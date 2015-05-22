@@ -12,7 +12,7 @@ exports.createUser = function(req, res){
     var jsonObj = req.body.user;
     //var user = req.session.user_profile;
 
-    User.findOne({username : username}, function (err, user) {
+    User.findOne({username : jsonObj.username}, function (err, user) {
         if(err){
             return res.json(500, {statusMsg:'User registration failed - '+err});
         }
