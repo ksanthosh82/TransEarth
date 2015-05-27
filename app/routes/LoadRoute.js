@@ -182,15 +182,19 @@ exports.searchLoadList = function(req,res){
         //console.log("getLoadListSummary filters: "+JSON.stringify(filters));
         var searchParams = {};
         searchParams["isActive"] = true;
-        if(typeof filters[0] != "undefined" && filters[0] != null && filters[0].trim() != ""){
+        if(typeof filters[0] != "undefined" && filters[0] != null && typeof filters[0].place != "undefined"
+            && filters[0].place != null && filters[0].place != ""){
             //var fromRegex = "/^" + filters[0] + "$/i";
             //searchParams["locationCapableFrom"] = fromRegex;
-            searchParams["load.pickup.address.city"] = filters[0];
+            var fromPlace = filters[0].place;
+            searchParams["load.pickup.address.city"] = fromPlace;
         }
-        if(typeof filters[1] != "undefined" && filters[1] != null  && filters[1].trim() != ""){
+        if(typeof filters[1] != "undefined" && filters[1] != null  && typeof filters[1].place != "undefined"
+            && filters[1].place != null && filters[1].place != ""){
             //var toRegex = "/^" + filters[1] + "$/i";
             //searchParams["locationCapableTo"] = toRegex;
-            searchParams["load.delivery.address.city"] = filters[1];
+            var toPlace = filters[1].place;
+            searchParams["load.delivery.address.city"] = toPlace;
         }
         if(typeof filters[2] != "undefined" && filters[2] != null && typeof filters[3] != "undefined" && filters[3] != null){
             var dateFilterRange = filters[2];
@@ -477,6 +481,36 @@ exports.addLoad = function(req, res){
     if(typeof input == "undefined" || input == null){
         return res.json(500, {statusMsg:'Load Input invalid'});
     }
+    if(typeof input.owner == "undefined" || input.owner == null
+        || typeof input.owner.address == "undefined" || input.owner.address == null
+        || typeof input.owner.address.mapLocation == "undefined" || input.owner.address.mapLocation == null
+        || typeof input.owner.address.mapLocation.place == "undefined" || input.owner.address.mapLocation.place == null
+        || input.owner.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Owner Location Details invalid'});
+    }
+    if(typeof input.company == "undefined" || input.company == null
+        || typeof input.company.address == "undefined" || input.company.address == null
+        || typeof input.company.address.mapLocation == "undefined" || input.company.address.mapLocation == null
+        || typeof input.company.address.mapLocation.place == "undefined" || input.company.address.mapLocation.place == null
+        || input.company.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Company Location Details invalid'});
+    }
+    if(typeof input.load == "undefined" || input.load == null
+        || typeof input.load.pickup == "undefined" || input.load.pickup == null
+        || typeof input.load.pickup.address == "undefined" || input.load.pickup.address == null
+        || typeof input.load.pickup.address.mapLocation == "undefined" || input.load.pickup.address.mapLocation == null
+        || typeof input.load.pickup.address.mapLocation.place == "undefined" || input.load.pickup.address.mapLocation.place == null
+        || input.load.pickup.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Pickup Location Details invalid'});
+    }
+    if(typeof input.load == "undefined" || input.load == null
+        || typeof input.load.delivery == "undefined" || input.load.delivery == null
+        || typeof input.load.delivery.address == "undefined" || input.load.delivery.address == null
+        || typeof input.load.delivery.address.mapLocation == "undefined" || input.load.delivery.address.mapLocation == null
+        || typeof input.load.delivery.address.mapLocation.place == "undefined" || input.load.delivery.address.mapLocation.place == null
+        || input.load.delivery.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Delivery Location Details invalid'});
+    }
 
     var load = new Load({
         load_id : Math.floor((Math.random() * 10000) + 1),
@@ -495,20 +529,22 @@ exports.addLoad = function(req, res){
             }
         },
         owner : {
+            details_same_as_user : input.owner.details_same_as_user,
             first_name: input.owner.first_name,
             last_name: input.owner.last_name,
             address : {
                 line1 : input.owner.address.line1,
                 line2 : input.owner.address.line2,
                 //line3 : { type: String, trim : true},
-                city : input.owner.address.city,
-                state : input.owner.address.state,
-                country : input.owner.address.country,
+                city : input.owner.address.mapLocation.place,
+                state : input.owner.address.mapLocation.state,
+                country : input.owner.address.mapLocation.country,
                 pincode : input.owner.address.pincode
             },
             contact : input.owner.contact
         },
         company : {
+            details_same_as_user : input.company.details_same_as_user,
             name: input.company.name,
             address_same_as_owner : input.company.address_same_as_owner,
             contact_same_as_owner : input.company.contact_same_as_owner,
@@ -516,9 +552,9 @@ exports.addLoad = function(req, res){
                 line1 : input.company.address.line1,
                 line2 : input.company.address.line2,
                 //line3 : { type: String, trim : true},
-                city : input.company.address.city,
-                state : input.company.address.state,
-                country : input.company.address.country,
+                city : input.company.address.mapLocation.place,
+                state : input.company.address.mapLocation.state,
+                country : input.company.address.mapLocation.country,
                 pincode : input.company.address.pincode
             },
             contact : input.company.contact
@@ -537,9 +573,9 @@ exports.addLoad = function(req, res){
                     line1 : input.load.pickup.address.line1,
                     line2 : input.load.pickup.address.line2,
                     //line3 : { type: String, trim : true},
-                    city : input.load.pickup.address.city,
-                    state : input.load.pickup.address.state,
-                    country : input.load.pickup.address.country,
+                    city : input.load.pickup.address.mapLocation.place,
+                    state : input.load.pickup.address.mapLocation.state,
+                    country : input.load.pickup.address.mapLocation.country,
                     pincode : input.load.pickup.address.pincode
                 },
                 contact : input.load.pickup.contact,
@@ -547,9 +583,9 @@ exports.addLoad = function(req, res){
                     line1 : input.load.pickup.address.line1,
                     //line2 : input.load.pickup.address.line2,
                     //line3 : { type: String, trim : true},
-                    city : input.load.pickup.address.city,
-                    state : input.load.pickup.address.state,
-                    country : input.load.pickup.address.country,
+                    city : input.load.pickup.address.mapLocation.place,
+                    state : input.load.pickup.address.mapLocation.state,
+                    country : input.load.pickup.address.mapLocation.country,
                     pincode : input.load.pickup.address.pincode
                 }
             },
@@ -559,9 +595,9 @@ exports.addLoad = function(req, res){
                     line1 : input.load.delivery.address.line1,
                     //line2 : input.load.delivery.address.line2,
                     //line3 : { type: String, trim : true},
-                    city : input.load.delivery.address.city,
-                    state : input.load.delivery.address.state,
-                    country : input.load.delivery.address.country,
+                    city : input.load.delivery.address.mapLocation.place,
+                    state : input.load.delivery.address.mapLocation.state,
+                    country : input.load.delivery.address.mapLocation.country,
                     pincode : input.load.delivery.address.pincode
                 },
                 contact : input.load.delivery.contact,
@@ -569,9 +605,9 @@ exports.addLoad = function(req, res){
                     line1 : input.load.delivery.address.line1,
                     //line2 : input.load.delivery.address.line2,
                     //line3 : { type: String, trim : true},
-                    city : input.load.delivery.address.city,
-                    state : input.load.delivery.address.state,
-                    country : input.load.delivery.address.country,
+                    city : input.load.delivery.address.mapLocation.place,
+                    state : input.load.delivery.address.mapLocation.state,
+                    country : input.load.delivery.address.mapLocation.country,
                     pincode : input.load.delivery.address.pincode
                 }
             }
@@ -610,6 +646,36 @@ exports.editLoad = function(req, res){
     if(typeof input._id == "undefined" || input._id == null
         || typeof input.load_id == "undefined" || input.load_id == null){
         return res.json(500, {statusMsg:'Empty Load ID passed - Stopping Hack Updates'});
+    }
+    if(typeof input.owner == "undefined" || input.owner == null
+        || typeof input.owner.address == "undefined" || input.owner.address == null
+        || typeof input.owner.address.mapLocation == "undefined" || input.owner.address.mapLocation == null
+        || typeof input.owner.address.mapLocation.place == "undefined" || input.owner.address.mapLocation.place == null
+        || input.owner.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Owner Location Details invalid'});
+    }
+    if(typeof input.company == "undefined" || input.company == null
+        || typeof input.company.address == "undefined" || input.company.address == null
+        || typeof input.company.address.mapLocation == "undefined" || input.company.address.mapLocation == null
+        || typeof input.company.address.mapLocation.place == "undefined" || input.company.address.mapLocation.place == null
+        || input.company.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Company Location Details invalid'});
+    }
+    if(typeof input.load == "undefined" || input.load == null
+        || typeof input.load.pickup == "undefined" || input.load.pickup == null
+        || typeof input.load.pickup.address == "undefined" || input.load.pickup.address == null
+        || typeof input.load.pickup.address.mapLocation == "undefined" || input.load.pickup.address.mapLocation == null
+        || typeof input.load.pickup.address.mapLocation.place == "undefined" || input.load.pickup.address.mapLocation.place == null
+        || input.load.pickup.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Pickup Location Details invalid'});
+    }
+    if(typeof input.load == "undefined" || input.load == null
+        || typeof input.load.delivery == "undefined" || input.load.delivery == null
+        || typeof input.load.delivery.address == "undefined" || input.load.delivery.address == null
+        || typeof input.load.delivery.address.mapLocation == "undefined" || input.load.delivery.address.mapLocation == null
+        || typeof input.load.delivery.address.mapLocation.place == "undefined" || input.load.delivery.address.mapLocation.place == null
+        || input.load.delivery.address.mapLocation.place == ""){
+        return res.json(500, {statusMsg:'Load Delivery Location Details invalid'});
     }
     console.log("Load to be edited: "+JSON.stringify(input));
 
@@ -650,20 +716,22 @@ exports.editLoad = function(req, res){
                         }
                     },
                     owner : {
+                        details_same_as_user : input.owner.details_same_as_user,
                         first_name: input.owner.first_name,
                         last_name: input.owner.last_name,
                         address : {
                             line1 : input.owner.address.line1,
                             //line2 : input.owner.address.line2,
                             //line3 : { type: String, trim : true},
-                            city : input.owner.address.city,
-                            state : input.owner.address.state,
-                            //country : input.owner.address.country,
+                            city : input.owner.address.mapLocation.place,
+                            state : input.owner.address.mapLocation.state,
+                            country : input.owner.address.mapLocation.country,
                             pincode : input.owner.address.pincode
                         },
                         contact : input.owner.contact
                     },
                     company : {
+                        details_same_as_user : input.company.details_same_as_user,
                         name: input.company.name,
                         address_same_as_owner : input.company.address_same_as_owner,
                         contact_same_as_owner : input.company.contact_same_as_owner,
@@ -671,9 +739,9 @@ exports.editLoad = function(req, res){
                             line1 : input.company.address.line1,
                             //line2 : input.company.address.line2,
                             //line3 : { type: String, trim : true},
-                            city : input.company.address.city,
-                            state : input.company.address.state,
-                            //country : input.company.address.country,
+                            city : input.company.address.mapLocation.place,
+                            state : input.company.address.mapLocation.state,
+                            country : input.company.address.mapLocation.country,
                             pincode : input.company.address.pincode
                         },
                         contact : input.company.contact
@@ -691,9 +759,9 @@ exports.editLoad = function(req, res){
                             address : {
                                 line1 : input.load.pickup.address.line1,
                                 //line2 : input.load.pickup.address.line2,
-                                city : input.load.pickup.address.city,
-                                state : input.load.pickup.address.state,
-                                //country : input.load.pickup.address.country,
+                                city : input.load.pickup.address.mapLocation.place,
+                                state : input.load.pickup.address.mapLocation.state,
+                                country : input.load.pickup.address.mapLocation.country,
                                 pincode : input.load.pickup.address.pincode
                             },
                             contact : input.load.pickup.contact,
@@ -701,9 +769,9 @@ exports.editLoad = function(req, res){
                                 line1 : input.load.pickup.address.line1,
                                 //line2 : input.load.pickup.address.line2,
                                 //line3 : { type: String, trim : true},
-                                city : input.load.pickup.address.city,
-                                state : input.load.pickup.address.state,
-                                //country : input.load.pickup.address.country,
+                                city : input.load.pickup.address.mapLocation.place,
+                                state : input.load.pickup.address.mapLocation.state,
+                                country : input.load.pickup.address.mapLocation.country,
                                 pincode : input.load.pickup.address.pincode
                             }
                         },
@@ -713,9 +781,9 @@ exports.editLoad = function(req, res){
                                 line1 : input.load.delivery.address.line1,
                                 //line2 : input.load.delivery.address.line2,
                                 //line3 : { type: String, trim : true},
-                                city : input.load.delivery.address.city,
-                                state : input.load.delivery.address.state,
-                                //country : input.load.delivery.address.country,
+                                city : input.load.delivery.address.mapLocation.place,
+                                state : input.load.delivery.address.mapLocation.state,
+                                country : input.load.delivery.address.mapLocation.country,
                                 pincode : input.load.delivery.address.pincode
                             },
                             contact : input.load.delivery.contact,
@@ -723,9 +791,9 @@ exports.editLoad = function(req, res){
                                 line1 : input.load.delivery.address.line1,
                                 //line2 : input.load.delivery.address.line2,
                                 //line3 : { type: String, trim : true},
-                                city : input.load.delivery.address.city,
-                                state : input.load.delivery.address.state,
-                                //country : input.load.delivery.address.country,
+                                city : input.load.delivery.address.mapLocation.place,
+                                state : input.load.delivery.address.mapLocation.state,
+                                country : input.load.delivery.address.mapLocation.country,
                                 pincode : input.load.delivery.address.pincode
                             }
                         }

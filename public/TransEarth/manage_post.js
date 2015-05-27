@@ -12,6 +12,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         formatYear: 'yy',
         startingDay: 1
     };
+
     $scope.pickup.opened = false;
     $scope.pickup.open = function($event) {
         $event.preventDefault();
@@ -47,6 +48,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.truckToPost = $scope.truckPostToUpdate;
         $scope.truckToPost.details = {};
         $scope.truckToPost.post = {};
+
         $scope.truckToPost.post.pickup = {};
         $scope.truckToPost.post.delivery = {};
 
@@ -66,16 +68,42 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         //console.log("truckToPost Data to start with: "+JSON.stringify(tempTruck));
     }
 
-    $scope.truckToPost.details.name = tempTruck.truck_details.name;
+    $scope.truckToPost.details.type = tempTruck.truck_details.type;
     $scope.truckToPost.details.make = tempTruck.truck_details.make;
     $scope.truckToPost.details.model = tempTruck.truck_details.model;
     $scope.truckToPost.details.reg_no = tempTruck.truck_details.reg_no;
     $scope.truckToPost.details.load = tempTruck.truck_details.maximum_load.quantity + " " + tempTruck.truck_details.maximum_load.unit;
 
+    $scope.truckToPost.post.source = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
+    $scope.truckToPost.post.destination = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
     if(typeof tempPost != "undefined" && tempPost != null){
         $scope.truckToPost.post._id = tempPost._id;
-        $scope.truckToPost.post.source = tempPost.truck_post.availability.pickup_location;
-        $scope.truckToPost.post.destination = tempPost.truck_post.availability.delivery_location;
+        //$scope.truckToPost.post.source.place = tempPost.truck_post.availability.pickup_location;
+        //$scope.truckToPost.post.destination.place = tempPost.truck_post.availability.delivery_location;
+        $("#source").val(tempPost.truck_post.availability.pickup_location);
+        $("#destination").val(tempPost.truck_post.availability.delivery_location);
+        $scope.truckToPost.post.source = {
+            place :tempPost.truck_post.availability.pickup_location,
+            state : "",
+            isSelected : true,
+            disable : false
+        };
+        $scope.truckToPost.post.destination = {
+            place : tempPost.truck_post.availability.delivery_location,
+            state : "",
+            isSelected : true,
+            disable : false
+        };
         $scope.truckToPost.post.load = tempPost.truck_post.maximum_load.quantity;
         $scope.truckToPost.post.pickup.date = tempPost.truck_post.availability.date;
     }

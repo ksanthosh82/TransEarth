@@ -4,6 +4,19 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
 
     $scope.truckPostList = {};
     $scope.truckPostList.filter = {};
+    $scope.truckPostList.filter.from = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
+
+    $scope.truckPostList.filter.to = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
 
     $scope.truckPostList.filter.dateRange = null;
     $scope.truckPostList.filter.dt = new Date();

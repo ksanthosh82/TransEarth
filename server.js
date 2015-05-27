@@ -5,7 +5,7 @@ var express = require('express');
 var fs = require('fs');
 var moment = require('moment');
 var _ = require('lodash');
-var validSessionDuration = 5 * 60 * 1000;
+var validSessionDuration = 30 * 60 * 1000;
 
 var TruckRoute = require('./app/routes/TruckRoute');
 var UserRoute = require('./app/routes/UserRoute');
@@ -63,9 +63,12 @@ app.configure(function(){
         //console.log('Request session Maxage - '+req.session.cookie.maxAge);
         //console.log('Requested URL - '+req.url+" and session Maxage - "+req.session.cookie.maxAge);
         //console.log("Hiiii");
-        if (req.method == 'POST' && req.url == '') {
+        if (req.method == 'POST' && req.url == '/login') {
+            console.log("Inside Login Remember Me");
             if (req.body.rememberMe) {
-                req.session.cookie.maxAge = 0; // 30*24*60*60*1000 Remember 'me' for 30 days
+                //req.session.cookie.maxAge = 0; // Remember 'me' Deacticate
+                console.log("Marking Remember Me");
+                req.session.cookie.maxAge = 5*24*60*60*1000; //Remember 'me' for 5 days
             } else {
                 req.session.cookie.expires = false;
             }
@@ -73,7 +76,10 @@ app.configure(function(){
         req.error = null;
         if (req.isAuthenticated()) {
             console.log(moment().utc().local().format("YYYY-MM-DD hh:mm:ss")+": Cookie MaxAge:"+req.session.cookie.maxAge+" Requested URL: "+req.url);
-            req.session.cookie.maxAge = validSessionDuration;
+            if(typeof req.session.cookie == "undefined" || typeof req.session.cookie.maxAge == "undefined"){
+                console.log("Marking Remember Me for session duration");
+                req.session.cookie.maxAge = validSessionDuration;
+            }
             return next();
         }
         next();
@@ -150,14 +156,14 @@ app.post('/TransEarth/login', function (req, res, next) {
                 messageAvailable : true,
                 message : info.message
             };
-            req.session.auth = {invalid : true};
+            //req.session.auth = {invalid : true};
             req.session.messages = [info.message];
             console.log("User validation failed - "+user+' - '+req.session.messages);
-            req.error = "Invalid Credentials";
+            //req.error = "Invalid Credentials";
             //return next(req.error);
-            return res.json(500, "Invalid Credentials");
+            //return res.json(500, "Invalid Credentials");
             //return res.redirect('/TransEarth/login');
-            //return res.redirect('/TransEarth');
+            return res.redirect('/TransEarth');
         }
         req.session.auth = null;
         req.logIn(user, function (err1) {
@@ -259,19 +265,25 @@ app.get('/', function (req, res) {
 app.get('/TransEarth', function (req, res) {
     //console.log("Get Index page");
     //clearSession(req);
-    var user = {};
-    if(typeof req.session.user_profile != "undefined" && req.session.user_profile != null){
-        user = {
-            "user" : {
-                "user_name" : req.session.user_profile.display_name,
-                "user_type" : req.session.user_profile.user_type,
-                "user_logged_in" : true
-            }
-        };
-        console.log("Rendering home page with User logging in: "+JSON.stringify(user));
+    var local = {
+        serverAuth :{
+            loginFailed : false
+        }
     };
+    if(typeof req.session.user_profile != "undefined" && req.session.user_profile != null){
+        local.user = {};
+        local.user.user_name = req.session.user_profile.display_name;
+        local.user.user_type = req.session.user_profile.user_type;
+        local.user.user_logged_in = true;
+        console.log("Rendering home page with User logging in: "+JSON.stringify(local));
+    };
+    if(typeof req.session.auth != "undefined" && req.session.auth != null){
+        console.log("Login failed and including login template: "+JSON.stringify(req.session.auth));
+        local.serverAuth.loginFailed = true;
+        local.serverAuth.loginError = req.session.auth.message;
+    }
 
-    res.render('index', user);
+    res.render('index', local);
     //res.render('example', user);
 });
 
@@ -381,6 +393,9 @@ app.post("/TransEarth/removeLoad", LoadRoute.removeLoad);
 
 app.post("/TransEarth/getMaterialTypes", LookupRoute.getMaterialTypes);
 
+app.get('/TransEarth/test', function (req, res) {
+    res.render('test');
+});
 // Create an HTTP service.
 var server = http.createServer(app);
 

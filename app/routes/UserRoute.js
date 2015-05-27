@@ -12,6 +12,10 @@ exports.createUser = function(req, res){
     var jsonObj = req.body.user;
     //var user = req.session.user_profile;
 
+    if(typeof jsonObj == "undefined" || jsonObj == null){
+        return res.json(500, {statusMsg : "Empty User details passed"});
+    }
+
     User.findOne({username : jsonObj.username}, function (err, user) {
         if(err){
             return res.json(500, {statusMsg:'User registration failed - '+err});
@@ -25,6 +29,12 @@ exports.createUser = function(req, res){
     });
 
     function saveUser(){
+
+        if(typeof jsonObj.mapLocation == "undefined" || jsonObj.mapLocation == null
+            || jsonObj.mapLocation.place == "" || jsonObj.mapLocation.state == "" || jsonObj.mapLocation.country == "" ){
+            return res.json(500, {statusMsg : "Location is not valid. Please correct"});
+        }
+
         var user = new User({
             username: jsonObj.username,
             //email: jsonObj.username,
@@ -39,12 +49,12 @@ exports.createUser = function(req, res){
                     line1 : jsonObj.line1,
                     line2 : jsonObj.line2,
                     line3 : jsonObj.line3,
-                    city : jsonObj.city,
-                    state : jsonObj.state,
-                    //country : jsonObj.country,
+                    city : jsonObj.mapLocation.place,
+                    state : jsonObj.mapLocation.state,
+                    country : jsonObj.mapLocation.country,
                     pincode : jsonObj.pincode
                 },
-                contact : [jsonObj.contactno]
+                contact : [jsonObj.contact]
             },
             //accessToken: { type: String }, // Used for Remember Me
             //type:{type: String,required: true},

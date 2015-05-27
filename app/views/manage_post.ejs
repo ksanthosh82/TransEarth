@@ -24,11 +24,12 @@
 							<fieldset>
 								<!-- Truck NAME -->
 								<div class="form-group-sm">
-									<label class="col-lg-3 control-label">Truck Name</label>
+									<label class="col-lg-3 control-label">Truck Type</label>
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-truck"></i></span>
-											<input readonly type="text" class="form-control" name="truck_name" id="truck_name" ng-model="truckToPost.details.name" placeholder="Enter Truck Name">
+											<input readonly type="text" class="form-control" name="truck_type" id="truck_type" ng-model="truckToPost.details.type"
+												   placeholder="Enter Truck Type">
 										</div>
 									</div>
 								</div>
@@ -86,7 +87,10 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<input type="text" class="form-control" name="source" id="source" ng-model="truckToPost.post.source" placeholder="Enter Source" ng-minlength="1" ng-maxlength="35" ng-required="true">
+											<!-- input type="text" class="form-control" name="source" id="source" ng-model="truckToPost.post.source"
+												   placeholder="Enter Source" ng-minlength="1" ng-maxlength="35" ng-required="true" -->
+											<google-places
+													tagId="source" tagName="source" location=truckToPost.post.source></google-places>
 										</div>
 										<i class="form-control-feedback"
 										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.source.$invalid,
@@ -113,7 +117,10 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<input type="text" class="form-control" name="destination" id="destination" ng-model="truckToPost.post.destination" placeholder="Enter Destination" ng-minlength="1" ng-maxlength="35" ng-required="true">
+											<!-- input type="text" class="form-control" name="destination" id="destination" ng-model="truckToPost.post.destination"
+												   placeholder="Enter Destination" ng-minlength="1" ng-maxlength="35" ng-required="true" -->
+											<google-places
+													tagId="destination" tagName="destination" location=truckToPost.post.destination></google-places>
 										</div>
 										<i class="form-control-feedback"
 										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.destination.$invalid,

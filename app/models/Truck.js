@@ -27,11 +27,11 @@ var postSchema = new Schema({
     load_handling : {
         //owned_by : { type: String, trim: true},
         minimum_load : {
-            metric : {type: Number, trim: true},
+            quantity : {type: Number, trim: true},
             unit : {type: String, trim: true}
         },
         maximum_load : {
-            metric : {type: Number, required: true, trim: true},
+            quantity : {type: Number, required: true, trim: true},
             unit : {type: String, required: true, trim: true}
         },
         material :{
@@ -109,6 +109,7 @@ var truckSchema = new Schema({
         }
     },
     owner : {
+        details_same_as_user : { type: Boolean, required: true, trim : true},
         first_name: { type: String, required: true, trim : true},
         last_name: { type: String, required: true, trim : true},
         address : {
@@ -123,6 +124,7 @@ var truckSchema = new Schema({
         contact : { type: Number, required: true, trim : true}
     },
     company : {
+        details_same_as_user : { type: Boolean, required: true, trim : true},
         name: { type: String, required: true, trim : true},
         address_same_as_owner : { type: Boolean, required: true, trim : true},
         contact_same_as_owner : { type: Boolean, required: true, trim : true},
@@ -138,7 +140,7 @@ var truckSchema = new Schema({
         contact : { type: Number, required: true, trim : true}
     },
     truck_details : {
-        name : {type: String, trim: true},
+        type : {type: String, trim: true},
         make : {type: String, required: true, trim: true},
         model : {type: String, required: true, trim: true},
         reg_no : {type: String, required: true, trim: true},

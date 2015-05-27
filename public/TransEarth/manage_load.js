@@ -9,14 +9,52 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
     $scope.editLoadInd = false;
     var sharedLoad = LoadRequest.getSharedLoad();
     if(typeof sharedLoad != "undefined" && sharedLoad != null){
+        console.log("Shared Load in memory: "+JSON.stringify(sharedLoad));
         $scope.page_header = "Edit Load";
         $scope.editLoadInd = true;
         $scope.addLoadInd = false;
         //$scope.loadForm = {};
+        sharedLoad.owner.address.mapLocation = {
+            place : sharedLoad.owner.address.city,
+            state : sharedLoad.owner.address.state,
+            country : sharedLoad.owner.address.country,
+            isSelected : true,
+            disable : sharedLoad.owner.details_same_as_user
+        };
+        sharedLoad.company.address.mapLocation = {
+            place : sharedLoad.company.address.city,
+            state : sharedLoad.company.address.state,
+            country : sharedLoad.company.address.country,
+            isSelected : true,
+            disable : sharedLoad.company.address_same_as_owner
+        };
+        sharedLoad.load.pickup.address.mapLocation = {
+            place : sharedLoad.load.pickup.address.city,
+            state : sharedLoad.load.pickup.address.state,
+            country : sharedLoad.load.pickup.address.country,
+            isSelected : true,
+            disable : false
+        };
+        sharedLoad.load.delivery.address.mapLocation = {
+            place : sharedLoad.load.delivery.address.city,
+            state : sharedLoad.load.delivery.address.state,
+            country : sharedLoad.load.delivery.address.country,
+            isSelected : true,
+            disable : false
+        };
+        sharedLoad.owner.address.pincode  = sharedLoad.owner.address.pincode.toString();
+        sharedLoad.company.address.pincode  = sharedLoad.company.address.pincode.toString();
+        sharedLoad.owner.contact  = sharedLoad.owner.contact.toString();
+        sharedLoad.company.contact  = sharedLoad.company.contact.toString();
+        sharedLoad.load.pickup.address.pincode  = sharedLoad.load.pickup.address.pincode.toString();
+        sharedLoad.load.pickup.contact  = sharedLoad.load.pickup.contact.toString();
+        sharedLoad.load.delivery.address.pincode  = sharedLoad.load.delivery.address.pincode.toString();
+        sharedLoad.load.delivery.contact  = sharedLoad.load.delivery.contact.toString();
+        sharedLoad.load.quantity  = sharedLoad.load.quantity.toString();
         $scope.load = sharedLoad;
         console.log("Shared Load: "+JSON.stringify($scope.load));
-        $scope.disableAddress = $scope.load.company.address_same_as_owner;
-        $scope.disableContact = $scope.load.company.contact_same_as_owner;
+        //$scope.disableAddress = $scope.load.company.address_same_as_owner;
+        //$scope.disableContact = $scope.load.company.contact_same_as_owner;
         $scope.loadProcess.indicator.showCompanyDetails = true;
         $scope.loadProcess.indicator.showOwnerDetails = true;
     }else{
@@ -29,6 +67,38 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
         $scope.load.owner.address = {};
         $scope.load.company = {};
         $scope.load.company.address = {};
+        $scope.$watch("load.company.contact", function(){
+            console.log("watching contact:"+$scope.load.company.contact);
+        });
+        $scope.load.owner.address.mapLocation = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
+        $scope.load.company.address.mapLocation = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
+        $scope.load.load = {};
+        $scope.load.load.pickup = {};
+        $scope.load.load.pickup.address = {};
+        $scope.load.load.pickup.address.mapLocation = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
+        $scope.load.load.delivery = {};
+        $scope.load.load.delivery.address = {};
+        $scope.load.load.delivery.address.mapLocation = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
         $scope.load.details = {};
         $scope.load.details.pickup = {};
         $scope.load.details.pickup.address = {};
@@ -86,16 +156,112 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
             });
     };
     $scope.getMaterials();
+
+    $scope.canDisableOwnerDetails = function(){
+        console.log("canDisableOwnerDetails with user information: "+JSON.stringify($scope.user));
+        if(typeof $scope.load.owner == "undefined" && $scope.load.owner == null){
+            $scope.load.owner = {};
+        }
+        if($scope.load.owner.details_same_as_user && typeof $scope.user.user_information != "undefined"
+            && $scope.user.user_information.address != "undefined"){
+            $scope.load.owner.first_name = $scope.user.user_information.first_name;
+            $scope.load.owner.last_name = $scope.user.user_information.last_name;
+
+            $scope.load.owner.address.line1 = $scope.user.user_information.address.line1;
+            $scope.load.owner.address.line2 = $scope.user.user_information.address.line2;
+            //$scope.truck.company.address.line3 = $scope.truck.owner.address.line3;
+            //$scope.truck.owner.address.city = $scope.user.user_information.address.city;
+            //$scope.truck.owner.address.state = $scope.user.user_information.address.state;
+            $scope.load.owner.address.mapLocation = {
+                place : $scope.user.user_information.address.city,
+                state : $scope.user.user_information.address.state,
+                country : $scope.user.user_information.address.country,
+                isSelected : true,
+                disable : true
+            };
+            $("#owner_city").val($scope.user.user_information.address.city);
+
+            $scope.load.owner.address.pincode = $scope.user.user_information.address.pincode.toString();
+            $scope.load.owner.contact = $scope.user.user_information.contact[0].toString();
+            $scope.load.owner.address_same_as_owner = false;
+            $scope.load.owner.contact_same_as_owner = false;
+            console.log("canDisableOwnerDetails "+JSON.stringify($scope.load.owner));
+            //$scope.company.address_same_as_owner = true;
+        }else{
+            $scope.load.owner.first_name = "";
+            $scope.load.owner.last_name = "";
+            $scope.load.owner.address.line1 = "";
+            $scope.load.owner.address.line2 = "";
+            $scope.load.owner.address.mapLocation = {
+                place : "",
+                state : "",
+                isSelected : true,
+                disable : true
+            };
+            $("#owner_city").val("");
+            $scope.load.owner.address.pincode = "";
+            $scope.load.owner.contact = "";
+            $scope.load.owner.address_same_as_owner = false;
+            console.log("canDisableOwnerDetails "+JSON.stringify($scope.load.owner));
+        }
+    };
+    $scope.canDisableCompanyDetails = function(){
+        console.log("canDisableCompanyDetails with user information: "+JSON.stringify($scope.user));
+        if(typeof $scope.load.company == "undefined" && $scope.load.company == null){
+            $scope.load.company = {};
+        }
+        if($scope.load.company.details_same_as_user && typeof $scope.user.user_information != "undefined"
+            && $scope.user.user_information.address != "undefined"){
+            $scope.load.company.name = $scope.user.user_information.company_name;
+
+            $scope.load.company.address.line1 = $scope.user.user_information.address.line1;
+            $scope.load.company.address.line2 = $scope.user.user_information.address.line2;
+            //$scope.truck.company.address.line3 = $scope.truck.owner.address.line3;
+            //$scope.truck.owner.address.city = $scope.user.user_information.address.city;
+            //$scope.truck.owner.address.state = $scope.user.user_information.address.state;
+            $scope.load.company.address.mapLocation = {
+                place : $scope.user.user_information.address.city,
+                state : $scope.user.user_information.address.state,
+                country : $scope.user.user_information.address.country,
+                isSelected : true,
+                disable : true
+            };
+            $("#company_city").val($scope.user.user_information.address.city);
+
+            $scope.load.company.address.pincode = $scope.user.user_information.address.pincode.toString();
+            $scope.load.company.contact = $scope.user.user_information.contact[0].toString();
+            //$("#company_contact").val($scope.user.user_information.contact[0].toString());
+            $scope.load.company.address_same_as_owner = false;
+            $scope.load.company.contact_same_as_owner = false;
+            console.log("canDisableCompanyDetails "+JSON.stringify($scope.load.company));
+            //$scope.company.address_same_as_owner = true;
+        }else{
+            $scope.load.company.name = "";
+            $scope.load.company.address.line1 = "";
+            $scope.load.company.address.line2 = "";
+            $scope.load.company.address.mapLocation = {
+                place : "",
+                state : "",
+                isSelected : true,
+                disable : true
+            };
+            $("#company_city").val("");
+            $scope.load.company.address.pincode = "";
+            $scope.load.company.contact = "";
+            $scope.load.company.address_same_as_owner = false;
+            console.log("canDisableCompanyDetails empty "+JSON.stringify($scope.load.company));
+        }
+    };
     $scope.canDisableSameAddress = function(){
         //console.log("canDisableSameAddress "+JSON.stringify($scope.load.company));
         if(typeof $scope.load.company == "undefined" && $scope.load.company == null){
             $scope.load.company = {};
         }
-        if($scope.disableAddress && typeof $scope.load.owner != "undefined" && typeof $scope.load.owner.address != "undefined"
+        if($scope.load.company.address_same_as_owner /*&& typeof $scope.load.owner != "undefined" && typeof $scope.load.owner.address != "undefined"
                 && typeof $scope.load.owner.address.line1!="undefined" && typeof $scope.load.owner.address.city!="undefined"
                 && typeof $scope.load.owner.address.state!="undefined" && typeof $scope.load.owner.address.pincode!="undefined"
                 && $scope.load.owner.address.line1!=null && $scope.load.owner.address.city!=null && $scope.load.owner.address.state!=null
-                && typeof $scope.load.owner.address.pincode!=null){
+                && typeof $scope.load.owner.address.pincode!=null*/){
                 $scope.load.company.address.line1 = $scope.load.owner.address.line1;
                 $scope.load.company.address.line2 = $scope.load.owner.address.line2;
                 //$scope.load.company.address.line3 = $scope.load.owner.address.line3;
@@ -104,30 +270,37 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
                 $scope.load.company.address.pincode = $scope.load.owner.address.pincode;
                 $scope.load.company.address_same_as_owner = true;
                 //$scope.disableAddress = true;
-            }/*else{
-                //$scope.disableAddress = false;
-                //$scope.load.company = {};
-                $scope.load.company.line1 = "";
-                $scope.load.company.line2 = "";
-                //$scope.load.company.line3 = "";
-                $scope.load.company.city = "";
-                $scope.load.company.state = "";
-                $scope.disableAddress = false;
-            }*/
+        }else if(typeof $scope.load.company != "undefined"
+            && typeof $scope.load.company.address != "undefined"
+            && $scope.load.company != null && $scope.load.company.address != null){
+            console.log("canDisableSameAddress owner 1 "+JSON.stringify($scope.load.owner));
+            $scope.load.company.address.line1 = "";
+            $scope.load.company.address.line2 = "";
+            $scope.load.company.address.mapLocation = {
+                place : "",
+                state : "",
+                isSelected : false,
+                disable : false
+            };
+            $scope.load.company.address.pincode = "";
+            console.log("canDisableSameAddress owner 5 "+JSON.stringify($scope.load.owner));
+        }
     };
     $scope.canDisableSameContact = function(){
-        //console.log("canDisableSameContact "+JSON.stringify($scope.load.company));
+        console.log("canDisableSameContact "+JSON.stringify($scope.load.company));
         if(typeof $scope.load.company == "undefined" && $scope.load.company == null){
             $scope.load.company = {};
         }
-        if($scope.disableContact && typeof $scope.load.owner != "undefined"
+
+        if($scope.load.company.contact_same_as_owner && typeof $scope.load.owner != "undefined"
             && typeof $scope.load.owner.contact != "undefined" && typeof $scope.load.owner.contact != null){
-            $scope.load.company.contact = $scope.load.owner.contact;
+            console.log("canDisableSameContact "+JSON.stringify($scope.load.owner));
+            $scope.load.company.contact = $scope.load.owner.contact.toString();
             //$scope.disableContact = true;
-        }/*else{
+        }else{
             $scope.load.company.contact = "";
-            //$scope.disableContact = false;
-        }*/
+            //$scope.truck.company.contact_same_as_owner = false;
+        }
     };
 
     $scope.loadProcess.function.showCompanyDetails = function(){
@@ -178,12 +351,22 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
         if ($scope.loadForm.$valid) {
             //console.log("Form is valid! "+JSON.stringify($scope.load));
 
-            if($scope.disableAddress){
+            if($scope.load.owner.details_same_as_user){
+                $scope.load.owner.details_same_as_user = true;
+            }else{
+                $scope.load.owner.details_same_as_user = false;
+            }
+            if($scope.load.company.details_same_as_user){
+                $scope.load.company.details_same_as_user = true;
+            }else{
+                $scope.load.company.details_same_as_user = false;
+            }
+            if($scope.load.company.address_same_as_owner){
                 $scope.load.company.address_same_as_owner = true;
             }else{
                 $scope.load.company.address_same_as_owner = false;
             }
-            if($scope.disableContact){
+            if($scope.load.company.contact_same_as_owner){
                 $scope.load.company.contact_same_as_owner = true;
             }else{
                 $scope.load.company.contact_same_as_owner = false;

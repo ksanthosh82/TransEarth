@@ -18,8 +18,8 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
     };
     $scope.myTruckPostList.totalServerItems = 0;
     $scope.myTruckPostList.pagingOptions = {
-        pageSizes: [3, 6, 10],
-        pageSize: 3,
+        pageSizes: [10, 20, 30],
+        pageSize: 10,
         currentPage: 1
     };
     $scope.myTruckPostList.setPagingData = function(data, page, pageSize){

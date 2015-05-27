@@ -4,10 +4,21 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
     $scope.core = {};
 
     if(typeof $scope.error != "undefined" && $scope.error != null){
-        $scope.login.authFailed = true;
+        $scope.serverAuth.authFailed = true;
         succesError($scope.error, "login_alert");
     }
+
+    if($scope.serverAuth.authFailed){
+        console.log('Inside loginCtrl serverAuth failed - '+JSON.stringify($scope.serverAuth));
+        succesError($scope.serverAuth.message, "login_alert");
+    }
     $scope.user = {};
+    $scope.user.mapLocation = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
 
     $scope.signUp = function(){
         console.log("Signup clicked");
@@ -34,7 +45,7 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
             }).error(function(data) {
                 console.log("Logged in Error: "+data);
                 $scope.core.loggedIn = false;
-                $scope.login.authFailed = true;
+                $scope.serverAuth.authFailed = true;
                 succesError(data, 'login_alert');
                 //$scope.messageAvailable = true;
                 //$scope.index.messageAvailable = true;
@@ -74,7 +85,7 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
     };
     $scope.passwordMismatch = true;
     $scope.passwordValidation = function() {
-        console.log("$scope.user.newPassword - "+$scope.user.password+" $scope.user.confirmPassword - "+$scope.user.confirmPassword);
+        //console.log("$scope.user.newPassword - "+$scope.user.password+" $scope.user.confirmPassword - "+$scope.user.confirmPassword);
         if($scope.user.password != $scope.user.confirmPassword){
             $scope.passwordMismatch = true;
         }else{
@@ -99,6 +110,12 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
     // function to submit the form after all validation has occurred
     $scope.reset = function(){
         $scope.user = {};
+        $scope.user.mapLocation = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
         $scope.register = {};
     };
 
@@ -126,10 +143,10 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
 
                     // call $anchorScroll()
                     $anchorScroll();
-                }).error(function(data) {
-                    console.log("User saved failed:"+data);
+                }).error(function(err) {
+                    console.log("User saved failed:"+err.statusMsg);
                     $scope.saved = false;
-                    succesError(data, 'login_alert');
+                    succesError(err.statusMsg, 'login_alert');
                     // set the location.hash to the id of
                     // the element you wish to scroll to.
                     $location.hash('registerForm');

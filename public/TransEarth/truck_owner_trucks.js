@@ -20,8 +20,8 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
     };
     $scope.myTruckList.totalServerItems = 0;
     $scope.myTruckList.pagingOptions = {
-        pageSizes: [3, 6, 10],
-        pageSize: 3,
+        pageSizes: [10, 20, 30],
+        pageSize: 10,
         currentPage: 1
     };
     $scope.setPagingData = function(data, page, pageSize){

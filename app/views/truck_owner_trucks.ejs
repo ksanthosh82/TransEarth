@@ -45,125 +45,85 @@
 	<!-- div ng-controller="TruckDetailModalCtrl" -->
 	<!-- div class="modal-dialog">
 		<div class="modal-content" -->
-	<div class="row">
-		<div class="col-md-12">
-			<div id="truck_detail_alert"></div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Owner Details</h4>
-						<p class="list-group-item-text">
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_name">Owner Name</label>
-								<input class="form-control" type="text" disabled="" name="owner_name" id="owner_name" ng-model="truckModal.owner.name">
-							</div>
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_address">Address</label>
-								<!-- input class="form-control" type="text" disabled="" id="owner_address" -->
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_line1" id="owner_line1" ng-model="truckModal.owner.address.line1">
-							</div>
-							<div class="form-group-sm" ng-if="truckModal.owner.address.line2">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_line2" id="owner_line2" ng-model="truckModal.owner.address.line2">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_city" id="owner_city" ng-model="truckModal.owner.address.city">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_state" id="owner_state" ng-model="truckModal.owner.address.state">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_pincode" id="owner_pincode" ng-model="truckModal.owner.address.pincode">
-							</div>
-							<!-- CONTACT NO -->
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_contact">Contact No</label>
-								<input class="form-control" type="text" disabled="" name="owner_contact" id="owner_contact" ng-model="truckModal.owner.contact">
-							</div>
-						</p>
-					</a>
+	<div class="modal-header">
+		<h3 class="modal-title">Truck Information</h3>
+	</div>
+	<div class="modal-body">
+		<div id="truck_detail_alert"></div>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Owner Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-user"></i> Name</div>
+							{{truckModal.owner.name}}
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Address</div>
+							{{truckModal.owner.address.line1}} <br/>
+							{{truckModal.owner.address.line2}} <br/>
+							{{truckModal.owner.address.city}} <br/>
+							{{truckModal.owner.address.state}} <br/>
+							{{truckModal.owner.address.country}} <br/>
+							{{truckModal.owner.address.pincode}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-phone"></i> Contact</div>
+							{{truckModal.owner.contact}}
+						</li>
+					</ul>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Company Details</h4>
-						<p class="list-group-item-text">
-							<div class="form-group-sm">
-								<label class="control-label" for="company_name">Company Name</label>
-								<input class="form-control" type="text" disabled="" name="company_name" id="company_name" ng-model="truckModal.company.name">
-							</div>
-							<!-- Address -->
-							<div class="form-group-sm">
-								<label class="control-label" for="company_address">Address</label>
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_line1" id="company_line1" ng-model="truckModal.company.address.line1">
-							</div>
-							<div class="form-group-sm" ng-if="truckModal.company.address.line2">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_line2" id="company_line2" ng-model="truckModal.company.address.line2">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_city" id="company_city" ng-model="truckModal.company.address.city">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_state" id="company_state" ng-model="truckModal.company.address.state">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_pincode" id="company_pincode" ng-model="truckModal.company.address.pincode">
-							</div>
-							<!-- CONTACTNO -->
-							<div class="form-group-sm">
-								<label class="control-label" for="company_contact">Contact No</label>
-								<input class="form-control" type="text" disabled="" name="company_contact" id="company_contact" ng-model="truckModal.company.contact">
-							</div>
-						</p>
-					</a>
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Company Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-user"></i> Name</div>
+							{{truckModal.company.name}}
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Address</div>
+							{{truckModal.company.address.line1}} <br/>
+							{{truckModal.company.address.line2}} <br/>
+							{{truckModal.company.address.city}} <br/>
+							{{truckModal.company.address.state}} <br/>
+							{{truckModal.company.address.country}} <br/>
+							{{truckModal.company.address.pincode}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-phone"></i> Contact</div>
+							{{truckModal.company.contact}}
+						</li>
+					</ul>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Truck Details</h4>
-						<p class="list-group-item-text">
-							<!-- Truck NAME -->
-							<div class="form-group-sm">
-								<label class="control-label" for="truck_name">Truck Name</label>
-								<input class="form-control" type="text" disabled="" name="truck_name" id="truck_name" ng-model="truckModal.truck_details.name">
-							</div>
-							<!-- Make -->
-							<div class="form-group-sm">
-								<label class="control-label" for="truck_make">Make</label>
-								<input class="form-control" type="text" disabled="" name="truck_make" id="truck_make" ng-model="truckModal.truck_details.make">
-							</div>
-							<!-- Model -->
-							<div class="form-group-sm">
-								<label class="control-label" for="truck_model">Model</label>
-								<input class="form-control" type="text" disabled="" name="truck_model" id="truck_model" ng-model="truckModal.truck_details.model">
-							</div>
-							<!-- Reg No -->
-							<div class="form-group-sm">
-								<label class="control-label" for="regno">Reg No</label>
-								<input class="form-control" type="text" disabled="" name="regno" id="regno" ng-model="truckModal.truck_details.reg_no">
-							</div>
-							<!-- Load -->
-							<div class="form-group-sm">
-								<label class="control-label" for="load">Reg No</label>
-								<input class="form-control" type="text" disabled="" name="load" id="load" ng-model="truckModal.truck_details.maximum_load.quantity">
-							</div>
-						</p>
-					</a>
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Truck Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-truck"></i> Type</div>
+							{{truckModal.truck_details.type}}
+						</li>
+						<li>
+							<div><i class="fa fa-tag"></i> Make</div>
+							{{truckModal.truck_details.make}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-bookmark"></i> Model</div>
+							{{truckModal.truck_details.model}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-gavel"></i> Reg No</div>
+							{{truckModal.truck_details.reg_no}}
+						</li>
+						<li>
+							<div><i class="fa fa-shopping-cart"></i> Load</div>
+							{{truckModal.truck_details.maximum_load.quantity}} &nbsp; Tons
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>

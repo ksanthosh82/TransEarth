@@ -73,119 +73,83 @@
 	<!-- div ng-controller="LoadDetailModalCtrl" -->
 	<!-- div class="modal-dialog">
 		<div class="modal-content" -->
-	<div class="row">
-		<div class="col-md-12">
-			<div id="load_detail_alert"></div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Owner Details</h4>
-						<p class="list-group-item-text">
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_name">Owner Name</label>
-								<input class="form-control" type="text" disabled="" name="owner_name" id="owner_name" ng-model="loadModal.owner.name">
-							</div>
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_address">Address</label>
-								<!-- input class="form-control" type="text" disabled="" id="owner_address" -->
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_line1" id="owner_line1" ng-model="loadModal.owner.address.line1">
-							</div>
-							<div class="form-group-sm" ng-if="loadModal.owner.address.line2">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_line2" id="owner_line2" ng-model="loadModal.owner.address.line2">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_city" id="owner_city" ng-model="loadModal.owner.address.city">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_state" id="owner_state" ng-model="loadModal.owner.address.state">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="owner_pincode" id="owner_pincode" ng-model="loadModal.owner.address.pincode">
-							</div>
-							<!-- CONTACT NO -->
-							<div class="form-group-sm">
-								<label class="control-label" for="owner_contact">Contact No</label>
-								<input class="form-control" type="text" disabled="" name="owner_contact" id="owner_contact" ng-model="loadModal.owner.contact">
-							</div>
-						</p>
-					</a>
+	<div class="modal-header">
+		<h3 class="modal-title">Load Information</h3>
+	</div>
+	<div class="modal-body">
+		<div id="load_detail_alert"></div>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Owner Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-user"></i> Name</div>
+							{{loadModal.owner.name}}
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Address</div>
+							{{loadModal.owner.address.line1}} <br/>
+							{{loadModal.owner.address.line2}} <br/>
+							{{loadModal.owner.address.city}} <br/>
+							{{loadModal.owner.address.state}} <br/>
+							{{loadModal.owner.address.country}} <br/>
+							{{loadModal.owner.address.pincode}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-phone"></i> Contact</div>
+							{{loadModal.owner.contact}}
+						</li>
+					</ul>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Company Details</h4>
-						<p class="list-group-item-text">
-							<div class="form-group-sm">
-								<label class="control-label" for="company_name">Company Name</label>
-								<input class="form-control" type="text" disabled="" name="company_name" id="company_name" ng-model="loadModal.company.name">
-							</div>
-							<!-- Address -->
-							<div class="form-group-sm">
-								<label class="control-label" for="company_address">Address</label>
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_line1" id="company_line1" ng-model="loadModal.company.address.line1">
-							</div>
-							<div class="form-group-sm" ng-if="loadModal.company.address.line2">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_line2" id="company_line2" ng-model="loadModal.company.address.line2">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_city" id="company_city" ng-model="loadModal.company.address.city">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_state" id="company_state" ng-model="loadModal.company.address.state">
-							</div>
-							<div class="form-group-sm">
-								<!-- label class="control-label" for="owner_line1">Last Name</label -->
-								<input class="form-control" type="text" disabled="" name="company_pincode" id="company_pincode" ng-model="loadModal.company.address.pincode">
-							</div>
-							<!-- CONTACTNO -->
-							<div class="form-group-sm">
-								<label class="control-label" for="company_contact">Contact No</label>
-								<input class="form-control" type="text" disabled="" name="company_contact" id="company_contact" ng-model="loadModal.company.contact">
-							</div>
-						</p>
-					</a>
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Company Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-user"></i> Name</div>
+							{{loadModal.company.name}}
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Address</div>
+							{{loadModal.company.address.line1}} <br/>
+							{{loadModal.company.address.line2}} <br/>
+							{{loadModal.company.address.city}} <br/>
+							{{loadModal.company.address.state}} <br/>
+							{{loadModal.company.address.country}} <br/>
+							{{loadModal.company.address.pincode}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-phone"></i> Contact</div>
+							{{loadModal.company.contact}}
+						</li>
+					</ul>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">Load Details</h4>
-						<p class="list-group-item-text">
-							<div class="form-group-sm">
-								<label class="control-label" for="quantity">Quantity</label>
-								<input class="form-control" type="text" disabled="" name="quantity" id="quantity" ng-model="loadModal.load.quantity"> &nbsp; Tons
-							</div>
-							<div class="form-group-sm">
-								<label class="control-label" for="quantity">Material</label>
-								<input class="form-control" type="text" disabled="" name="material" id="material" ng-model="loadModal.load.material.type">
-							</div>
-							<div class="form-group-sm">
-								<label class="control-label" for="pickup_city">Pickup City</label>
-								<input class="form-control" type="text" disabled="" name="pickup_city" id="pickup_city" ng-model="loadModal.load.pickup.address.city">
-							</div>
-							<div class="form-group-sm">
-								<label class="control-label" for="pickup_city">Delivery City</label>
-								<input class="form-control" type="text" disabled="" name="delivery_city" id="delivery_city" ng-model="loadModal.load.delivery.address.city">
-							</div>
-						</p>
-					</a>
+			<div class="col-sm-4">
+				<div class="col-xs-5 col-sm-12">
+					<h3>Load Details</h3>
+					<ul class="profile-details">
+						<li>
+							<div><i class="fa fa-suitcase"></i> Quantity/ Weight</div>
+							{{loadModal.load.quantity}}
+						</li>
+						<li>
+							<div><i class="fa fa-cubes"></i> Material</div>
+							{{loadModal.load.material.type}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Pickup City</div>
+							{{loadModal.load.pickup.address.city}} <br/>
+						</li>
+						<li>
+							<div><i class="fa fa-map-marker"></i> Delivery City</div>
+							{{loadModal.load.delivery.address.city}}
+						</li>
+					</ul>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </script>

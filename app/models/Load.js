@@ -25,6 +25,7 @@ var loadSchema = new Schema({
         }
     },
     owner : {
+        details_same_as_user: { type: Boolean, required: true, trim : true},
         first_name: { type: String, required: true, trim : true},
         last_name: { type: String, required: true, trim : true},
         address : {
@@ -39,6 +40,7 @@ var loadSchema = new Schema({
         contact : { type: Number, required: true, trim : true}
     },
     company : {
+        details_same_as_user: { type: Boolean, required: true, trim : true},
         name: { type: String, required: true, trim : true},
         address_same_as_owner : { type: Boolean, required: true, trim : true},
         contact_same_as_owner : { type: Boolean, required: true, trim : true},

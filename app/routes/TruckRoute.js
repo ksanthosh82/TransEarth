@@ -193,15 +193,19 @@ exports.searchTruckPost = function(req,res){
     if(typeof filters != "undefined" && filters.length > 0){
         //console.log("getTruckListSummary filters: "+JSON.stringify(filters));
         var searchParams = {};
-        if(typeof filters[0] != "undefined" && filters[0] != null && filters[0].trim() != ""){
+        if(typeof filters[0] != "undefined" && filters[0] != null && typeof filters[0].place != "undefined"
+            && filters[0].place != null && filters[0].place != ""){
             //var fromRegex = "/^" + filters[0] + "$/i";
             //searchParams["locationCapableFrom"] = fromRegex;
-            searchParams["posts.truck_post.availability.pickup_location"] = filters[0];
+            var fromPlace = filters[0].place;
+            searchParams["posts.truck_post.availability.pickup_location"] = fromPlace;
         }
-        if(typeof filters[1] != "undefined" && filters[1] != null  && filters[1].trim() != ""){
+        if(typeof filters[1] != "undefined" && filters[1] != null  && typeof filters[1].place != "undefined"
+            && filters[1].place != null && filters[1].place != ""){
             //var toRegex = "/^" + filters[1] + "$/i";
             //searchParams["locationCapableTo"] = toRegex;
-            searchParams["posts.truck_post.availability.delivery_location"] = filters[1];
+            var toPlace = filters[1].place;
+            searchParams["posts.truck_post.availability.delivery_location"] = toPlace;
         }
         if(typeof filters[2] != "undefined" && filters[2] != null && typeof filters[3] != "undefined" && filters[3] != null) {
             var dateFilterRange = filters[2];
@@ -678,20 +682,24 @@ exports.addTruck = function(req, res){
             }
         },
         owner : {
+            details_same_as_user : input.owner.details_same_as_user,
             first_name: input.owner.first_name,
             last_name: input.owner.last_name,
             address : {
                 line1 : input.owner.address.line1,
                 line2 : input.owner.address.line2,
                 //line3 : { type: String, trim : true},
-                city : input.owner.address.city,
-                state : input.owner.address.state,
-                //country : input.owner.address.country,
+                //city : input.owner.address.city,
+                //state : input.owner.address.state,
+                city : input.owner.address.mapLocation.place,
+                state : input.owner.address.mapLocation.state,
+                country : input.owner.address.mapLocation.country,
                 pincode : input.owner.address.pincode
             },
             contact : input.owner.contact
         },
         company : {
+            details_same_as_user : input.company.details_same_as_user,
             name: input.company.name,
             address_same_as_owner : input.company.address_same_as_owner,
             contact_same_as_owner : input.company.contact_same_as_owner,
@@ -699,26 +707,28 @@ exports.addTruck = function(req, res){
                 line1 : input.company.address.line1,
                 line2 : input.company.address.line2,
                 //line3 : { type: String, trim : true},
-                city : input.company.address.city,
-                state : input.company.address.state,
-                //country : input.company.address.country,
+                //city : input.company.address.city,
+                //state : input.company.address.state,
+                city : input.company.address.mapLocation.place,
+                state : input.company.address.mapLocation.state,
+                country : input.company.address.mapLocation.country,
                 pincode : input.company.address.pincode
             },
             contact : input.company.contact
         },
         truck_details : {
-            name : input.details.name,
+            type : input.details.type,
             make : input.details.make,
             model : input.details.model,
             reg_no : input.details.regno,
             isActive : true,
             minimum_load : {
                 quantity : input.details.load,
-                unit : "Tonne"
+                unit : "Tons"
             },
             maximum_load : {
                 quantity : input.details.load,
-                unit : "Tonne"
+                unit : "Tons"
             }
             //discontinueReason : {type: String, trim: true}
         },
@@ -825,9 +835,11 @@ exports.editTruck = function(req, res){
                             line1 : input.owner.address.line1,
                             //line2 : input.owner.address.line2,
                             //line3 : { type: String, trim : true},
-                            city : input.owner.address.city,
-                            state : input.owner.address.state,
-                            //country : input.owner.address.country,
+                            //city : input.owner.address.city,
+                            //state : input.owner.address.state,
+                            city : input.owner.address.mapLocation.place,
+                            state : input.owner.address.mapLocation.state,
+                            country : input.owner.address.mapLocation.country,
                             pincode : input.owner.address.pincode
                         },
                         contact : input.owner.contact
@@ -840,26 +852,28 @@ exports.editTruck = function(req, res){
                             line1 : input.company.address.line1,
                             //line2 : input.company.address.line2,
                             //line3 : { type: String, trim : true},
-                            city : input.company.address.city,
-                            state : input.company.address.state,
-                            //country : input.company.address.country,
+                            //city : input.owner.address.city,
+                            //state : input.owner.address.state,
+                            city : input.company.address.mapLocation.place,
+                            state : input.company.address.mapLocation.state,
+                            country : input.company.address.mapLocation.country,
                             pincode : input.company.address.pincode
                         },
                         contact : input.company.contact
                     },
                     truck_details : {
-                        name : input.details.name,
+                        type : input.details.type,
                         make : input.details.make,
                         model : input.details.model,
                         reg_no : input.details.regno,
                         isActive : true,
                         minimum_load : {
                             quantity : input.details.load,
-                            unit : "Tonne"
+                            unit : "Tons"
                         },
                         maximum_load : {
                             quantity : input.details.load,
-                            unit : "Tonne"
+                            unit : "Tons"
                         }
                         //discontinueReason : {type: String, trim: true}
                     },
@@ -954,14 +968,22 @@ exports.addTruckPost = function(req, res){
     if(typeof new_post == "undefined" || new_post == null){
         return res.json(500, {statusMsg:'Truck Post Details invalid'});
     }
+    if(typeof new_post.source == "undefined" || new_post.source == null
+        || typeof new_post.source.place == "undefined" || new_post.source.place == null || new_post.source.place == ""){
+        return res.json(500, {statusMsg:'Truck Post Source Details invalid'});
+    }
+    if(typeof new_post.destination == "undefined" || new_post.destination == null
+        || typeof new_post.destination.place == "undefined" || new_post.destination.place == null || new_post.destination.place == ""){
+        return res.json(500, {statusMsg:'Truck Post Destination Details invalid'});
+    }
 
     var post = {
         status : "ADDED",
         truck_post : {
             availability : {
                 date : new_post.pickup.date,
-                pickup_location : new_post.source,
-                delivery_location : new_post.destination
+                pickup_location : new_post.source.place,
+                delivery_location : new_post.destination.place
             },
             minimum_load : {
                 quantity : new_post.load,
@@ -1041,6 +1063,15 @@ exports.editTruckPost = function(req, res){
     var truckId = req.body.truckId;
     var post = req.body.post;
 
+    if(typeof post.source == "undefined" || post.source == null
+        || typeof post.source.place == "undefined" || post.source.place == null || post.source.place == ""){
+        return res.json(500, {statusMsg:'Truck Post Source Details invalid'});
+    }
+    if(typeof post.destination == "undefined" || post.destination == null
+        || typeof post.destination.place == "undefined" || post.destination.place == null || post.destination.place == ""){
+        return res.json(500, {statusMsg:'Truck Post Destination Details invalid'});
+    }
+
     if(typeof truckId == "undefined" || truckId == null){
         return res.json(500, {"statusMsg" : "Cannot update truck with Id undefined"});
     }else{
@@ -1087,8 +1118,8 @@ exports.editTruckPost = function(req, res){
         var truck_post = {
             availability : {
                 date : post.pickup.date,
-                pickup_location : post.source,
-                delivery_location : post.destination
+                pickup_location : post.source.place,
+                delivery_location : post.destination.place
             },
             minimum_load : {
                 quantity : post.load,

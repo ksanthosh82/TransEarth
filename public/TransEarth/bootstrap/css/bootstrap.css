@@ -1401,13 +1401,13 @@ a.bg-danger:hover {
   background-color: #d62c1a;
 }
 .page-header {
-  padding-bottom: 9.5px;
-  margin: 42px 0 21px;
+  padding-bottom: 5px;
+  margin: 10px 0 10px;
   border-bottom: 1px solid transparent;
 }
 .page-header .small{
-  padding-bottom: 4.5px;
-  margin: 10px 0 10px;
+  padding-bottom: 2.5px;
+  margin: 5px 0 5px;
   border-bottom: 1px solid transparent;
 }
 ul,
@@ -2702,7 +2702,7 @@ fieldset[disabled] .checkbox label {
 .input-sm {
   height: 35px;
   padding: 6px 9px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.5;
   border-radius: 3px;
 }
@@ -4071,8 +4071,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
   position: relative;
-  min-height: 60px;
-  margin-bottom: 21px;
+  min-height: 15px;
+  margin-bottom: 10px;
   border: 1px solid transparent;
 }
 @media (min-width: 768px) {

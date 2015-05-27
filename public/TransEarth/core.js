@@ -1,5 +1,14 @@
 //var TransEarthApp = angular.module('TransEarthApp', ['ngRoute', 'ui.bootstrap', "ngGrid", "ngTable", 'ngSanitize']);
-var TransEarthApp = angular.module('TransEarthApp', ['ngRoute', 'ui.bootstrap', 'ngGrid', 'ui.bootstrap', 'ngTable']);
+var TransEarthApp = angular.module('TransEarthApp',
+    [
+        'ngRoute',
+        'ui.bootstrap',
+        'ngGrid',
+        //'angular-bootstrap-select',
+        'nya.bootstrap.select',
+        'ngTable'
+    ]
+);
 
 TransEarthApp.factory('httpInterceptor', function ($q, $rootScope, $log) {
 
@@ -231,27 +240,163 @@ TransEarthApp.directive('ngCompare', function () {
     }
 });
 
-TransEarthApp.directive('numbers-only', function(){
+TransEarthApp.directive('googlePlacesTemp', function(){
+    return {
+        restrict:'E',
+        replace:true,
+        // transclude:true,
+        scope: {location:'='},
+        template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
+        link: function($scope, elm, attrs){
+            var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+                $scope.location = place.address_components;
+                $scope.$apply();
+            });
+        }
+    }
+});
+
+TransEarthApp.directive('googlePlaces', function(){
+    return {
+        restrict:'AE',
+        replace:true,
+        // transclude:true,
+        scope: {
+            location : '=',
+            tagId : "@",
+            tagName : "@"
+        },
+        //template: '<input id="{{tagId}}" name="{{tagName}}" type="text" class="input-block-level"/>',
+        //template: '<input id="hash" name="hash" type="text" class="input-block-level"/>',
+        //template: '<div><input id="hash" name="hash" type="text" class="input-block-level"/>{{tagId}}</div>',
+        link: function($scope, elm, attrs){
+            var tagId = attrs.tagid;
+            var tagName = attrs.tagname;
+            var disable;
+            if(typeof $scope.location == "undefined" || $scope.location == null){
+                //$scope.city = {};
+                disable = false;
+            }else{
+                disable = $scope.location.disable;
+            }
+
+            var template = '<input class="form-control" id="'+tagId+'" name="'+tagName+'" disable="'+disable+'" type="text" class="input-block-level"/>';
+            //console.log(template);
+            //console.log($scope);
+            //console.log(attrs);
+            //console.log($scope.location);
+            elm.html(template);
+            if(typeof $scope.location != "undefined" && $scope.location != null){
+                console.log("Setting location name "+"#"+tagId+" : "+$scope.location.place);
+                $("#"+tagId).val($scope.location.place);
+                //$("#ownr_city").val($scope.city.place);
+            }
+
+            var autocomplete = new google.maps.places.Autocomplete($("#"+tagId)[0], {});
+            //var autocomplete = new google.maps.places.Autocomplete($("#hash")[0], {});
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+                //$scope.city = {};
+                if(typeof place != "undefined" && place != null && typeof place.address_components != "undefined" && place.address_components != null){
+                    console.log("place: "+JSON.stringify(place));
+                    var result = getObjects(place.address_components, 'types', 'locality', null, null);
+                    //console.log("result: "+JSON.stringify(result));
+                    //$scope.city.place = place.address_components;
+                    if(Array.isArray(result) && result.length > 0){
+                        $scope.location.place = result[0].long_name;
+                        $scope.location.isSelected = true;
+                    }
+                    result = getObjects(place.address_components, 'types', 'administrative_area_level_1', null, null);
+                    if(Array.isArray(result) && result.length > 0){
+                        $scope.location.state = result[0].long_name;
+                        //$scope.city.isSelected = true;
+                    }
+                    result = getObjects(place.address_components, 'types', 'country', null, null);
+                    if(Array.isArray(result) && result.length > 0){
+                        $scope.location.country = result[0].long_name;
+                        //$scope.city.isSelected = true;
+                    }
+                }else{
+                    $scope.location.isSelected = false;
+                }
+                //console.log(JSON.stringify(place));
+                console.log(JSON.stringify($scope.location));
+                $scope.$apply();
+            });
+        }
+    }
+});
+
+/*TransEarthApp.directive('numbersOnly', function () {
     return {
         require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function (inputValue) {
-                // this next if is necessary for when using ng-required on your input.
-                // In such cases, when a letter is typed first, this parser will be called
-                // again, and the 2nd time, the value will be undefined
-                if (inputValue == undefined) return '';
-                var transformedInput = inputValue.replace(/[^0-9]+/g, '');
-                if (transformedInput!=inputValue) {
-                    modelCtrl.$setViewValue(transformedInput);
-                    modelCtrl.$render();
-                }
+        link: function (scope, element, attr, ngModelCtrl) {
+            function fromUser(text) {
+                if (text) {
+                    var transformedInput = text.replace(/[^0-9]/g, '');
 
-                return transformedInput;
-            });
+                    if (transformedInput !== text) {
+                        ngModelCtrl.$setViewValue(transformedInput);
+                        ngModelCtrl.$render();
+                    }
+                    return transformedInput;
+                }
+                return undefined;
+            }
+            ngModelCtrl.$parsers.push(fromUser);
+        }
+    };
+});*/
+
+TransEarthApp.directive('numbersOnly', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attr, ngModelCtrl) {
+            function fromUser(text) {
+                if (text) {
+                    var transformedInput = text.replace(/[^0-9]/g, '');
+
+                    if (transformedInput !== text) {
+                        ngModelCtrl.$setViewValue(transformedInput);
+                        ngModelCtrl.$render();
+                    }
+                    return transformedInput;
+                }
+                return undefined;
+            }
+            ngModelCtrl.$parsers.push(fromUser);
         }
     };
 });
 
+TransEarthApp.directive('capitalizeFirst', function(uppercaseFilter, $parse) {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            //console.log(attrs.ngModel);
+            var capitalize = function(inputValue) {
+                //console.log(inputValue);
+                var capitalized;
+                if(typeof  inputValue != "undefined" && inputValue != null){
+                    capitalized = inputValue.replace(/\s+/g,'').toUpperCase();
+                    /*var capitalized = inputValue.split(' ').reduce(function(prevValue, word){
+                     return  prevValue + word.substring(0, 1).toUpperCase() + word.substring(1)+' ';
+                     }, '');*/
+                    if(capitalized !== inputValue) {
+                        modelCtrl.$setViewValue(capitalized);
+                        modelCtrl.$render();
+                    }
+                    return capitalized;
+                }
+            };
+            var model = $parse(attrs.ngModel);
+            modelCtrl.$parsers.push(capitalize);
+            capitalize(model(scope));
+        }
+    };
+});
 //Route Provider to load views with ng-view
 TransEarthApp.config(['$routeProvider', '$locationProvider',
     function($routeProvider) {
@@ -303,8 +448,29 @@ function convertDateStringsToDates(input) {
     }
 }
 
+function getObjects(obj, key, val, parentKey, parentObj) {
+    var objects = [];
+    for (var i in obj) {
+        //console.log("i: "+JSON.stringify(i)+" value "+JSON.stringify(obj[i]));
+        if (!obj.hasOwnProperty(i)) continue;
+        //console.log("continue with i: "+JSON.stringify(i)+" value "+JSON.stringify(obj[i]));
+        if (typeof obj[i] == 'object') {
+            //console.log("Start object flattening: "+JSON.stringify(obj[i]));
+            objects = objects.concat(getObjects(obj[i], key, val, i, obj));
+            //console.log("Concatenated objects: "+JSON.stringify(objects));
+        } else if (i == key && obj[key] == val) {
+            //console.log("Found objects: key: "+i+" object: "+JSON.stringify(obj[key]));
+            objects.push(obj);
+        }else if(parentKey == key && obj[i] == val){
+            //console.log("Found array item: key: "+key+" object pushed: "+JSON.stringify(parentObj));
+            objects.push(parentObj);
+        }
+    }
+    return objects;
+}
+
 //Head controller to load page title
-function coreController($scope, $rootScope, $http, $location, UserRequest) {
+function coreController($scope, $rootScope, $http, $location, UserRequest, TruckRequest) {
 //function coreController($scope, $route, $http, $location, UserRequest) {
     //alert('Inside coreController');
     $scope.siteTitle = 'Transport Earth';
@@ -313,16 +479,29 @@ function coreController($scope, $rootScope, $http, $location, UserRequest) {
     $scope.core = {};
     $scope.core.truck_owner = false;
     $scope.core.load_owner = false;
-    $scope.login = {};
-    $scope.login.authFailed = false;
-    $scope.login.messageAvailable = false;
+    $scope.serverAuth = {};
+    $scope.serverAuth.authFailed = false;
+    $scope.serverAuth.messageAvailable = false;
 
     $scope.user = {};
     $scope.core.loggedIn = false;
 
+    $scope.$watch('local', function(){
+        console.log("Core ng-init local: "+$scope.local);
+        if(typeof $scope.local != "undefined" && $scope.local != null){
+            $scope.loginAuth = JSON.parse($scope.local);
+            if(typeof $scope.loginAuth != "undefined" && $scope.loginAuth != null && $scope.loginAuth.loginFailed){
+                $scope.serverAuth.authFailed = true;
+                $scope.serverAuth.messageAvailable = true;
+                $scope.serverAuth.message = $scope.loginAuth.loginError;
+                console.log("Set $scope.serverAuth: "+JSON.stringify($scope.serverAuth));
+            }
+        }
+    });
+
     $http.get('/TransEarth/getLoggedInUserProfile')
         .success(function(data){
-            //console.log("Get User Profile: "+JSON.stringify(data));
+            console.log("Get User Profile: "+JSON.stringify(data));
             if(typeof data.user != 'undefined'){
                 $scope.user = data.user;
                 $scope.core.loggedIn = true;
@@ -338,12 +517,16 @@ function coreController($scope, $rootScope, $http, $location, UserRequest) {
                 }
                 //console.log("Core Profile: "+JSON.stringify($scope.core));
             }
+            console.log("$scope.serverAuth: "+JSON.stringify($scope.serverAuth));
             if($scope.core.truck_owner){
                 $scope.page.template = "/TransEarth/truck_owner_home";
                 $scope.page.scope = "Truck Owner Home";
             }else if($scope.core.load_owner){
                 $scope.page.template = "/TransEarth/load_owner_home";
                 $scope.page.scope = "Load Owner Home";
+            }else if($scope.serverAuth.authFailed){
+                $scope.page.template = ''+"/TransEarth/login";
+                $scope.page.scope = "Login";
             }else{
                 $scope.page.template = "/TransEarth/site_home";
                 $scope.page.scope = "Site Base Home";
@@ -413,6 +596,7 @@ function coreController($scope, $rootScope, $http, $location, UserRequest) {
     };
     $scope.addTruck = function(){
         //console.log("Add Truck clicked");
+        TruckRequest.setSharedTruck(null);
         $scope.page.template = ''+"/TransEarth/manage_truck";
         $scope.page.scope = "Add Truck";
         //console.log("Search Truck clicked : "+$scope.pageTemplate);

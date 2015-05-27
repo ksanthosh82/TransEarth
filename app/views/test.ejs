@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<!--[if IE]>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<![endif]-->
+		<title>Test</title>
+		<!-- BOOTSTRAP CORE STYLE  -->
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<link href="css/bootswatch.less" rel="stylesheet" />
+		<!-- FONT AWESOME ICONS  -->
+		<link href="images/icons/css/font-awesome.css" rel="stylesheet" />
+		<link type="text/css" href="bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/>
+
+		<!-- CUSTOM STYLE  -->
+		<link href="angular/css/ng-grid.css" rel="stylesheet" type="text/css" />
+		<link href="css/transEarthStyle.css" rel="stylesheet" />
+		<link href="css/animations.css" rel="stylesheet" />
+
+		<!-- script src="https://maps.gstatic.com/maps-api-v3/api/js/21/0/main.js"></script>
+		<script src="https://maps.gstatic.com/maps-api-v3/api/js/21/0/places.js"></script -->
+
+		<!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="scripts/html5shiv.js"></script>
+		<script src="scripts/respond.min.js"></script>
+		<![endif]-->
+		<!-- Google Places API -->
+		<!-- script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+
+		<script src="maps.js"></script -->
+
+	</head>
+	<body ng-app="Otd" ng-controller="SearchForm">
+
+		<google-places location=location></google-places>
+		<google-places-temp tagId="From" tagName="From" city=fromLocation></google-places-temp>
+		<google-places-temp tagId="To" tagName="To" city=toLocation></google-places-temp>
+		<!-- google-temp-places location=location fromId=fromId></google-temp-places -->
+		<!-- input google-temp-places id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/ -->
+		<button ng-click="doSearch()" class="btn btn-large btn-primary">Search</button>
+
+		<!-- script src="assets/js/jquery-1.11.1.js"></script -->
+		<script src="scripts/jquery-1.9.1.min.js"></script>
+		<script src="scripts/jquery-ui-1.10.1.custom.min.js"></script>
+		<!-- BOOTSTRAP SCRIPTS  -->
+		<!-- script src="assets/js/bootstrap.js"></script -->
+		<script src="bootstrap/js/bootstrap-select.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<!-- Angular -->
+		<script src="angular/angular.min.js"></script>
+		<script src="angular/angular-route.min.js"></script>
+		<script src="angular/ui-bootstrap-tpls-0.10.0.js"></script>
+		<script src="angular/angular-bootstrap-select.min.js"></script>
+		<!-- Load Date & Time picker plugins -->
+		<script src="bootstrap/js/daterangepicker.js"></script>
+		<script src="angular/angular-daterangepicker.js"></script>
+		<!-- Load Angular ng-grid -->
+		<script src="angular/ng-grid.debug.js"></script>
+		<!-- Load Angular ng-table -->
+		<script src="angular/ng-table.js"></script>
+		<script src="util.js"></script>
+		<script src="scripts/alert.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+		<script>
+			'use strict';
+
+			angular.module('Otd', ['OtdDirectives']);
+
+			/* Controllers */
+			function SearchForm($scope){
+				$scope.fromLocation = {
+					city : '',
+					isSelected : false
+				};
+				$scope.fromLocationTemp = {
+					city : 'from temp',
+					isSelected : false
+				};
+				$scope.toLocation = {
+					city : '',
+					isSelected : false
+				};
+				$scope.toLocationTemp = {
+					city : 'to temp',
+					isSelected : false
+				};
+				$scope.location = 'location';
+				$scope.mapLocation = {
+					city : '',
+					isSelected : false
+				};
+				$scope.city = {
+					place : '',
+					isSelected : false
+				};
+
+				$scope.doSearch = function(){
+					console.log('fromLocation: ' + JSON.stringify($scope.fromLocation));
+					console.log('toLocation: ' + JSON.stringify($scope.toLocation));
+					console.log('location: ' + JSON.stringify($scope.location));
+					if($scope.location === ''){
+						alert('Directive did not update the location property in parent controller.');
+					} else {
+						//alert('Yay. Location: ' + JSON.stringify($scope.location));
+						console.log('Yay. Location: ' + JSON.stringify($scope.location));
+					}
+				};
+			}
+
+			/* Directives */
+			angular.module('OtdDirectives', []).
+					directive('googlePlaces', function(){
+						return {
+							restrict:'E',
+							replace:true,
+							// transclude:true,
+							scope: {location:'='},
+							template: '<div><input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/></div>',
+							link: function($scope, elm, attrs){
+								var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+								google.maps.event.addListener(autocomplete, 'place_changed', function() {
+									var place = autocomplete.getPlace();
+									//$scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+									$scope.location = place.address_components;
+									$scope.$apply();
+								});
+							}
+						}
+					}).directive('googlePlacesTemp', function(){
+						return {
+							restrict:'AE',
+							replace:true,
+							// transclude:true,
+							scope: {
+								city : '=',
+								tagId : "@",
+								tagName : "@"
+							},
+							//template: '<input id="{{tagId}}" name="{{tagName}}" type="text" class="input-block-level"/>',
+							//template: '<input id="hash" name="hash" type="text" class="input-block-level"/>',
+							//template: '<div><input id="hash" name="hash" type="text" class="input-block-level"/>{{tagId}}</div>',
+							link: function($scope, elm, attrs){
+								var tagId = attrs.tagid;
+								var tagName = attrs.tagname;
+								var template = '<input id="'+tagId+'" name="'+tagName+'"" type="text" class="input-block-level"/>';
+								console.log(template);
+								console.log($scope);
+								console.log(attrs);
+								elm.html(template);
+								var autocomplete = new google.maps.places.Autocomplete($("#"+tagId)[0], {});
+								//var autocomplete = new google.maps.places.Autocomplete($("#hash")[0], {});
+								google.maps.event.addListener(autocomplete, 'place_changed', function() {
+									var place = autocomplete.getPlace();
+									if(typeof place != "undefined" && place != null && typeof place.address_components != "undefined" && place.address_components != null){
+										$scope.city.place = place.address_components;
+										$scope.city.isSelected = true;
+									}else{
+										$scope.city.isSelected = false;
+									}
+									console.log(JSON.stringify(place));
+									console.log(JSON.stringify($scope.city));
+									$scope.$apply();
+								});
+							}
+						}
+					});
+		</script>
+	</body>
+</html>

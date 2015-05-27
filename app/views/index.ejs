@@ -11,6 +11,7 @@
 		<title>Transport on Earth</title>
 		<!-- BOOTSTRAP CORE STYLE  -->
 		<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<!--- link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" / -->
 		<link href="css/bootswatch.less" rel="stylesheet" />
 		<!-- FONT AWESOME ICONS  -->
 		<link href="images/icons/css/font-awesome.css" rel="stylesheet" />
@@ -20,6 +21,7 @@
 		<link href="angular/css/ng-grid.css" rel="stylesheet" type="text/css" />
 		<link href="css/transEarthStyle.css" rel="stylesheet" />
 		<link href="css/animations.css" rel="stylesheet" />
+		<link href="css/prettify.css" rel="stylesheet" />
 		<!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
@@ -32,7 +34,7 @@
 		<script src="maps.js"></script -->
 
 	</head>
-	<body ng-controller="coreController">
+	<body ng-controller="coreController" ng-init="local='<%= JSON.stringify(serverAuth)%>'">
 		<div class="navbar navbar-default transearth-header navbar-fixed-top">
 			<div class="container">
 				<div class="navbar-header" id="headerBar">
@@ -108,6 +110,9 @@
 
 		<div id="top"></div>
 		<div class="container">
+			<!-- div class="slide-animate-container">
+				<div class="slide-animate" ng-include src="page.template"></div>
+			</div -->
 			<div ng-include src="page.template"></div>
 		</div>
 
@@ -127,15 +132,19 @@
 		<!-- script src="assets/js/jquery-1.11.1.js"></script -->
 		<script src="scripts/jquery-1.9.1.min.js"></script>
 		<script src="scripts/jquery-ui-1.10.1.custom.min.js"></script>
-		<!-- BOOTSTRAP SCRIPTS  -->
-		<!-- script src="assets/js/bootstrap.js"></script -->
-		<script src="bootstrap/js/bootstrap-select.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<!-- Angular -->
 		<script src="angular/angular.min.js"></script>
 		<script src="angular/angular-route.min.js"></script>
+		<!-- BOOTSTRAP SCRIPTS  -->
+		<!-- script src="assets/js/bootstrap.js"></script -->
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="bootstrap/js/jquery.bootstrap.wizard.js"></script>
+		<script src="scripts/prettify.js"></script>
+		<script src="bootstrap/js/bootstrap-select.min.js"></script>
+		<!-- Angular Addon -->
 		<script src="angular/ui-bootstrap-tpls-0.10.0.js"></script>
 		<script src="angular/angular-bootstrap-select.min.js"></script>
+		<script src="angular/nya-bootstrap-select.js"></script>
         <!-- Load Date & Time picker plugins -->
         <script src="bootstrap/js/daterangepicker.js"></script>
         <script src="angular/angular-daterangepicker.js"></script>
@@ -143,6 +152,9 @@
 		<script src="angular/ng-grid.debug.js"></script>
 		<!-- Load Angular ng-table -->
 		<script src="angular/ng-table.js"></script>
+		<!-- Google Maps API -->
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+		<!-- Application specific scripts -->
 		<script src="util.js"></script>
 		<script src="scripts/alert.js"></script>
 		<script src="core.js"></script>

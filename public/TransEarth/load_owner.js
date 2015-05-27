@@ -39,8 +39,8 @@ function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadReques
 
     $scope.myLoadList.totalServerItems = 0;
     $scope.myLoadList.pagingOptions = {
-        pageSizes: [3, 6, 10],
-        pageSize: 3,
+        pageSizes: [10, 20, 30],
+        pageSize: 10,
         currentPage: 1
     };
 

@@ -4,6 +4,19 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
 
     $scope.loadPostList = {};
     $scope.loadPostList.filter = {};
+    $scope.loadPostList.filter.from = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
+
+    $scope.loadPostList.filter.to = {
+        place : "",
+        state : "",
+        isSelected : false,
+        disable : false
+    };
 
     $scope.loadPostList.filter.dateRange = null;
     $scope.loadPostList.filter.dt = new Date();
