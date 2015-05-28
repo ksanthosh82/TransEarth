@@ -76,8 +76,6 @@ footer{
 }
 
 footer .row {line-height: 28px;vertical-align: middle;}
-footer .row .cts {color:#272727;}
-footer .row .metlife img{vertical-align: top;}
 
 input[type="text"],input[type="password"]{
 	border-radius: 5px;
@@ -985,11 +983,19 @@ section {
     margin-bottom: 10px;
 }
 
-#truckManagePanel .input-group {
+#truckManagePage .input-group {
     margin-bottom: 10px;
 }
 
-#loadManagePanel .input-group {
+#loadManagePage .input-group {
+    margin-bottom: 10px;
+}
+
+#signupPage .input-group {
+    margin-bottom: 10px;
+}
+
+#truckPostManagePage .input-group {
     margin-bottom: 10px;
 }
 
@@ -1094,6 +1100,10 @@ section {
     padding: 7px 15px;
 }
 
+#material .btn{
+    padding: 7px 15px;
+}
+
 .no-border {
     border:none;
     padding: 0px 9px;
@@ -1112,7 +1122,7 @@ section {
 }
 .stepwizard {
     display: table;
-    width: 50%;
+    width: 75%;
     position: relative;
 }
 .stepwizard-step button[disabled] {
@@ -1147,24 +1157,44 @@ ul.profile-details{
     margin-top:10px;
     padding:0 5px;
     list-style:none;
-    color:#7c848d
+    color:#7c848d;
 }
 ul.profile-details li{
     position:relative;
     margin:0 0 20px 0;
-    padding-left:22px
+    padding-left:22px;
 }
 ul.profile-details li div{
-    color:#b2b8bd
+    color:#054F8C;
+    font-family: "Glyphicons Halflings";
+    text-decoration: underline blink;
+    font-weight: bold;
 }
+/*ul.profile-details li p{
+    color:#7c848d;
+}*/
 ul.profile-details li div i{
     position:absolute;
     top:4px;
-    left:-5px;
-    color:#ced1d4;
+    left:-10px;
+    color:#054F8C;
     width:20px;
-    text-align:center
+    text-align:center;
+    font-size: large;
 }
 ul.profile-details li input[type="text"]{
-    color:black !important
+    color:black !important;
+}
+h4 {
+    color : #CC4D16;
+}
+
+#user_role .ng-valid {
+    border-color: #006600;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+    color:#7c848d;
 }

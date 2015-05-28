@@ -46,7 +46,11 @@
 								<option>Ketchup</option>
 								<option>Relish</option>
 							</select -->
-							<input class="form-control input-sm" type="text" ng-change="resetSearchCategory()" placeholder="Available Date" id="daterange" name="daterange" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="loadPostList.filter.dt" is-open="opened" datepicker-options="loadPostList.dateOptions" ng-required="true" close-text="Close" />
+							<input class="form-control input-sm" type="text" ng-change="resetSearchCategory()" placeholder="Available Date"
+								   id="daterange" name="daterange" class="form-control" datepicker-popup="dd-MMMM-yyyy"
+								   ng-model="loadPostList.filter.dt" is-open="opened"
+								   min="minDate"
+								   datepicker-options="loadPostList.dateOptions" ng-required="true" close-text="Close" />
 							<!-- span class="glyphicon error" ng-show="truckListForm.daterange.$error.required">*</span -->
 						</div>
 						<div class="form-group" ng-if="loadPostList.filter.dateRange!=null">

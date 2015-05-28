@@ -2,6 +2,9 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
     console.log('Inside truckManageCtrl - '+$scope.page.scope);
 
     $scope.truckForm = {};
+    $scope.width = 50;
+    $scope.width = $scope.width.toFixed();
+    $scope.width = $scope.width + "%";
 
     $scope.truck = TruckRequest.getSharedTruck();
     console.log("User details in Manage Truck:"+JSON.stringify($scope.user));
@@ -143,6 +146,12 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.owner.address.pincode = $scope.user.user_information.address.pincode.toString();
             $scope.truck.owner.contact = $scope.user.user_information.contact[0].toString();
 
+            if(typeof $scope.truck.company == "undefined" && $scope.truck.company == null){
+                $scope.truck.company = {};
+            }
+            if($scope.truck.owner.details_same_as_user && typeof $scope.user.user_information != "undefined"){
+                $scope.truck.company.name = $scope.user.user_information.company_name;
+            }
             console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
             //$scope.company.address_same_as_owner = true;
         }else{
@@ -159,6 +168,10 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $("#owner_city").val("");
             $scope.truck.owner.address.pincode = "";
             $scope.truck.owner.contact = "";
+            if(typeof $scope.truck.company == "undefined" && $scope.truck.company == null){
+                $scope.truck.company = {};
+            }
+            $scope.truck.company.name = "";
             console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
         }
     };

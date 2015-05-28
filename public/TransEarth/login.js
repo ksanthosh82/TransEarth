@@ -2,7 +2,10 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
     console.log('Inside loginCtrl - '+$scope.error);
 
     $scope.core = {};
-
+    $scope.width = 80;
+    $scope.width = $scope.width.toFixed();
+    $scope.width = $scope.width + "%";
+    console.log("$scope.width "+$scope.width);
     if(typeof $scope.error != "undefined" && $scope.error != null){
         $scope.serverAuth.authFailed = true;
         succesError($scope.error, "login_alert");

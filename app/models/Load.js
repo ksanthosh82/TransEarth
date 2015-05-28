@@ -25,7 +25,7 @@ var loadSchema = new Schema({
         }
     },
     owner : {
-        details_same_as_user: { type: Boolean, required: true, trim : true},
+        details_same_as_user: { type: Boolean, required: true, trim : true, default: false},
         first_name: { type: String, required: true, trim : true},
         last_name: { type: String, required: true, trim : true},
         address : {
@@ -40,10 +40,10 @@ var loadSchema = new Schema({
         contact : { type: Number, required: true, trim : true}
     },
     company : {
-        details_same_as_user: { type: Boolean, required: true, trim : true},
+        details_same_as_user: { type: Boolean, required: true, trim : true, default: false},
         name: { type: String, required: true, trim : true},
-        address_same_as_owner : { type: Boolean, required: true, trim : true},
-        contact_same_as_owner : { type: Boolean, required: true, trim : true},
+        address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
+        contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
         address : {
             line1 : { type: String, required: true, trim : true},
             line2 : { type: String, trim : true},
@@ -65,6 +65,8 @@ var loadSchema = new Schema({
         status : { type: String, required: true, trim : true},
         pickup : {
             date : {type: Date, required: true, trim: true},
+            address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
+            contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             address : {
                 line1 : { type: String, required: true, trim : true},
                 line2 : { type: String, trim : true},
@@ -87,6 +89,8 @@ var loadSchema = new Schema({
         },
         delivery : {
             date : {type: Date, trim: true},
+            address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
+            contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             address : {
                 line1 : { type: String, required: true, trim : true},
                 line2 : { type: String, trim : true},

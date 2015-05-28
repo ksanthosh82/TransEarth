@@ -1,10 +1,4 @@
 /*Body Styles starts*/
-	body#login{
-	    background: url("/MMIS/images/metlife/login-page-bg.jpg") repeat-x fixed left top;
-	}
-	body{
-		background: url("/MMIS/images/metlife/landing-page-bg.jpg") repeat fixed left top;
-	}
 	.overlay{display: block; filter: alpha(opacity=80); background-color: white;}
 	.bootstrap-select {width: 92%;}
 	.bootstrap-select button.btn{width: 100%;}
@@ -29,6 +23,4 @@
 	.ie8Foot {/*background-color: rgb(5, 76, 103);*/ background-color: #f5f3f3;/*color: white;*/ height: 30px;}
 	.ie8Foot .container{line-height: 30px; vertical-align: middle;}
 	.ie8Foot .row {line-height: 28px;vertical-align: middle;}
-	.ie8Foot .row .cts {color:#272727;}
-	.ie8Foot .row .metlife img{font-size:24px;color:#3c7cdb;}
 /*Footer Styles ends*/

@@ -18,9 +18,9 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
         disable : false
     };
 
-    $scope.loadPostList.filter.dateRange = null;
+    $scope.loadPostList.filter.dateRange = 2;
     $scope.loadPostList.filter.dt = new Date();
-
+    $scope.minDate = new Date();
     $scope.loadPostList.dateOptions = {
         formatYear: 'yy',
         startingDay: 1

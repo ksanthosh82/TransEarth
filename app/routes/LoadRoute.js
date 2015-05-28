@@ -340,7 +340,7 @@ exports.getMyLoadList = function(req,res){
     colDef.displayName = "From";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '21%';
+    colDef.width = '20%';
     returnData.myLoadList.headers.push(colDef);
 
     colDef = {};
@@ -348,7 +348,7 @@ exports.getMyLoadList = function(req,res){
     colDef.displayName = "To";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '21%';
+    colDef.width = '20%';
     returnData.myLoadList.headers.push(colDef);
 
     colDef = {};
@@ -356,7 +356,7 @@ exports.getMyLoadList = function(req,res){
     colDef.displayName = "Load";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '17%';
+    colDef.width = '10%';
     ///colDef.cellClass = 'gridCurrentMonth';
     /*colDef.cellTemplate = '<div style="text-align:center;">';
      colDef.cellTemplate += '    <div class="ngCellText" style="color:grey;">';
@@ -373,7 +373,7 @@ exports.getMyLoadList = function(req,res){
     colDef.field = 'materialType';
     colDef.displayName = "Material";
     //colDef.headerClass = 'gridHeader';
-    colDef.width = '20%';
+    colDef.width = '19%';
     colDef.resizable = true;
     returnData.myLoadList.headers.push(colDef);
 
@@ -569,6 +569,7 @@ exports.addLoad = function(req, res){
             status : "OPEN",
             pickup : {
                 date : input.load.pickup.date,
+                address_same_as_owner : input.load.pickup.address_same_as_owner,
                 address : {
                     line1 : input.load.pickup.address.line1,
                     line2 : input.load.pickup.address.line2,
@@ -590,7 +591,8 @@ exports.addLoad = function(req, res){
                 }
             },
             delivery : {
-                date : input.load.delivery.date,
+                //date : input.load.delivery.date,
+                address_same_as_owner : input.load.delivery.address_same_as_owner,
                 address : {
                     line1 : input.load.delivery.address.line1,
                     //line2 : input.load.delivery.address.line2,
@@ -756,6 +758,7 @@ exports.editLoad = function(req, res){
                         status : "OPEN",
                         pickup : {
                             date : input.load.pickup.date,
+                            address_same_as_owner : input.load.pickup.address_same_as_owner,
                             address : {
                                 line1 : input.load.pickup.address.line1,
                                 //line2 : input.load.pickup.address.line2,
@@ -776,7 +779,8 @@ exports.editLoad = function(req, res){
                             }
                         },
                         delivery : {
-                            date : input.load.delivery.date,
+                            //date : input.load.delivery.date,
+                            address_same_as_owner : input.load.delivery.address_same_as_owner,
                             address : {
                                 line1 : input.load.delivery.address.line1,
                                 //line2 : input.load.delivery.address.line2,

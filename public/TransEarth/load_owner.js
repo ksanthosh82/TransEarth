@@ -2,6 +2,13 @@
 function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadRequest) {
     console.log('Inside loadOwnerCtrl');
 
+    $scope.showText = function(obj){
+        if(typeof obj != "undefined" && obj != null && obj != ""){
+            return true;
+        }else{
+            return false;
+        }
+    };
     $scope.myLoadList = {};
     $scope.myLoadList.filter = {};
 

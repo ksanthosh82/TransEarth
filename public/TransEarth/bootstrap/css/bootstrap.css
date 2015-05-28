@@ -3044,7 +3044,7 @@ fieldset[disabled] .btn {
   box-shadow: none;
 }
 .btn-default {
-  color: rgba(110, 125, 132, 0.93);
+  color: rgba(144, 152, 152, 0.94);
   background-color: rgba(194, 185, 255, 0.14);
   border-color: rgba(221, 221, 221, 0.55);
 }
@@ -3054,8 +3054,8 @@ fieldset[disabled] .btn {
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
-  color: rgba(193, 193, 193, 0.29);
-  background-color: #a0a0a0;
+  color: rgba(0, 0, 0, 0.71);
+  background-color: #ccdde8;
   border-color: #74898a;
 }
 .btn-default:active,
@@ -3081,7 +3081,7 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active {
-  background-color: #95a5a6;
+  background-color: #e8e5ea;
   border-color: #95a5a6;
 }
 .btn-default .badge {
@@ -5811,6 +5811,7 @@ button.close {
 .modal-body {
   position: relative;
   padding: 20px;
+  padding-top: 10px;
 }
 .modal-footer {
   padding: 20px;

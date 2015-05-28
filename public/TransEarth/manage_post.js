@@ -1,9 +1,14 @@
 function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, UserRequest, TruckRequest, TruckPostRequest) {
     console.log('Inside truckPostManageCtrl - '+$scope.core.clickedTruckId);
 
+    $scope.minDate = new Date();
     $scope.gotoHome = function(){
         $scope.page.template = "/TransEarth/truck_owner_home";
         $scope.page.scope = "Truck Owner Home";
+    };
+    $scope.cancelPost = function(){
+        TruckPostRequest.setSharedTruck(null);
+        $scope.truckOwnerPage.showPostList=true;
     };
 
     $scope.pickup = {};
@@ -38,7 +43,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         console.log("truckPostToUpdate data: "+JSON.stringify($scope.truckPostToUpdate));
         $scope.addTruckPostInd = false;
         $scope.editTruckPostInd = true;
-        $scope.page.header = "Update Truck Post";
+        $scope.page.header = "Update Post";
         $scope.truckPostToUpdate.details = {};
         tempTruck = $scope.truckPostToUpdate;
         //tempPost = $scope.truckPostToUpdate.posts.indexOf(TruckPostRequest.getSharedTruckPostId());
@@ -63,8 +68,9 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.truckToPost.post.delivery = {};
 
         //console.log("truckToPost data: "+JSON.stringify($scope.truckToPost));
-        $scope.page.header = "Add Post to Truck";
+        $scope.page.header = "Add Post";
         tempTruck = $scope.truckToPost;
+        tempPost = null;
         //console.log("truckToPost Data to start with: "+JSON.stringify(tempTruck));
     }
 
@@ -104,7 +110,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
             isSelected : true,
             disable : false
         };
-        $scope.truckToPost.post.load = tempPost.truck_post.maximum_load.quantity;
+        $scope.truckToPost.post.load = tempPost.truck_post.maximum_load.quantity.toString();
         $scope.truckToPost.post.pickup.date = tempPost.truck_post.availability.date;
     }
     $scope.truckPostForm = {};
@@ -120,6 +126,18 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.truckToPost.post = {};
         $scope.truckToPost.post.pickup = {};
         $scope.truckToPost.post.delivery = {};
+        $scope.truckToPost.post.source = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
+        $scope.truckToPost.post.destination = {
+            place : "",
+            state : "",
+            isSelected : false,
+            disable : false
+        };
     };
 
     $scope.submitForm = function () {
@@ -142,6 +160,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
                         $scope.truckPostProcess.indicator.showAlert = true;
                         $scope.truckPostToUpdate = null;
                         $scope.truckToPost = null;
+                        TruckPostRequest.setSharedTruck(null);
                         succesAlert("Truck Post added successfully", 'truck_home_alert');
                         $scope.truckOwnerPage.showPostList = true;
                         // set the location.hash to the id of
@@ -176,7 +195,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
                         $scope.truckPostProcess.indicator.saved = true;
                         $scope.truckPost = {};
                         $scope.truckPostProcess.indicator.showAlert = true;
-
+                        TruckPostRequest.setSharedTruck(null);
                         $scope.truckPostToUpdate = null;
                         $scope.truckToPost = null;
                         succesAlert("Truck Post updated successfully", 'truck_home_alert');

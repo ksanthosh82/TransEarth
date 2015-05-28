@@ -18,13 +18,9 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
         disable : false
     };
 
-    $scope.truckPostList.filter.dateRange = null;
+    $scope.truckPostList.filter.dateRange = 2;
     $scope.truckPostList.filter.dt = new Date();
-
-    $scope.truckPostList.dateOptions = {
-        formatYear: 'yy',
-        startingDay: 1
-    };
+    $scope.minDate = $scope.minDate ? null : new Date();
 
     $scope.opened = false;
     $scope.open = function($event) {
@@ -32,6 +28,11 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
         $event.stopPropagation();
         //console.log("Opened");
         $scope.opened = true;
+    };
+
+    $scope.truckPostList.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
     };
 
     $scope.truckPostList.searchButtonName = "Search";
@@ -44,8 +45,8 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
     };
     $scope.truckPostList.totalServerItems = 0;
     $scope.truckPostList.pagingOptions = {
-        pageSizes: [3, 6, 10],
-        pageSize: 3,
+        pageSizes: [10, 20, 30],
+        pageSize: 10,
         currentPage: 1
     };
     $scope.setPagingData = function(data, page, pageSize){

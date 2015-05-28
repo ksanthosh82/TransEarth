@@ -1,7 +1,14 @@
 //ng-grid Truck List
-function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, TruckRequest) {
+function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, TruckRequest, TruckPostRequest) {
     console.log('Inside truckOwnerTrucksCtrl');
 
+    $scope.showText = function(obj){
+        if(typeof obj != "undefined" && obj != null && obj != ""){
+            return true;
+        }else{
+            return false;
+        }
+    };
     //$scope.myTruckList = {};
     $scope.myTruckList.showAddPostError = false;
     $scope.myTruckList.filter = {};
@@ -267,6 +274,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
                 if(typeof data != 'undefined' && data != null){
                     console.log(JSON.stringify(data));
                     TruckRequest.setSharedTruck(data);
+                    //TruckPostRequest.setSharedTruck(null);
                     //console.log("Get Shared Truck Request: "+JSON.stringify(TruckRequest.getSharedTruck()));
                     $scope.myTruckList.showAddPostError = false;
                     $scope.truckOwnerPage.showPostList = false;
