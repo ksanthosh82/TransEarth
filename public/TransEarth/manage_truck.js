@@ -155,7 +155,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
             //$scope.company.address_same_as_owner = true;
         }else{
-            $scope.truck.owner.first_name = "";
+/*            $scope.truck.owner.first_name = "";
             $scope.truck.owner.last_name = "";
             $scope.truck.owner.address.line1 = "";
             $scope.truck.owner.address.line2 = "";
@@ -172,7 +172,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
                 $scope.truck.company = {};
             }
             $scope.truck.company.name = "";
-            console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
+            console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));*/
         }
     };
     $scope.canDisableCompanyDetails = function(){
@@ -204,7 +204,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));
             //$scope.company.address_same_as_owner = true;
         }else{
-            $scope.truck.company.name = "";
+/*            $scope.truck.company.name = "";
             $scope.truck.company.address.line1 = "";
             $scope.truck.company.address.line2 = "";
             $scope.truck.company.address.mapLocation = {
@@ -217,7 +217,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.company.address.pincode = "";
             $scope.truck.company.contact = "";
             $scope.truck.company.address_same_as_owner = false;
-            console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));
+            console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));*/
         }
     };
     $scope.canDisableSameAddress = function(){
@@ -243,7 +243,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         }else if(typeof $scope.truck.company != "undefined"
                 && typeof $scope.truck.company.address != "undefined"
                 && $scope.truck.company != null && $scope.truck.company.address != null){
-            console.log("canDisableSameAddress owner 1 "+JSON.stringify($scope.truck.owner));
+/*            console.log("canDisableSameAddress owner 1 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.line1 = "";
             //console.log("canDisableSameAddress owner 2 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.line2 = "";
@@ -256,7 +256,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             };
             //console.log("canDisableSameAddress owner 4 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.pincode = "";
-            console.log("canDisableSameAddress owner 5 "+JSON.stringify($scope.truck.owner));
+            console.log("canDisableSameAddress owner 5 "+JSON.stringify($scope.truck.owner));*/
         }
         //console.log("canDisableSameAddress owner "+JSON.stringify($scope.truck.owner));
         console.log("canDisableSameAddress company "+JSON.stringify($scope.truck.company));
@@ -270,8 +270,8 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.company.contact = $scope.truck.owner.contact;
             //$scope.truck.company.contact_same_as_owner = true;
         }else{
-            $scope.truck.company.contact = "";
-            //$scope.truck.company.contact_same_as_owner = false;
+/*            $scope.truck.company.contact = "";
+            //$scope.truck.company.contact_same_as_owner = false;*/
         }
     };
 
@@ -410,7 +410,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         else {
             //alert("Please correct errors!");
             $scope.truckProcess.indicator.showAlert = true;
-            succesAlert("Please correct the errors", 'manage_truck_alert');
+            succesError("Please correct the errors", 'manage_truck_alert');
             // set the location.hash to the id of
             // the element you wish to scroll to.
             $location.hash('truckManagePage');

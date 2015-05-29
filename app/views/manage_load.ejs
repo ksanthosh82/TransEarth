@@ -151,7 +151,7 @@
 											 ng-class="{ 'has-error' : loadForm.owner_line1.$invalid,
 										'has-success' : !(loadForm.owner_line1.$invalid),
 										'has-feedback' : loadForm.owner_line1.$invalid}"
-											 for="owner_line1">Line 1 is mandatory
+											 for="owner_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -180,8 +180,8 @@
 											 ng-class="{ 'has-error' : loadForm.owner_line2.$invalid,
 										'has-success' : !(loadForm.owner_line2.$invalid),
 										'has-feedback' : loadForm.owner_line2.$invalid}"
-											 for="owner_line2">Line 2 is optional
-										</div>
+											 for="owner_line2">Address Line 2 is optional
+                                    </div>
 									</div>
 								</div>
 
@@ -420,7 +420,7 @@
 											 ng-class="{ 'has-error' : loadForm.company_line1.$invalid,
 							 				'has-success' : !(loadForm.company_line1.$invalid),
 					 						'has-feedback' : loadForm.company_line1.$invalid}"
-											 for="company_line1">Line 1 is mandatory and should be of minimum 10 characters
+											 for="company_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -450,7 +450,7 @@
 											 ng-class="{ 'has-error' : loadForm.company_line2.$invalid,
 							 				'has-success' : !(loadForm.company_line2.$invalid),
 					 						'has-feedback' : loadForm.company_line2.$invalid}"
-											 for="company_line2">Line 2 is mandatory and should be of minimum 10 characters
+											 for="company_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -734,9 +734,9 @@
 							<fieldset>
 								<!-- Pickup Date -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid,
-												'has-success' : !(loadForm.pickup_date.$invalid),
-												'has-feedback' : loadForm.pickup_date.$invalid}">
+									 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid || load.load.pickup.date==null,
+												'has-success' : !(loadForm.pickup_date.$invalid || load.load.pickup.date==null),
+												'has-feedback' : loadForm.pickup_date.$invalid || load.load.pickup.date==null}">
 									<label class="col-lg-3 control-label">Date</label>
 									<div class="col-lg-9">
 										<div class="input-group">
@@ -748,16 +748,16 @@
 												   ng-required="true" close-text="Close" />
 										</div>
 										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : loadForm.pickup_date.$invalid,
-														'glyphicon glyphicon-ok' : !(loadForm.pickup_date.$invalid),
-														'has-feedback' : loadForm.pickup_date.$valid}"
+										   ng-class="{ 'glyphicon glyphicon-remove' : loadForm.pickup_date.$invalid || load.load.pickup.date==null,
+														'glyphicon glyphicon-ok' : !(loadForm.pickup_date.$invalid || load.load.pickup.date==null),
+														'has-feedback' : loadForm.pickup_date.$valid || load.load.pickup.date==null}"
 										   for="pickup_date">
 										</i>
-										<div ng-if="loadForm.pickup_date.$invalid"
+										<div ng-if="loadForm.pickup_date.$invalid || load.load.pickup.date==null"
 											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid,
-															'has-success' : !(loadForm.pickup_date.$invalid),
-															'has-feedback' : loadForm.pickup_date.$invalid}"
+											 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid || load.load.pickup.date==null,
+															'has-success' : !(loadForm.pickup_date.$invalid || load.load.pickup.date==null),
+															'has-feedback' : loadForm.pickup_date.$invalid || load.load.pickup.date==null}"
 											 for="pickup_date">Pickup Date is mandatory
 										</div>
 									</div>
@@ -805,7 +805,7 @@
 											 ng-class="{ 'has-error' : loadForm.pickup_line1.$invalid,
 													'has-success' : !(loadForm.pickup_line1.$invalid),
 													'has-feedback' : loadForm.pickup_line1.$invalid}"
-											 for="pickup_line1">Line 1 is mandatory
+											 for="pickup_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -836,7 +836,7 @@
 											 ng-class="{ 'has-error' : loadForm.pickup_line2.$invalid,
 													'has-success' : !(loadForm.pickup_line2.$invalid),
 													'has-feedback' : loadForm.pickup_line2.$invalid}"
-											 for="pickup_line2">Line 2 is optional
+											 for="pickup_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -1062,7 +1062,7 @@
 											 ng-class="{ 'has-error' : loadForm.delivery_line1.$invalid,
 													'has-success' : !(loadForm.delivery_line1.$invalid),
 													'has-feedback' : loadForm.delivery_line1.$invalid}"
-											 for="delivery_line1">Line 1 is mandatory
+											 for="delivery_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -1092,7 +1092,7 @@
 											 ng-class="{ 'has-error' : loadForm.delivery_line2.$invalid,
 													'has-success' : !(loadForm.delivery_line2.$invalid),
 													'has-feedback' : loadForm.delivery_line2.$invalid}"
-											 for="delivery_line2">Line 2 is optional
+											 for="delivery_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -1253,7 +1253,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">ï¿½</button>
 				<h4 class="modal-title">Terms and Conditions</h4>
 			</div>
 			<div class="modal-body">
