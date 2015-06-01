@@ -1,5 +1,5 @@
 /**
- * Created by anupghosh on 12/29/13.
+ * Created by Santhosh
  */
 
 
@@ -36,6 +36,14 @@ var successInfo = function (message, id) {
     items.push('<div class="alert alert-info">');
     items.push('<a href="#" class="close" data-dismiss="alert">&times;</a>');
     items.push('<strong>Information!</strong> ' + message);
+    items.push('</div>');
+    $('#'+id).html (items.join(''));
+};
+
+var clearAlert = function(id){
+    //$('#'+id).remove();
+    var items = [];
+    items.push('<div>');
     items.push('</div>');
     $('#'+id).html (items.join(''));
 };

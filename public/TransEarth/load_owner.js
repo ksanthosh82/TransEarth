@@ -2,6 +2,8 @@
 function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadRequest) {
     console.log('Inside loadOwnerCtrl');
 
+    clearAlert("myLoadList_alert");
+
     $scope.showText = function(obj){
         if(typeof obj != "undefined" && obj != null && obj != ""){
             return true;
@@ -236,6 +238,7 @@ function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadReques
 
     var LoadRemoveModalCtrl = function ($scope, $modalInstance, loadToInactivate) {
 
+        clearAlert("remove_load_alert");
         $scope.loadToInactivate = loadToInactivate;
         $scope.showClose = false;
         console.log("Inside LoadRemoveModalCtrl: loadToRemove = "+JSON.stringify($scope.loadToInactivate));

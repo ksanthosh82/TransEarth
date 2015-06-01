@@ -14,6 +14,8 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
     if($scope.serverAuth.authFailed){
         console.log('Inside loginCtrl serverAuth failed - '+JSON.stringify($scope.serverAuth));
         succesError($scope.serverAuth.message, "login_alert");
+    }else{
+        clearAlert("login_alert");
     }
     $scope.user = {};
     $scope.user.mapLocation = {
@@ -25,6 +27,8 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
 
     $scope.signUp = function(){
         console.log("Signup clicked");
+        $scope.serverAuth.authFailed = false;
+        clearAlert("login_alert");
         $scope.page.template = ''+"/TransEarth/signup";
     };
 
@@ -139,7 +143,7 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
                     $scope.register.showPersonalDetails = false;
                     $scope.passwordMismatch = true;
                     $scope.user = {};
-                    succesAlert("User registered successfully", 'login_alert');
+                    succesAlert("User registered successfully", 'signup_alert');
                     // set the location.hash to the id of
                     // the element you wish to scroll to.
                     $location.hash('registerForm');
@@ -149,7 +153,7 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
                 }).error(function(err) {
                     console.log("User saved failed:"+err.statusMsg);
                     $scope.saved = false;
-                    succesError(err.statusMsg, 'login_alert');
+                    succesError(err.statusMsg, 'signup_alert');
                     // set the location.hash to the id of
                     // the element you wish to scroll to.
                     $location.hash('registerForm');

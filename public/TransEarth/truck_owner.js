@@ -2,6 +2,7 @@
 function truckOwnerCtrl($scope, $http, $location, UserRequest, TruckRequest) {
     console.log('Inside truckOwnerCtrl');
 
+    clearAlert("truck_home_alert");
     TruckRequest.setSharedTruck(null);
     if(TruckRequest.isSharedTruckProcessed()){
         console.log("Truck processed");
@@ -13,9 +14,9 @@ function truckOwnerCtrl($scope, $http, $location, UserRequest, TruckRequest) {
     $scope.truckOwnerPage.showPostList = true;
     $scope.truckOwnerPage.showAlert = false;
 
-    $scope.$watch('truckOwnerPage.showAlert', function (newVal, oldVal) {
+    /*$scope.$watch('truckOwnerPage.showAlert', function (newVal, oldVal) {
         console.log('truckOwnerPage.showAlert old value = '+oldVal+" and new value = "+newVal);
-    }, true);
+    }, true);*/
 
     $scope.myTruckList = {};
     $scope.myTruckPostList = {};

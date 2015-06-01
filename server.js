@@ -211,15 +211,17 @@ function ensureAuthenticated(req, res, next) {
         console.log("User logged in - "+req.session.cookie.maxAge);
         return next();
     }
+    req.session.validity = false;
     console.log("User not logged in - Default pages display - "+req.session.cookie.maxAge);
-    //res.redirect('/TransEarth/login');
-    return next();
+    return res.redirect('/TransEarth/sessionExpired');
+    //return next();
 }
 
 function clearSession(req){
     if(typeof req.session != 'undefined' && req.session != null){
         //req.session.auth = null;
         req.session.user_profile = null;
+        req.session.auth = null;
     }
 }
 
@@ -263,46 +265,45 @@ app.get('/', function (req, res) {
 });
 
 app.get('/TransEarth', function (req, res) {
-    //console.log("Get Index page");
+    console.log("Get Index page: "+JSON.stringify(req.session));
     //clearSession(req);
     var local = {
-        serverAuth :{
+        session :{
             loginFailed : false
         }
     };
     if(typeof req.session.user_profile != "undefined" && req.session.user_profile != null){
-        local.user = {};
-        local.user.user_name = req.session.user_profile.display_name;
-        local.user.user_type = req.session.user_profile.user_type;
-        local.user.user_logged_in = true;
-        console.log("Rendering home page with User logging in: "+JSON.stringify(local));
-    };
-    if(typeof req.session.auth != "undefined" && req.session.auth != null){
-        console.log("Login failed and including login template: "+JSON.stringify(req.session.auth));
-        local.serverAuth.loginFailed = true;
-        local.serverAuth.loginError = req.session.auth.message;
+        local.session.user = {};
+        local.session.user.user_name = req.session.user_profile.display_name;
+        local.session.user.user_type = req.session.user_profile.user_type;
+        local.session.user.user_logged_in = true;
+        //console.log("Rendering home page with User logged in: "+JSON.stringify(local));
     }
-
+    if(typeof req.session.auth != "undefined" && req.session.auth != null){
+        //console.log("Login failed and including login template: "+JSON.stringify(req.session.auth));
+        local.session.loginFailed = true;
+        local.session.loginError = req.session.auth.message;
+    }
+    if(typeof req.session.validity != "undefined" && req.session.validity != null && !req.session.validity){
+        console.log("User Session invalid: "+req.session.validity);
+        local.session.validity = false;
+        req.session.validity = null;
+    }
+    console.log("Rendering Index Home session details: "+JSON.stringify(local));
     res.render('index', local);
     //res.render('example', user);
 });
 
-app.get("/TransEarth/template1", function (req, res) {
-    //console.log("Get Template 1 page");
-    //clearSession(req);
-    res.json('test1');
-});
-
-app.get("/TransEarth/template2", function (req, res) {
-    //console.log("Get Template 1 page");
-    //clearSession(req);
-    res.json('test 2');
-});
-
-app.get("/TransEarth/template1", function (req, res) {
-    //console.log("Get Template 1 page");
-    //clearSession(req);
-    res.json('test2');
+app.get('/TransEarth/sessionExpired', function (req, res) {
+    console.log("Get sessionExpired");
+    clearSession(req);
+    var local = {
+        session :{
+            expired : true
+        }
+    };
+    res.render('error', local);
+    //res.render('example', user);
 });
 
 app.get('/TransEarth/site_home', function (req, res) {
@@ -326,37 +327,37 @@ app.get('/TransEarth/searchLoad', function (req, res) {
     res.render('search_load');
 });
 
-app.get('/TransEarth/truck_owner_home', function (req, res) {
+app.get('/TransEarth/truck_owner_home', ensureAuthenticated, function (req, res) {
     //console.log("Trucks page");
     res.render('truck_owner_home');
 });
 
-app.get('/TransEarth/load_owner_home', function (req, res) {
+app.get('/TransEarth/load_owner_home', ensureAuthenticated, function (req, res) {
     console.log("Load page");
     res.render('load_owner_home');
 });
 
-app.get('/TransEarth/truck_owner_trucks', function (req, res) {
+app.get('/TransEarth/truck_owner_trucks', ensureAuthenticated, function (req, res) {
     console.log("Load truck_owner_trucks page");
     res.render('truck_owner_trucks');
 });
 
-app.get('/TransEarth/truck_owner_posts', function (req, res) {
+app.get('/TransEarth/truck_owner_posts', ensureAuthenticated, function (req, res) {
     console.log("Load truck_owner_posts page");
     res.render('truck_owner_posts');
 });
 
-app.get('/TransEarth/manage_post', function (req, res) {
+app.get('/TransEarth/manage_post', ensureAuthenticated, function (req, res) {
     console.log("Load add_post page");
     res.render('manage_post');
 });
 
-app.get('/TransEarth/manage_truck', function (req, res) {
+app.get('/TransEarth/manage_truck', ensureAuthenticated, function (req, res) {
     console.log("Load manage_truck page");
     res.render('manage_truck');
 });
 
-app.get('/TransEarth/manage_load', function (req, res) {
+app.get('/TransEarth/manage_load', ensureAuthenticated, function (req, res) {
     console.log("Load manage page");
     res.render('manage_load');
 });
@@ -369,27 +370,27 @@ app.post("/TransEarth/getLoadPostingsSummary", LoadRoute.getLoadListSummary);
 app.post("/TransEarth/getTruckPostings", TruckRoute.searchTruckPost);
 app.post("/TransEarth/getLoadPostings", LoadRoute.searchLoadList);
 
-app.post("/TransEarth/getMyTrucks", TruckRoute.getMyTrucks);
-app.post("/TransEarth/getMyTruckPosts", TruckRoute.getMyTruckPosts);
+app.post("/TransEarth/getMyTrucks", ensureAuthenticated, TruckRoute.getMyTrucks);
+app.post("/TransEarth/getMyTruckPosts", ensureAuthenticated, TruckRoute.getMyTruckPosts);
 
-app.post("/TransEarth/getMyLoadList", LoadRoute.getMyLoadList);
+app.post("/TransEarth/getMyLoadList", ensureAuthenticated, LoadRoute.getMyLoadList);
 
-app.post("/TransEarth/getTruckById", TruckRoute.getTruckById);
-app.post("/TransEarth/getTruckPostById", TruckRoute.getTruckPostById);
+app.post("/TransEarth/getTruckById", ensureAuthenticated, TruckRoute.getTruckById);
+app.post("/TransEarth/getTruckPostById", ensureAuthenticated, TruckRoute.getTruckPostById);
 
-app.post("/TransEarth/addTruck", TruckRoute.addTruck);
-app.post("/TransEarth/editTruck", TruckRoute.editTruck);
-app.post("/TransEarth/removeTruck", TruckRoute.removeTruck);
+app.post("/TransEarth/addTruck", ensureAuthenticated, TruckRoute.addTruck);
+app.post("/TransEarth/editTruck", ensureAuthenticated, TruckRoute.editTruck);
+app.post("/TransEarth/removeTruck", ensureAuthenticated, TruckRoute.removeTruck);
 
-app.post("/TransEarth/addTruckPost", TruckRoute.addTruckPost);
-app.post("/TransEarth/editTruckPost", TruckRoute.editTruckPost);
-app.post("/TransEarth/removeTruckPost", TruckRoute.removeTruckPost);
+app.post("/TransEarth/addTruckPost", ensureAuthenticated, TruckRoute.addTruckPost);
+app.post("/TransEarth/editTruckPost", ensureAuthenticated, TruckRoute.editTruckPost);
+app.post("/TransEarth/removeTruckPost", ensureAuthenticated, TruckRoute.removeTruckPost);
 
-app.post("/TransEarth/getLoadById", LoadRoute.getLoadById);
+app.post("/TransEarth/getLoadById", ensureAuthenticated, LoadRoute.getLoadById);
 
-app.post("/TransEarth/addLoad", LoadRoute.addLoad);
-app.post("/TransEarth/editLoad", LoadRoute.editLoad);
-app.post("/TransEarth/removeLoad", LoadRoute.removeLoad);
+app.post("/TransEarth/addLoad", ensureAuthenticated, LoadRoute.addLoad);
+app.post("/TransEarth/editLoad", ensureAuthenticated, LoadRoute.editLoad);
+app.post("/TransEarth/removeLoad", ensureAuthenticated, LoadRoute.removeLoad);
 
 app.post("/TransEarth/getMaterialTypes", LookupRoute.getMaterialTypes);
 

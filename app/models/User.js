@@ -54,7 +54,7 @@ var userSchema = mongoose.Schema({
     email: { type: String},
     password: { type: String, required: true},
     display_name : {type: String},
-    user_type : {type: String, required: true},
+    user_type : [{type: String, required: true}],
     user_information : {
         first_name: { type: String, required: true},
         last_name: { type: String, required: true},

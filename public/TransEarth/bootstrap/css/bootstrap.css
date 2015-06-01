@@ -2909,6 +2909,11 @@ select[multiple].form-group-lg .form-control {
     margin-bottom: 0;
     vertical-align: middle;
   }
+  .form-inline .form-group-sm {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
   .form-inline .form-control {
     display: inline-block;
     width: auto;

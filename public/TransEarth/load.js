@@ -1,6 +1,7 @@
 //ng-grid Load List
-function loadListCtrl($scope, $http, $location, UserRequest) {
+function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
     console.log('Inside loadListCtrl');
+    clearAlert("loadlist_alert");
 
     $scope.loadPostList = {};
     $scope.loadPostList.filter = {};
@@ -34,9 +35,9 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
         $scope.opened = true;
     };
 
-    $scope.loadPostList.searchButtonName = "Search";
+    $scope.loadPostList.searchButtonName = "Go";
     $scope.resetSearchCategory = function(){
-        $scope.loadPostList.searchButtonName = "Search";
+        $scope.loadPostList.searchButtonName = "Go";
     };
     $scope.loadPostList.filterOptions = {
         filterText: '',
@@ -95,7 +96,7 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
                             $scope.loadPostList.columnDefs = data.loadPostList.headers;
                             $scope.setPagingData(filteredData,page,pageSize);
                             $scope.loadPostList.listShow = true;
-                            $scope.loadPostList.searchButtonName = "Review LoadList";
+                            //$scope.loadPostList.searchButtonName = "Review LoadList";
                         }else{
                             //console.log("No data available");
                             $scope.loadPostList.messageAvailable = true;
@@ -128,7 +129,7 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
                             $scope.loadPostList.columnDefs = data.loadPostList.headers;
                             $scope.setPagingData(filteredData,page,pageSize);
                             $scope.loadPostList.listShow = true;
-                            $scope.loadPostList.searchButtonName = "Review LoadList";
+                            //$scope.loadPostList.searchButtonName = "Review LoadList";
                         }else{
                             //console.log("No data available");
                             $scope.loadPostList.messageAvailable = true;
@@ -183,6 +184,81 @@ function loadListCtrl($scope, $http, $location, UserRequest) {
     $scope.searchLoads = function(){
         $scope.loadPostList.searchTriggered = true;
         $scope.getPagedDataAsync($scope.loadPostList.pagingOptions.pageSize, $scope.loadPostList.pagingOptions.currentPage);
+    };
+    $scope.searchLoads();
+
+    $scope.loadDetails = {};
+    $scope.loadInfo = {};
+    $scope.loadDetails.open = function (size) {
+        var modalInstance = $modal.open({
+            templateUrl: 'loadDetailModal.html',
+            controller: LoadDetailModalCtrl,
+            windowClass: 'xx-dialog',
+            size: size,
+            resolve: {
+                load: function () {
+                    console.log("Modal $scope.loadInfo: "+JSON.stringify($scope.loadInfo));
+                    return $scope.loadInfo;
+                }
+            }
+        });
+        modalInstance.result.then(function(truck){
+            //on ok button press
+            console.log("On ok button press");
+            //$scope.inActivateTruck(truckToRemove);
+        },function(){
+            //on cancel button press
+            console.log("Modal Closed");
+            //$scope.getPagedDataAsync($scope.myTruckList.pagingOptions.pageSize, $scope.myTruckList.pagingOptions.currentPage);
+        });
+    };
+
+    var LoadDetailModalCtrl = function ($scope, $modalInstance, load) {
+
+        $scope.loadModal = load;
+        if(typeof $scope.loadModal != "undefined" && typeof $scope.loadModal.owner != "undefined"){
+            $scope.loadModal.owner.name = $scope.loadModal.owner.last_name + " ," + $scope.loadModal.owner.first_name;
+        }
+        $scope.showClose = false;
+        console.log("Inside LoadDetailModalCtrl: loadModal = "+JSON.stringify($scope.loadModal));
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.loadModal);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
+    $scope.viewLoad = function(loadId){
+        if(!$scope.core.loggedIn){
+            $scope.loadPostList.messageAvailable = true;
+            succesError("Please login to view details", 'loadlist_alert');
+        }else{
+            console.log("Get load details: "+loadId);
+
+            $http.post("/TransEarth/getLoadById", {loadId : loadId})
+                .success(function(data) {
+                    // succesAlert(data.statusMsg, 'eaiSaveStatus');
+                    if(typeof data != 'undefined' && data != null){
+                        console.log(JSON.stringify(data));
+                        $scope.loadInfo = data;
+                        //TruckRequest.setSharedTruck(data);
+                        //console.log("Get Shared Truck Request: "+JSON.stringify(TruckRequest.getSharedTruck()));
+                        $scope.loadDetails.open('lg');
+                    }else{
+                        $scope.loadPostList.messageAvailable = true;
+                        //$scope.loadPostList.message = "No data available";
+                        succesWarning("Load details not found", 'loadlist_alert');
+                        console.log("No data available");
+                    }
+                }).error(function(err) {
+                    $scope.loadPostList.messageAvailable = true;
+                    //$scope.loadPostList.message = "No data available";
+                    succesError(err.statusMsg, 'myLoadList_alert');
+                });
+        }
     };
     //$location.url('/TransEarth/forms');
 }

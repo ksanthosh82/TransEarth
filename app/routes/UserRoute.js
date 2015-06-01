@@ -76,3 +76,26 @@ exports.createUser = function(req, res){
     }
 };
 
+exports.findUser = function(req, res){
+
+    console.log('Find User Started:'+JSON.stringify(req.body.user));
+    var jsonObj = req.body.user;
+    //var user = req.session.user_profile;
+
+    if(typeof jsonObj == "undefined" || jsonObj == null){
+        return res.json(500, {statusMsg : "Empty User details passed"});
+    }
+
+    User.findOne({username : jsonObj.username}, function (err, user) {
+        if(err){
+            return res.json(500, {statusMsg:'Chekcing User existence failed - '+err});
+        }
+        if(!user){
+            saveUser();
+        }else{
+            console.log("User already exists and force fail registration: "+JSON.stringify(user));
+            return res.json(500, {statusMsg:'Username already exists'});
+        }
+    });
+};
+

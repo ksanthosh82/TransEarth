@@ -1,6 +1,8 @@
 //ng-grid Truck List
-function truckListCtrl($scope, $http, $location, UserRequest) {
+function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
     console.log('Inside truckListCtrl');
+
+    clearAlert("trucklist_alert");
 
     $scope.truckPostList = {};
     $scope.truckPostList.filter = {};
@@ -35,9 +37,9 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
         startingDay: 1
     };
 
-    $scope.truckPostList.searchButtonName = "Search";
+    $scope.truckPostList.searchButtonName = "Go";
     $scope.resetSearchCategory = function(){
-        $scope.truckPostList.searchButtonName = "Search";
+        $scope.truckPostList.searchButtonName = "Go";
     };
     $scope.truckPostList.filterOptions = {
         filterText: '',
@@ -94,7 +96,7 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
                             $scope.truckPostList.columnDefs = data.truckPostList.headers;
                             $scope.setPagingData(filteredData,page,pageSize);
                             $scope.truckPostList.listShow = true;
-                            $scope.truckPostList.searchButtonName = "Review TruckList";
+                            //$scope.truckPostList.searchButtonName = "Review TruckList";
                         }else{
                             //console.log("No data available");
                             $scope.truckPostList.messageAvailable = true;
@@ -131,7 +133,7 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
                             $scope.truckPostList.columnDefs = data.truckPostList.headers;
                             $scope.setPagingData(filteredData,page,pageSize);
                             $scope.truckPostList.listShow = true;
-                            $scope.truckPostList.searchButtonName = "Review TruckList";
+                            //$scope.truckPostList.searchButtonName = "Review TruckList";
                         }else{
                             //console.log("No data available");
                             $scope.truckPostList.messageAvailable = true;
@@ -191,6 +193,81 @@ function truckListCtrl($scope, $http, $location, UserRequest) {
         $scope.truckPostList.searchTriggered = true;
         $scope.getPagedDataAsync($scope.truckPostList.pagingOptions.pageSize, $scope.truckPostList.pagingOptions.currentPage);
     };
+    $scope.searchTrucks();
+
+    $scope.truckPostDetails = {};
+    $scope.viewTruckPost = function(truckId, postId){
+        if(!$scope.core.loggedIn){
+            $scope.truckPostDetails.messageAvailable = true;
+            succesError("Please login to view details", 'trucklist_alert');
+        }else{
+            $http.post("/TransEarth/getTruckPostById", {
+                truckId : truckId,
+                postId : postId
+            }).success(function(data) {
+                //console.log("Data fetched by getTruckPostById:"+JSON.stringify(data));
+                if(typeof data != 'undefined' && data != null){
+                    //console.log(JSON.stringify(data));
+                    $scope.truckPostInfo = data;
+                    data.posts = $filter('filter')(data.posts, {_id:postId})[0];
+                    if(typeof data.posts != "undefined" && typeof data.posts.availability != "undefined"){
+                        //data.posts.availability.date = moment(data.posts.availability.date).format("dd MMM yyyy");
+                        data.posts.availability.date = data.posts.availability.date.getFullYear() + "/" + data.posts.availability.date.getMonth()+ "/" + data.posts.availability.date.getDate();
+                    }
+                    $scope.truckPostDetails.open('lg');
+                    $scope.truckPostDetails.messageAvailable = false;
+                }else{
+                    $scope.truckPostDetails.messageAvailable = true;
+                    succesError("Truck Post Details Not found", 'trucklist_alert');
+                    console.log("No Post data available");
+                }
+            }).error(function(err) {
+                $scope.truckPostDetails.messageAvailable = true;
+                succesError(err.statusMsg, 'trucklist_alert');
+            });
+        }
+    };
+    $scope.truckPostInfo = {};
+    $scope.truckPostDetails.open = function (size) {
+        var modalInstance = $modal.open({
+            templateUrl: 'truckPostDetailModal.html',
+            controller: TruckPostDetailModalCtrl,
+            windowClass: 'xx-dialog',
+            size: size,
+            resolve: {
+                post: function () {
+                    console.log("Modal $scope.truckPostInfo: "+JSON.stringify($scope.truckPostInfo));
+                    return $scope.truckPostInfo;
+                }
+            }
+        });
+        modalInstance.result.then(function(post){
+            //on ok button press
+            console.log("On ok button press");
+        },function(){
+            //on cancel button press
+            console.log("Modal Closed");
+        });
+    };
+
+    var TruckPostDetailModalCtrl = function ($scope, $modalInstance, post) {
+
+        $scope.truckPostModal = post;
+        if(typeof $scope.truckPostModal != "undefined" && typeof $scope.truckPostModal.owner != "undefined"){
+            $scope.truckPostModal.owner.name = $scope.truckPostModal.owner.last_name + " ," + $scope.truckPostModal.owner.first_name;
+        }
+        $scope.showClose = false;
+        console.log("Inside TruckPostDetailModalCtrl: truckPostModal = "+JSON.stringify($scope.truckPostModal));
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.truckPostModal);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
 }
 
 //ng-table driven

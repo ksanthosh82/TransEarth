@@ -2,6 +2,8 @@ function indexCtrl($scope, $http, $location, $route, UserRequest) {
     //console.log('Inside indexCtrl');
 
     //$scope.user = window.user_name;
+    clearAlert("indexTruckPostListMessage");
+    clearAlert("indexLoadPostListMessage");
 
     if(typeof $scope.user == "undefined"){
         $scope.page.template = "/TransEarth/site_home";

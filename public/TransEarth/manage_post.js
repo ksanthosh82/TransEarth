@@ -1,6 +1,9 @@
 function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, UserRequest, TruckRequest, TruckPostRequest) {
     console.log('Inside truckPostManageCtrl - '+$scope.core.clickedTruckId);
 
+    clearAlert("truck_home_alert");
+    clearAlert("manage_truckPost_alert");
+
     $scope.minDate = new Date();
     $scope.gotoHome = function(){
         $scope.page.template = "/TransEarth/truck_owner_home";
@@ -96,17 +99,19 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.truckToPost.post._id = tempPost._id;
         //$scope.truckToPost.post.source.place = tempPost.truck_post.availability.pickup_location;
         //$scope.truckToPost.post.destination.place = tempPost.truck_post.availability.delivery_location;
-        $("#source").val(tempPost.truck_post.availability.pickup_location);
-        $("#destination").val(tempPost.truck_post.availability.delivery_location);
         $scope.truckToPost.post.source = {
-            place :tempPost.truck_post.availability.pickup_location,
+            place : tempPost.truck_post.availability.pickup_location,
             state : "",
+            display : tempPost.truck_post.availability.pickup_location,
             isSelected : true,
             disable : false
         };
+        $("#source").val(tempPost.truck_post.availability.pickup_location);
+        $("#destination").val(tempPost.truck_post.availability.delivery_location);
         $scope.truckToPost.post.destination = {
             place : tempPost.truck_post.availability.delivery_location,
             state : "",
+            display : tempPost.truck_post.availability.delivery_location,
             isSelected : true,
             disable : false
         };
@@ -210,10 +215,10 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
                         console.log("Truck Post update failed:"+JSON.stringify(err));
                         $scope.truckPostProcess.indicator.saved = false;
                         $scope.truckPostProcess.indicator.showAlert = true;
-                        succesError(JSON.stringify(err), 'manage_truckPost_alert');
+                        succesError(JSON.stringify(err), 'manage_truck_post_alert');
                         // set the location.hash to the id of
                         // the element you wish to scroll to.
-                        $location.hash('manage_truckPost_alert');
+                        $location.hash('truckPostManagePage');
 
                         // call $anchorScroll()
                         $anchorScroll();
@@ -226,10 +231,10 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         }else {
             //alert("Please correct errors!");
             $scope.truckPostProcess.indicator.showAlert = true;
-            succesAlert("Please correct the errors on Truck Post", 'manage_truckPost_alert');
+            succesWarning("Please correct the errors on Truck Post", 'manage_truck_post_alert');
             // set the location.hash to the id of
             // the element you wish to scroll to.
-            $location.hash('manage_truckPost_alert');
+            $location.hash('truckPostManagePage');
 
             // call $anchorScroll()
             $anchorScroll();

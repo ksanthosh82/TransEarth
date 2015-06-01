@@ -139,19 +139,30 @@ exports.searchTruckPost = function(req,res){
     };
 
     var colDef = {};
-    /*colDef.field = 'truckId';
-     colDef.displayName = "Truck #";
-     //colDef.headerClass = 'gridHeader';
-     colDef.resizable = true;
-     colDef.width = '15%';
-     returnData.truckList.headers.push(colDef);*/
+    colDef.field = 'action';
+    colDef.displayName = "Action";
+    //colDef.headerClass = 'gridHeader';
+    colDef.cellTemplate = '<div style="text-align:center;">';
+    colDef.cellTemplate += '    <div class="ngCellText" style="color:grey;">';
+    colDef.cellTemplate += '        <div class="ngCellText" >';
+    colDef.cellTemplate += '            <a href="#" ng-click="viewTruckPost(row.entity.truck_id, row.entity.post_id)">';
+    colDef.cellTemplate += '                <i class="glyphicon glyphicon-eye-open custom-green-basic adjust-size"></i>';
+    colDef.cellTemplate += '            </a>';
+    colDef.cellTemplate += '        </div>';
+    colDef.cellTemplate += '    </div>';
+    colDef.cellTemplate += '</div>';
+    colDef.resizable = true;
+    colDef.width = '10%';
+    colDef.cellClass = "small-font";
+    colDef.headerClass = "small-font";
+    returnData.truckPostList.headers.push(colDef);
 
     colDef = {};
     colDef.field = 'source';
     colDef.displayName = "From";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '25%';
+    colDef.width = '20%';
     returnData.truckPostList.headers.push(colDef);
 
     colDef = {};
@@ -159,7 +170,7 @@ exports.searchTruckPost = function(req,res){
     colDef.displayName = "To";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '25%';
+    colDef.width = '20%';
     returnData.truckPostList.headers.push(colDef);
 
     colDef = {};
@@ -192,7 +203,7 @@ exports.searchTruckPost = function(req,res){
 
     if(typeof filters != "undefined" && filters.length > 0){
         //console.log("getTruckListSummary filters: "+JSON.stringify(filters));
-        var searchParams = {};
+        var searchParams = {"posts.status" : {"$nin":["REMOVED"]}};
         if(typeof filters[0] != "undefined" && filters[0] != null && typeof filters[0].place != "undefined"
             && filters[0].place != null && filters[0].place != ""){
             //var fromRegex = "/^" + filters[0] + "$/i";
@@ -261,9 +272,6 @@ exports.searchTruckPost = function(req,res){
     Truck.aggregate(
         [
             {
-                $match : searchParams
-            },
-            {
                 $match: {
                     "truck_details.isActive" : true
                 }
@@ -272,9 +280,7 @@ exports.searchTruckPost = function(req,res){
                 $unwind : "$posts"
             },
             {
-                $match: {
-                    "posts.status" : {"$nin":["REMOVED"]}
-                }
+                $match : searchParams
             },
             {
                 $project:
@@ -284,6 +290,7 @@ exports.searchTruckPost = function(req,res){
                     //date: { $dayOfMonth: "$posts.truck_post.availability.date" },
                     _id: 0,
                     truck_id: "$_id",
+                    post_id: "$posts._id",
                     source: "$posts.truck_post.availability.pickup_location",
                     destination: "$posts.truck_post.availability.delivery_location",
                     load : "$posts.truck_post.maximum_load.quantity",
@@ -301,6 +308,7 @@ exports.searchTruckPost = function(req,res){
                 var item = data[i];
                 truckPostList.push({
                     truck_id: item.truck_id,
+                    post_id: item.post_id,
                     source : item.source,
                     destination : item.destination,
                     capacity : item.load + " " + item.unit,
@@ -512,7 +520,7 @@ exports.getMyTruckPosts = function(req,res){
     colDef.cellTemplate = '<div style="text-align:center;">';
     colDef.cellTemplate += '    <div class="ngCellText" style="color:grey;">';
     colDef.cellTemplate += '        <div class="ngCellText" >';
-    colDef.cellTemplate += '            <a href="#" ng-click="editTruckPost(row.entity.truck_id, row.entity.post_id)">';
+    colDef.cellTemplate += '            <a href="#" ng-click="editTruckPost(row.entity.truck_id, row.entity.post_id, row.entity.availableDate)">';
     colDef.cellTemplate += '                <i class="glyphicon glyphicon-pencil custom-blue-basic adjust-size"></i>';
     colDef.cellTemplate += '            </a>';
     colDef.cellTemplate += '            <a href="#" ng-click="removeTruckPost(row.entity.truck_id, row.entity.post_id, row.entity.regNo, row.entity.capacity, row.entity.availableDate)">';
@@ -572,7 +580,7 @@ exports.getMyTruckPosts = function(req,res){
     returnData.myTruckPostList.headers.push(colDef);
 
     colDef = {};
-    colDef.field = 'availableDate';
+    colDef.field = 'availableDateDisplay';
     colDef.displayName = "Available On";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
@@ -640,7 +648,8 @@ exports.getMyTruckPosts = function(req,res){
                     regNo : item.regNo,
                     source : item.source,
                     destination : item.destination,
-                    availableDate : moment(item.availableDate).format("Do MMM YYYY"),
+                    availableDateDisplay : moment(item.availableDate).format("Do MMM YYYY"),
+                    availableDate : item.availableDate,
                     capacity : item.load + " " + item.unit
                 })
             }

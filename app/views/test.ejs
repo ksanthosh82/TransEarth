@@ -45,6 +45,31 @@
 		<!-- input google-temp-places id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/ -->
 		<button ng-click="doSearch()" class="btn btn-large btn-primary">Search</button>
 
+		<div class="input-group">
+			<span class="input-group-addon">
+				<i class="fa fa-map-marker fa-2"></i>
+			</span>
+			<div id="city">
+				<div ng-class="{'has-error': form.user_city.$error.required,
+					'has-success' : !(form.user_city.$error.required),
+					'has-feedback' : form.user_city.$error.required}">
+					<input class="form-control" id="user_city" name="user_city" disable="false" type="text" class="input-block-level"
+						   ng-model="location.place" ng-required="true"/>
+				</div>
+			</div>
+		</div>
+		<i class="form-control-feedback" ng-class="{ 'glyphicon glyphicon-remove' : form.user_city.$error.required,
+			'glyphicon glyphicon-ok' : !form.user_city.$error.required,
+			'has-feedback' : form.user_city.$error.required}"
+		   for="city">
+		</i>
+		<div ng-if="form.user_city.$error.required" class="help-block"
+			 ng-class="{ 'has-error' : form.user_city.$invalid,
+			 'has-success' : !form.user_city.$invalid,
+			 'has-feedback' : form.user_city.$invalid}"
+			 for="city">Location is mandatory da
+		</div>
+		<pre>{{form.user_city.$error | json}}</pre>
 		<!-- script src="assets/js/jquery-1.11.1.js"></script -->
 		<script src="scripts/jquery-1.9.1.min.js"></script>
 		<script src="scripts/jquery-ui-1.10.1.custom.min.js"></script>

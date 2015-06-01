@@ -127,11 +127,30 @@ exports.searchLoadList = function(req,res){
     };
 
     var colDef = {};
+    colDef.field = 'action';
+    colDef.displayName = "Action";
+    //colDef.headerClass = 'gridHeader';
+    colDef.cellTemplate = '<div style="text-align:center;">';
+    colDef.cellTemplate += '    <div class="ngCellText" style="color:grey;">';
+    colDef.cellTemplate += '        <div class="ngCellText" >';
+    colDef.cellTemplate += '            <a href="#" ng-click="viewLoad(row.entity.load_id)">';
+    colDef.cellTemplate += '                <i class="glyphicon glyphicon glyphicon-eye-open custom-green-basic adjust-size"></i>';
+    colDef.cellTemplate += '            </a>';
+    colDef.cellTemplate += '        </div>';
+    colDef.cellTemplate += '    </div>';
+    colDef.cellTemplate += '</div>';
+    colDef.resizable = true;
+    colDef.width = '7%';
+    colDef.cellClass = "small-font";
+    colDef.headerClass = "small-font";
+    returnData.loadPostList.headers.push(colDef);
+
+    colDef = {};
     colDef.field = 'source';
     colDef.displayName = "From";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '21%';
+    colDef.width = '20%';
     returnData.loadPostList.headers.push(colDef);
 
     colDef = {};
@@ -139,7 +158,7 @@ exports.searchLoadList = function(req,res){
     colDef.displayName = "To";
     //colDef.headerClass = 'gridHeader';
     colDef.resizable = true;
-    colDef.width = '21%';
+    colDef.width = '20%';
     returnData.loadPostList.headers.push(colDef);
 
     colDef = {};
@@ -164,7 +183,7 @@ exports.searchLoadList = function(req,res){
     colDef.field = 'materialType';
     colDef.displayName = "Material";
     //colDef.headerClass = 'gridHeader';
-    colDef.width = '20%';
+    colDef.width = '18%';
     colDef.resizable = true;
     returnData.loadPostList.headers.push(colDef);
 
@@ -172,7 +191,7 @@ exports.searchLoadList = function(req,res){
     colDef.field = 'pickupDate';
     colDef.displayName = "Pickup Date";
     //colDef.headerClass = 'gridHeader';
-    colDef.width = '20%';
+    colDef.width = '18%';
     colDef.resizable = true;
     returnData.loadPostList.headers.push(colDef);
 
@@ -258,6 +277,7 @@ exports.searchLoadList = function(req,res){
                         date: { $dayOfMonth: "$load.pickup.date" },
                         //assign: "",
                         //truckName: "$truckName",
+                        load_id: "$_id",
                         source: "$load.pickup.address.city",
                         destination: "$load.delivery.address.city",
                         loadQuantity: "$load.quantity",
@@ -279,6 +299,7 @@ exports.searchLoadList = function(req,res){
                 var item = data[i];
                 loadPostList.push({
                     assign : "NA",
+                    load_id: item.load_id,
                     source : item.source,
                     destination : item.destination,
                     load : item.loadQuantity + " " + item.loadUnit,

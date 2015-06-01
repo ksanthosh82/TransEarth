@@ -50,6 +50,10 @@ TransEarthApp.factory('UserRequest', function () {
 
     var user_profile = {};
 
+    function resetUserProfile(){
+        user_profile = {};
+    }
+
     function setUserProfile(user){
         if(typeof user.username != "undefined" && user.username != null && user.username != ""){
             user_profile.username = user.username;
@@ -81,7 +85,8 @@ TransEarthApp.factory('UserRequest', function () {
         getUserName : getUserName,
         getEmail : getEmail,
         getUserType : getUserType,
-        setUserProfile : setUserProfile
+        setUserProfile : setUserProfile,
+        resetUserProfile : resetUserProfile
     };
 });
 
@@ -103,6 +108,11 @@ TransEarthApp.factory('TruckRequest', function(){
         },
         setSharedTruckProcessed : function(status){
             _processed = status;
+        },
+        resetSharedTruck : function(status){
+            var temp;
+            _processed = temp;
+            _truck = temp;
         }
     };
 });
@@ -133,6 +143,12 @@ TransEarthApp.factory('TruckPostRequest', function(){
         },
         setSharedTruckPostProcessed : function(status){
             _saved = status;
+        },
+        resetSharedTruckPost : function(status){
+            var temp;
+            _postId = temp;
+            _truck = temp;
+            _saved= temp;
         }
     };
 });
@@ -258,10 +274,33 @@ TransEarthApp.directive('googlePlacesTemp', function(){
     }
 });
 
-TransEarthApp.directive('googlePlaces', function(){
+TransEarthApp.directive('formattedAddress', function(){
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, controller) {
+            controller.$parsers.push(function(value) {
+                console.log("value: "+value);
+                if(typeof value != "undefined"
+                        && value != null
+                        && typeof value["formatted-address"] != "undefined"
+                        && value["formatted-address"] != null){
+                    console.log("formatted value: "+value["formatted-address"]);
+                    return value["formatted-address"];
+                }else{
+                    return ;
+                }
+            });
+        }
+    }
+});
+
+TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
     return {
         restrict:'AE',
-        replace:true,
+        //replace:true,
+        replace:false,
+        require: ['^form'],
+        controller: 'CityCtrl',
         // transclude:true,
         scope: {
             location : '=',
@@ -271,10 +310,27 @@ TransEarthApp.directive('googlePlaces', function(){
         //template: '<input id="{{tagId}}" name="{{tagName}}" type="text" class="input-block-level"/>',
         //template: '<input id="hash" name="hash" type="text" class="input-block-level"/>',
         //template: '<div><input id="hash" name="hash" type="text" class="input-block-level"/>{{tagId}}</div>',
-        link: function($scope, elm, attrs){
+        link: function($scope, elm, attrs, ctrls){
             var tagId = attrs.tagid;
             var tagName = attrs.tagname;
+            var requiredAttr = attrs.required;
+            var placeHolder = attrs.holder;
             var disable;
+            $scope.form = ctrls[0];
+            if (typeof placeHolder == "undefined" || placeHolder == null) {
+                placeHolder = "Enter Location";
+            }
+            if (typeof requiredAttr != "undefined" && requiredAttr != null) {
+                // If attribute required exists
+                // ng-required takes a boolean
+                $scope.required = true;
+            }else{
+                $scope.required = false;
+                if(typeof $scope.location != "undefined" && $scope.location != null){
+                    $scope.location.isSelected = true;
+                }
+            }
+            //console.log("Required set on initialize: "+$scope.required);
             if(typeof $scope.location == "undefined" || $scope.location == null){
                 //$scope.city = {};
                 disable = false;
@@ -282,19 +338,68 @@ TransEarthApp.directive('googlePlaces', function(){
                 disable = $scope.location.disable;
             }
 
-            var template = '<input class="form-control" id="'+tagId+'" name="'+tagName+'" disable="'+disable+'" type="text" class="input-block-level"/>';
-            //console.log(template);
-            //console.log($scope);
-            //console.log(attrs);
-            //console.log($scope.location);
+            var template =
+                    '<div class="input-group"> ' +
+                        '<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span> ' +
+                        '<div id="city"> ' +
+                            '<div ng-class="{\'has-error\': form.'+tagName+'.$error.required && !location.isSelected, ' +
+                            '\'has-success\' : !(form.'+tagName+'.$error.required) && location.isSelected, '+
+                            '\'has-feedback\' : form.'+tagName+'.$error.required && !location.isSelected}">' +
+                                '<input class="form-control" id="'+tagId+'" name="'+tagName + '" ' +
+                                'ng-disabled="location.disable" type="text" class="input-block-level" '+
+                                'ng-change="resetPlace()" ' +
+                                'placeholder="'+placeHolder+'" ' +
+                                'ng-model="location.display" ng-required="'+$scope.required+'"'+
+                                '/> ' +
+                            '</div> ' +
+                        '</div> ' +
+                    '</div> '+
+                        //'<span ng-show="form.'+tagName+'.$error.required" class="help-block">Required</span> ' +
+                    '<i class="form-control-feedback" ' +
+                                'ng-class="{ \'glyphicon glyphicon-remove\' : form.'+tagName+'.$error.required || !location.isSelected, '+
+                                '\'glyphicon glyphicon-ok\' : !form.'+tagName+'.$error.required && location.isSelected, '+
+                                '\'has-feedback\' : form.'+tagName+'.$error.required && !location.isSelected}" '+
+                                'for="city"> ' +
+                    '</i>'+
+                    '<div ng-if="form.'+tagName+'.$error.required" '+
+                                'class="help-block" '+
+                                'ng-class="{ \'has-error\' : form.'+tagName+'.$error.required && !location.isSelected, '+
+                                '\'has-success\' : !form.'+tagName+'.$error.required && location.isSelected, '+
+                                '\'has-feedback\' : form.'+tagName+'.$error.required && !location.isSelected}" '+
+                                'for="city">Location is mandatory'+
+                    '</div> '
+                    //+ '<pre>{{form.'+tagName+'.$error | json}} {{location.isSelected}}</pre> '
+                ;
+            //console.log("Template set on initialize: "+template);
+            //console.log("Scope set on initialize: "+$scope);
+            //console.log("Attr set on initialize: "+attrs.required);
+            $scope.resetPlace = function(){
+                if(typeof $scope.location != "undefined" && $scope.location!= null){
+                    //console.log("Resetting place as it is changed: "+JSON.stringify($scope.location));
+                    //$scope.location.place = "";
+                    //$scope.location.state = "";
+                    if(requiredAttr){
+                        $scope.location.isSelected = false;
+                        $scope.location.disable = false;
+                    }else if($scope.location.display == ""){
+                        $scope.location.place = "";
+                        $scope.location.isSelected = true;
+                        $scope.location.disable = false;
+                    }else{
+                        $scope.location.isSelected = false;
+                        $scope.location.disable = false;
+                    }
+                }
+            };
             elm.html(template);
+            $compile(elm.contents())($scope);
             if(typeof $scope.location != "undefined" && $scope.location != null){
-                console.log("Setting location name "+"#"+tagId+" : "+$scope.location.place);
+                //console.log("Location set on initialize for "+"#"+tagId+" : "+JSON.stringify($scope.location));
                 $("#"+tagId).val($scope.location.place);
                 //$("#ownr_city").val($scope.city.place);
             }
 
-            var autocomplete = new google.maps.places.Autocomplete($("#"+tagId)[0], {});
+            var autocomplete = new google.maps.places.Autocomplete($("#"+tagId)[0], {types: ['(cities)'],componentRestrictions: {country: 'in'}});
             //var autocomplete = new google.maps.places.Autocomplete($("#hash")[0], {});
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
@@ -307,6 +412,7 @@ TransEarthApp.directive('googlePlaces', function(){
                     if(Array.isArray(result) && result.length > 0){
                         $scope.location.place = result[0].long_name;
                         $scope.location.isSelected = true;
+                        $scope.location["formatted-address"] = result[0]["formatted-address"];
                     }
                     result = getObjects(place.address_components, 'types', 'administrative_area_level_1', null, null);
                     if(Array.isArray(result) && result.length > 0){
@@ -319,7 +425,12 @@ TransEarthApp.directive('googlePlaces', function(){
                         //$scope.city.isSelected = true;
                     }
                 }else{
-                    $scope.location.isSelected = false;
+                    console.log("place not defined");
+                    if(requiredAttr){
+                        $scope.location.isSelected = false;
+                    }else{
+                        $scope.location.isSelected = true;
+                    }
                 }
                 //console.log(JSON.stringify(place));
                 console.log(JSON.stringify($scope.location));
@@ -327,7 +438,10 @@ TransEarthApp.directive('googlePlaces', function(){
             });
         }
     }
-});
+}]);
+
+TransEarthApp.controller('CityCtrl', ['$scope', function($scope) {
+}]);
 
 /*TransEarthApp.directive('numbersOnly', function () {
     return {
@@ -371,7 +485,7 @@ TransEarthApp.directive('numbersOnly', function () {
     };
 });
 
-TransEarthApp.directive('capitalizeFirst', function(uppercaseFilter, $parse) {
+TransEarthApp.directive('capitalizeAll', function(uppercaseFilter, $parse) {
     return {
         require: 'ngModel',
         link: function(scope, element, attrs, modelCtrl) {
@@ -384,6 +498,33 @@ TransEarthApp.directive('capitalizeFirst', function(uppercaseFilter, $parse) {
                     /*var capitalized = inputValue.split(' ').reduce(function(prevValue, word){
                      return  prevValue + word.substring(0, 1).toUpperCase() + word.substring(1)+' ';
                      }, '');*/
+                    if(capitalized !== inputValue) {
+                        modelCtrl.$setViewValue(capitalized);
+                        modelCtrl.$render();
+                    }
+                    return capitalized;
+                }
+            };
+            var model = $parse(attrs.ngModel);
+            modelCtrl.$parsers.push(capitalize);
+            capitalize(model(scope));
+        }
+    };
+});
+
+TransEarthApp.directive('capitalizeFirst', function(uppercaseFilter, $parse) {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            //console.log(attrs.ngModel);
+            var capitalize = function(inputValue) {
+                //console.log(inputValue);
+                var capitalized;
+                if(typeof  inputValue != "undefined" && inputValue != null){
+                    //capitalized = inputValue.replace(/\s+/g,'').toUpperCase();
+                    var capitalized = inputValue.split(' ').reduce(function(prevValue, word){
+                        return  prevValue + word.substring(0, 1).toUpperCase() + word.substring(1)+' ';
+                    }, '');
                     if(capitalized !== inputValue) {
                         modelCtrl.$setViewValue(capitalized);
                         modelCtrl.$render();
@@ -475,7 +616,6 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
     //alert('Inside coreController');
     $scope.siteTitle = 'Transport Earth';
     $scope.page = {};
-    //$scope.page.template = "/TransEarth/site_home";
     $scope.core = {};
     $scope.core.truck_owner = false;
     $scope.core.load_owner = false;
@@ -483,18 +623,46 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
     $scope.serverAuth.authFailed = false;
     $scope.serverAuth.messageAvailable = false;
 
+    $scope.ifSessionInvalid = false;
     $scope.user = {};
     $scope.core.loggedIn = false;
+    $scope.core.expired = false;
+
+    $scope.resetCore = function(){
+        //$scope.siteHome();
+        //$scope.core = {};
+        $scope.core.loggedIn = false;
+        $scope.core.truck_owner = false;
+        $scope.core.load_owner = false;
+        $scope.serverAuth = {};
+        $scope.serverAuth.authFailed = false;
+        $scope.serverAuth.messageAvailable = false;
+        $scope.user = {};
+        $scope.core.loggedIn = false;
+        $scope.core.expired = true;
+    } ;
 
     $scope.$watch('local', function(){
         console.log("Core ng-init local: "+$scope.local);
+        $scope.ifSessionInvalid = false;
         if(typeof $scope.local != "undefined" && $scope.local != null){
-            $scope.loginAuth = JSON.parse($scope.local);
-            if(typeof $scope.loginAuth != "undefined" && $scope.loginAuth != null && $scope.loginAuth.loginFailed){
+            $scope.session = JSON.parse($scope.local);
+            if(typeof $scope.session != "undefined" && $scope.session != null && $scope.session.loginFailed){
                 $scope.serverAuth.authFailed = true;
                 $scope.serverAuth.messageAvailable = true;
                 $scope.serverAuth.message = $scope.loginAuth.loginError;
                 console.log("Set $scope.serverAuth: "+JSON.stringify($scope.serverAuth));
+            }
+            if(typeof $scope.session.expired != "undefined" && $scope.session.expired != null && !$scope.local.expired){
+                console.log("Session not valid: "+JSON.stringify($scope.session));
+                TruckRequest.resetSharedTruck();
+                UserRequest.resetUserProfile();
+                //TruckPostRequest.resetSharedTruckPost();
+                $scope.ifSessionInvalid = true;
+                $scope.resetCore();
+                $scope.siteHome();
+                $scope.$apply();
+                //window.location.reload(true);
             }
         }
     });
@@ -502,6 +670,8 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
     $http.get('/TransEarth/getLoggedInUserProfile')
         .success(function(data){
             console.log("Get User Profile: "+JSON.stringify(data));
+            $scope.core.truck_owner = false;
+            $scope.core.load_owner = false;
             if(typeof data.user != 'undefined'){
                 $scope.user = data.user;
                 $scope.core.loggedIn = true;
@@ -513,12 +683,27 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
                     if($scope.user.user_type == "load_owner"){
                         $scope.core.truck_owner = false;
                         $scope.core.load_owner = true;
+                    }else if(Array.isArray($scope.user.user_type)){
+                        console.log("Array User type: "+$scope.user.user_type);
+                        for(var user_type in $scope.user.user_type){
+                            console.log("User type item: "+$scope.user.user_type[user_type]);
+                            if($scope.user.user_type[user_type] == "truck_owner"){
+                                $scope.core.truck_owner = true;
+                            }
+                            if($scope.user.user_type[user_type] == "load_owner"){
+                                $scope.core.load_owner = true;
+                            }
+                        }
                     }
+                    console.log("$scope.core.truck_owner: "+$scope.core.truck_owner);
+                    console.log("$scope.core.load_owner: "+$scope.core.load_owner);
                 }
                 //console.log("Core Profile: "+JSON.stringify($scope.core));
+            }else{
+                $scope.core.expired = true;
             }
             console.log("$scope.serverAuth: "+JSON.stringify($scope.serverAuth));
-            if($scope.core.truck_owner){
+            /*if($scope.core.truck_owner){
                 $scope.page.template = "/TransEarth/truck_owner_home";
                 $scope.page.scope = "Truck Owner Home";
             }else if($scope.core.load_owner){
@@ -530,7 +715,14 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
             }else{
                 $scope.page.template = "/TransEarth/site_home";
                 $scope.page.scope = "Site Base Home";
+            }*/
+            if($scope.serverAuth.authFailed){
+                $scope.page.template = ''+"/TransEarth/login";
+                $scope.page.scope = "Login";
+            }else{
+                $scope.siteHome();
             }
+
         }).error(function(err){
             alert("Error accessing user profile:"+err);
         });
@@ -562,8 +754,15 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
             alert("error accessing Auth message");
         });*/
 
+    $scope.siteHome = function(){
+        //console.log("Home clicked");
+        $scope.page.template = ''+"/TransEarth/site_home";
+        $scope.page.scope = "TransEarth Home";
+        //console.log("Login clicked : "+$scope.pageTemplate);
+    };
     $scope.loginClicked = function(){
         //console.log("Login clicked");
+        $scope.core.expired = false;
         $scope.page.template = ''+"/TransEarth/login";
         $scope.page.scope = "Login";
         //console.log("Login clicked : "+$scope.pageTemplate);
@@ -595,9 +794,10 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
         //console.log("Search Truck clicked : "+$scope.pageTemplate);
     };
     $scope.addTruck = function(){
-        //console.log("Add Truck clicked");
+        console.log("Add Truck clicked");
         TruckRequest.setSharedTruck(null);
-        $scope.page.template = ''+"/TransEarth/manage_truck";
+        $scope.page.template = null;
+        $scope.page.template = ''+"/TransEarth/manage_truck?test=1";
         $scope.page.scope = "Add Truck";
         //console.log("Search Truck clicked : "+$scope.pageTemplate);
     };

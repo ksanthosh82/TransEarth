@@ -6,7 +6,7 @@
 		<span class="label label-default pull-right">Clear errors in each step to move to next</span>
 	</div>
 
-	<div id="login_alert"></div>
+	<div id="signup_alert"></div>
 
 	<div id="goto_home" ng-show="saved">
 		<a href="/TransEarth" class="btn btn-large btn-primary">GO BACK TO HOME</a>
@@ -44,19 +44,19 @@
 									<legend></legend>
 									<div class="form-group"
 										 ng-class="{ 'has-error' : userForm.user_type.$invalid,
-									'has-success' : !(userForm.user_type.$invalid),
+									'has-success' : userForm.user_type.$valid,
 									'has-feedback' : userForm.user_type.$invalid}">
 										<label class="col-lg-3 control-label">User Type</label>
 										<div class="col-lg-9">
 											<div class="input-group" id="user_role">
 												<span class="input-group-addon"><i class="fa fa-user"></i></span>
 												<select name="user_type" class="form-control nya-selectpicker"
-														id="user_type"
+														id="user_type" multiple
 														ng-model="user.user_type"
 														ng-options="user_type.type as user_type.Name for user_type in userTypes"
 														ng-required="true"
 														ng-change="showAccountDetails()">
-													<option value=''>Please Choose One</option>
+													<option value="false">Please Choose One</option>
 												</select>
 											</div>
 											<!-- i class="form-control-feedback"
@@ -232,8 +232,8 @@
 										<div class="col-lg-12">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-user"></i></span>
-												<input type="text" class="form-control" name="first_name" id="first_name" ng-model="user.first_name" placeholder="Enter First Name"
-													   maxlength="35" ng-required="true">
+												<input type="text" class="form-control" name="first_name" id="first_name" ng-model="user.first_name"
+													   placeholder="Enter First Name" maxlength="35" ng-required="true" capitalizeFirst>
 											</div>
 											<i class="form-control-feedback"
 											   ng-class="{ 'glyphicon glyphicon-remove' : userForm.first_name.$invalid,
@@ -260,8 +260,8 @@
 										<div class="col-lg-12">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-user"></i></span>
-												<input type="text" class="form-control" name="last_name" id="last_name" ng-model="user.last_name" placeholder="Enter Last Name"
-													   maxlength="35" ng-required="true">
+												<input type="text" class="form-control" name="last_name" id="last_name" ng-model="user.last_name"
+													   placeholder="Enter Last Name" maxlength="35" ng-required="true" capitalizeFirst>
 											</div>
 											<i class="form-control-feedback"
 											   ng-class="{ 'glyphicon glyphicon-remove' : userForm.last_name.$invalid,
@@ -380,15 +380,17 @@
 										'has-feedback' : !user.mapLocation.isSelected}">
 										<label class="col-lg-8 control-label">City</label>
 										<div class="col-lg-12">
-											<div class="input-group">
+											<!-- div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-												<!-- input type="text" class="form-control" name="city" id="city" ng-model="user.city" placeholder="Enter City" ng-required="true" -->
 												<div id="city">
-													<google-places
+													<google-places required
 															tagId="user_city" tagName="user_city" location=user.mapLocation></google-places>
 												</div>
-											</div>
-											<i class="form-control-feedback"
+											</div -->
+											<google-places required
+														   tagId="user_city" tagName="user_city"
+														   location=user.mapLocation></google-places>
+											<!-- i class="form-control-feedback"
 											   ng-class="{ 'glyphicon glyphicon-remove' : !user.mapLocation.isSelected,
 										'glyphicon glyphicon-ok' : user.mapLocation.isSelected,
 										'has-feedback' : !user.mapLocation.isSelected}"
@@ -400,7 +402,7 @@
 										'has-success' : user.mapLocation.isSelected,
 										'has-feedback' : !user.mapLocation.isSelected}"
 												 for="city">Location is mandatory
-											</div>
+											</div -->
 										</div>
 										<!-- pre>{{userForm.city.$invalid}}</pre>
                                         <pre>{{userForm.city.$error}}</pre -->

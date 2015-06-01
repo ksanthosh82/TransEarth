@@ -5,7 +5,7 @@
 				<h3 class="panel-title">My Posts</h3>
 			</div>
 			<div class="panel-body">
-				<div id="myTruckPostListMessage" ng-show="!myTruckPostList.listShow">
+				<div id="myTruckPostListMessage" ng-show="!myTruckPostList.listShow||myTruckPostList.messageAvailable">
 					<div id="myTruckPostlist_alert" ></div>
 				</div>
 				<div ng-show="myTruckPostList.listShow" class="gridMaxStyle" ng-grid="myTruckPostList.gridOptions"></div>

@@ -151,7 +151,7 @@
 											 ng-class="{ 'has-error' : loadForm.owner_line1.$invalid,
 										'has-success' : !(loadForm.owner_line1.$invalid),
 										'has-feedback' : loadForm.owner_line1.$invalid}"
-											 for="owner_line1">Line 1 is mandatory
+											 for="owner_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -180,7 +180,7 @@
 											 ng-class="{ 'has-error' : loadForm.owner_line2.$invalid,
 										'has-success' : !(loadForm.owner_line2.$invalid),
 										'has-feedback' : loadForm.owner_line2.$invalid}"
-											 for="owner_line2">Line 2 is optional
+											 for="owner_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -192,33 +192,9 @@
 									'has-feedback' : load.owner.address.mapLocation.isSelected}">
 									<!-- label class="col-lg-3 control-label">City</label -->
 									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<!-- input type="text" class="form-control" name="owner_city" id="owner_city" ng-model="load.owner.address.city"
-												placeholder="Enter City" ng-required="true" -->
-											<div id="city" ng-if="!load.owner.details_same_as_user">
-												<google-places
-														tagId="owner_city" tagName="owner_city" location=load.owner.address.mapLocation></google-places>
-											</div>
-											<div id="city" ng-if="load.owner.details_same_as_user">
-												<input type="text" class="form-control" name="owner_city" id="owner_city"
-													   ng-disabled="true" readonly
-													   ng-model="load.owner.address.mapLocation.place" ng-required="true">
-											</div>
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : !load.owner.address.mapLocation.isSelected,
-									'glyphicon glyphicon-ok' : load.owner.address.mapLocation.isSelected,
-									'has-feedback' : load.owner.address.mapLocation.isSelected}"
-										   for="owner_city">
-										</i>
-										<div ng-if="!load.owner.address.mapLocation.isSelected"
-											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : !load.owner.address.mapLocation.isSelected,
-									'has-success' : load.owner.address.mapLocation.isSelected,
-									'has-feedback' : load.owner.address.mapLocation.isSelected}"
-											 for="owner_city">City is mandatory
-										</div>
+										<google-places required
+													   tagId="owner_city" tagName="owner_city"
+													   location=load.owner.address.mapLocation></google-places>
 									</div>
 									<!-- pre>{{userForm.city.$invalid}}</pre>
 									<pre>{{userForm.city.$error}}</pre -->
@@ -420,7 +396,7 @@
 											 ng-class="{ 'has-error' : loadForm.company_line1.$invalid,
 							 				'has-success' : !(loadForm.company_line1.$invalid),
 					 						'has-feedback' : loadForm.company_line1.$invalid}"
-											 for="company_line1">Line 1 is mandatory and should be of minimum 10 characters
+											 for="company_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -450,7 +426,7 @@
 											 ng-class="{ 'has-error' : loadForm.company_line2.$invalid,
 							 				'has-success' : !(loadForm.company_line2.$invalid),
 					 						'has-feedback' : loadForm.company_line2.$invalid}"
-											 for="company_line2">Line 2 is mandatory and should be of minimum 10 characters
+											 for="company_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -462,33 +438,9 @@
 										'has-feedback' : !load.company.address.mapLocation.isSelected}">
 									<!-- label class="col-lg-3 control-label">City</label -->
 									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<!-- input type="text" class="form-control" ng-disabled="disableAddress" name="company_city" id="company_city"
-												   ng-model="load.company.address.city" placeholder="Enter City" ng-required="true" -->
-											<div id="city" ng-if="!(load.company.address_same_as_owner)">
-												<google-places
-														tagId="company_city" tagName="company_city" location=load.company.address.mapLocation></google-places>
-											</div>
-											<div id="city" ng-if="(load.company.address_same_as_owner)">
-												<input type="text" class="form-control" name="owner_city" id="owner_city" readonly
-													   ng-disabled="load.company.details_same_as_user"
-													   ng-model="load.company.address.mapLocation.place" ng-required="true">
-											</div>
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : !load.company.address.mapLocation.isSelected,
-										'glyphicon glyphicon-ok' : load.company.address.mapLocation.isSelected,
-										'has-feedback' : !load.company.address.mapLocation.isSelected}"
-										   for="company_city">
-										</i>
-										<div ng-if="!load.company.address.mapLocation.isSelected"
-											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : !load.company.address.mapLocation.isSelected,
-										'has-success' : load.company.address.mapLocation.isSelected,
-										'has-feedback' : !load.company.address.mapLocation.isSelected}"
-											 for="company_city">City is mandatory
-										</div>
+										<google-places required
+													   tagId="company_city" tagName="company_city"
+													   location=load.company.address.mapLocation></google-places>
 									</div>
 									<!-- pre>{{userForm.city.$invalid}}</pre>
                                     <pre>{{userForm.city.$error}}</pre -->
@@ -734,9 +686,9 @@
 							<fieldset>
 								<!-- Pickup Date -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid,
-												'has-success' : !(loadForm.pickup_date.$invalid),
-												'has-feedback' : loadForm.pickup_date.$invalid}">
+									 ng-class="{ 'has-error' : loadForm.pickupDaterange.$invalid || load.load.pickup.date==null,
+												'has-success' : !(loadForm.pickupDaterange.$invalid || load.load.pickup.date==null),
+												'has-feedback' : loadForm.pickupDaterange.$invalid || load.load.pickup.date==null}">
 									<label class="col-lg-3 control-label">Date</label>
 									<div class="col-lg-9">
 										<div class="input-group">
@@ -748,16 +700,16 @@
 												   ng-required="true" close-text="Close" />
 										</div>
 										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : loadForm.pickup_date.$invalid,
-														'glyphicon glyphicon-ok' : !(loadForm.pickup_date.$invalid),
-														'has-feedback' : loadForm.pickup_date.$valid}"
+										   ng-class="{ 'glyphicon glyphicon-remove' : loadForm.pickupDaterange.$invalid || load.load.pickup.date==null,
+														'glyphicon glyphicon-ok' : !(loadForm.pickupDaterange.$invalid || load.load.pickup.date==null),
+														'has-feedback' : loadForm.pickupDaterange.$valid || load.load.pickup.date==null}"
 										   for="pickup_date">
 										</i>
-										<div ng-if="loadForm.pickup_date.$invalid"
+										<div ng-if="loadForm.pickupDaterange.$invalid"
 											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : loadForm.pickup_date.$invalid,
-															'has-success' : !(loadForm.pickup_date.$invalid),
-															'has-feedback' : loadForm.pickup_date.$invalid}"
+											 ng-class="{ 'has-error' : loadForm.pickupDaterange.$invalid || load.load.pickup.date==null,
+															'has-success' : !(loadForm.pickupDaterange.$invalid || load.load.pickup.date==null),
+															'has-feedback' : loadForm.pickupDaterange.$invalid || load.load.pickup.date==null}"
 											 for="pickup_date">Pickup Date is mandatory
 										</div>
 									</div>
@@ -790,7 +742,7 @@
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
 											<input type="text" class="form-control" name="pickup_line1" id="pickup_line1"
-												   ng-disable="load.load.pickup.address_same_as_owner"
+												   ng-disabled="load.load.pickup.address_same_as_owner"
 												   ng-model="load.load.pickup.address.line1" placeholder="Enter Pickup Address Line1"
 												   ng-maxlength="35" maxlength="35" ng-required="true">
 										</div>
@@ -805,7 +757,7 @@
 											 ng-class="{ 'has-error' : loadForm.pickup_line1.$invalid,
 													'has-success' : !(loadForm.pickup_line1.$invalid),
 													'has-feedback' : loadForm.pickup_line1.$invalid}"
-											 for="pickup_line1">Line 1 is mandatory
+											 for="pickup_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -820,7 +772,7 @@
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
 											<input type="text" class="form-control" name="pickup_line2" id="pickup_line2"
-												   ng-disable="load.load.pickup.address_same_as_owner"
+												   ng-disabled="load.load.pickup.address_same_as_owner"
 												   ng-model="load.load.pickup.address.line2"
 												   ng-maxlength="35" maxlength="35"
 												   placeholder="Enter Address Line2">
@@ -836,7 +788,7 @@
 											 ng-class="{ 'has-error' : loadForm.pickup_line2.$invalid,
 													'has-success' : !(loadForm.pickup_line2.$invalid),
 													'has-feedback' : loadForm.pickup_line2.$invalid}"
-											 for="pickup_line2">Line 2 is optional
+											 for="pickup_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -848,35 +800,9 @@
 												'has-feedback' : load.load.pickup.address.mapLocation.isSelected}">
 									<!-- label class="col-lg-3 control-label">City</label -->
 									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<!-- div id="city">
-												<google-places
-														tagId="pickup_city" tagName="pickup_city" location=load.load.pickup.address.mapLocation></google-places>
-											</div -->
-											<div id="city" ng-if="!(load.load.pickup.address_same_as_owner)">
-												<google-places
-														tagId="pickup_city" tagName="pickup_city" location=load.load.pickup.address.mapLocation></google-places>
-											</div>
-											<div id="city" ng-if="(load.load.pickup.address_same_as_owner)">
-												<input type="text" class="form-control" name="pickup_city" id="pickup_city"
-													   ng-disabled="load.load.pickup.address_same_as_owner"
-													   ng-model="load.load.pickup.address.mapLocation.place" ng-required="true">
-											</div>
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : !load.load.pickup.address.mapLocation.isSelected,
-												'glyphicon glyphicon-ok' : load.load.pickup.address.mapLocation.isSelected,
-												'has-feedback' : load.load.pickup.address.mapLocation.isSelected}"
-										   for="pickup_city">
-										</i>
-										<div ng-if="!load.load.pickup.address.mapLocation.isSelected"
-											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : !load.load.pickup.address.mapLocation.isSelected,
-												'has-success' : load.load.pickup.address.mapLocation.isSelected,
-												'has-feedback' : load.load.pickup.address.mapLocation.isSelected}"
-											 for="pickup_city">City is mandatory
-										</div>
+										<google-places required
+													   tagId="pickup_city" tagName="pickup_city"
+													   location=load.load.pickup.address.mapLocation></google-places>
 									</div>
 									<!-- pre>{{userForm.city.$invalid}}</pre>
 									<pre>{{userForm.city.$error}}</pre -->
@@ -919,7 +845,7 @@
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
 											<input type="text" numbers-only="numbers-only" class="form-control" name="pickup_pincode"
-												   ng-disable="load.load.pickup.address_same_as_owner"
+												   ng-disabled="load.load.pickup.address_same_as_owner"
 												   id="pickup_pincode" ng-model="load.load.pickup.address.pincode" placeholder="Enter Pincode"
 												   ng-minlength="6" ng-maxlength="6" maxlength="6" ng-required="true">
 										</div>
@@ -1062,7 +988,7 @@
 											 ng-class="{ 'has-error' : loadForm.delivery_line1.$invalid,
 													'has-success' : !(loadForm.delivery_line1.$invalid),
 													'has-feedback' : loadForm.delivery_line1.$invalid}"
-											 for="delivery_line1">Line 1 is mandatory
+											 for="delivery_line1">Address is mandatory
 										</div>
 									</div>
 								</div>
@@ -1092,7 +1018,7 @@
 											 ng-class="{ 'has-error' : loadForm.delivery_line2.$invalid,
 													'has-success' : !(loadForm.delivery_line2.$invalid),
 													'has-feedback' : loadForm.delivery_line2.$invalid}"
-											 for="delivery_line2">Line 2 is optional
+											 for="delivery_line2">Address Line 2 is optional
 										</div>
 									</div>
 								</div>
@@ -1104,35 +1030,9 @@
 												'has-feedback' : !load.load.delivery.address.mapLocation.isSelected}">
 									<!-- label class="col-lg-3 control-label">City</label -->
 									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<div id="city" ng-if="!(load.load.delivery.address_same_as_owner)">
-												<google-places
-														tagId="delivery_city" tagName="delivery_city" location=load.load.delivery.address.mapLocation></google-places>
-											</div>
-											<div id="city" ng-if="(load.load.delivery.address_same_as_owner)">
-												<input type="text" class="form-control" name="delivery_city" id="delivery_city"
-													   ng-disabled="load.load.delivery.address_same_as_owner"
-													   ng-model="load.load.delivery.address.mapLocation.place" ng-required="true">
-											</div>
-											<!-- div id="city">
-												<google-places
-														tagId="delivery_city" tagName="delivery_city" location=load.load.delivery.address.mapLocation></google-places>
-											</div -->
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : !load.load.delivery.address.mapLocation.isSelected,
-												'glyphicon glyphicon-ok' : load.load.delivery.address.mapLocation.isSelected,
-												'has-feedback' : !load.load.delivery.address.mapLocation.isSelected}"
-										   for="delivery_city">
-										</i>
-										<div ng-if="!load.load.delivery.address.mapLocation.isSelected"
-											 class="help-block pull-right"
-											 ng-class="{ 'has-error' : !load.load.delivery.address.mapLocation.isSelected,
-												'has-success' : load.load.delivery.address.mapLocation.isSelected,
-												'has-feedback' : !load.load.delivery.address.mapLocation.isSelected}"
-											 for="delivery_city">City is mandatory
-										</div>
+										<google-places required
+													   tagId="delivery_city" tagName="delivery_city"
+													   location=load.load.delivery.address.mapLocation></google-places>
 									</div>
 									<!-- pre>{{userForm.city.$invalid}}</pre>
 									<pre>{{userForm.city.$error}}</pre -->
@@ -1253,7 +1153,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
 				<h4 class="modal-title">Terms and Conditions</h4>
 			</div>
 			<div class="modal-body">

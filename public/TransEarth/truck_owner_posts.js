@@ -2,6 +2,9 @@
 function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, TruckPostRequest) {
     console.log('Inside truckOwnerPostsCtrl');
 
+    clearAlert("myTruckPostlist_alert");
+    clearAlert("truck_home_alert");
+
     //Posts
     //$scope.myTruckPostList = {};
     $scope.myTruckPostList.filter = {};
@@ -153,13 +156,17 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
     //};
 
     $scope.myTruckList.showAddPostError = false;
-    $scope.editTruckPost = function(truckId, postId){
-        console.log("Editing truck : "+truckId+" Post:"+postId);
+    $scope.editTruckPost = function(truckId, postId, availableDate){
+        console.log("Editing truck : "+truckId+" Post:"+postId+" Date: "+new Date(availableDate));
         //console.log("Get Shared Truck Request: "+TruckRequest.getSharedTruckId());
-        $http.post("/TransEarth/getTruckPostById", {
-            truckId : truckId,
-            postId : postId
-        }).success(function(data) {
+        if(new Date(availableDate) < new Date()){
+            $scope.myTruckPostList.messageAvailable = true;
+            succesWarning("Post prior to today cannot be edited. Please remove and add new post if required", 'myTruckPostlist_alert');
+        }else{
+            $http.post("/TransEarth/getTruckPostById", {
+                truckId : truckId,
+                postId : postId
+            }).success(function(data) {
                 //console.log("Data fetched by getTruckPostById:"+JSON.stringify(data));
                 $scope.myTruckList.showAddPostError = false;
                 if(typeof data != 'undefined' && data != null){
@@ -176,10 +183,11 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
                     console.log("No data available");
                 }
             }).error(function(err) {
-                $scope.myTruckList.listShow = false;
-                $scope.myTruckList.messageAvailable = true;
+                $scope.myTruckPostList.listShow = false;
+                $scope.myTruckPostList.messageAvailable = true;
                 succesError(err.statusMsg, 'myTruckPostlist_alert');
             });
+        }
     };
 
     $scope.truckPostToRemove = {};
@@ -209,6 +217,7 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
 
     var TruckPostRemoveModalCtrl = function ($scope, $modalInstance, truckPostToInactivate) {
 
+        clearAlert("remove_truck_post_alert");
         $scope.truckPostToInactivate = truckPostToInactivate;
         $scope.showClose = false;
         console.log("Inside TruckPostRemoveModalCtrl: truckPostToRemove = "+JSON.stringify($scope.truckPostToInactivate));

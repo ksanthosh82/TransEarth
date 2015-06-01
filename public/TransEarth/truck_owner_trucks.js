@@ -2,6 +2,8 @@
 function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, TruckRequest, TruckPostRequest) {
     console.log('Inside truckOwnerTrucksCtrl');
 
+    clearAlert("myTrucklist_alert");
+
     $scope.showText = function(obj){
         if(typeof obj != "undefined" && obj != null && obj != ""){
             return true;
@@ -220,6 +222,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
 
     var TruckRemoveModalCtrl = function ($scope, $modalInstance, truckToInactivate) {
 
+        clearAlert("remove_truck_alert");
         $scope.truckToInactivate = truckToInactivate;
         $scope.showClose = false;
         console.log("Inside TruckRemoveModalCtrl: truckToRemove = "+JSON.stringify($scope.truckToInactivate));

@@ -1,6 +1,7 @@
 function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, TruckRequest) {
     console.log('Inside truckManageCtrl - '+$scope.page.scope);
 
+    clearAlert("manage_truck_alert");
     $scope.truckForm = {};
     $scope.width = 50;
     $scope.width = $scope.width.toFixed();
@@ -27,6 +28,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             place : $scope.truckShared.owner.address.city,
             state : $scope.truckShared.owner.address.state,
             country : $scope.truckShared.owner.address.country,
+            display : $scope.truckShared.owner.address.city,
             isSelected : true,
             disable : $scope.truckShared.owner.details_same_as_user
         };
@@ -34,6 +36,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             place : $scope.truckShared.company.address.city,
             state : $scope.truckShared.company.address.state,
             country : $scope.truckShared.company.address.country,
+            display : $scope.truckShared.company.address.city,
             isSelected : true,
             disable : $scope.truckShared.company.address_same_as_owner
         };
@@ -138,6 +141,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
                 place : $scope.user.user_information.address.city,
                 state : $scope.user.user_information.address.state,
                 country : $scope.user.user_information.address.country,
+                display : $scope.user.user_information.address.city,
                 isSelected : true,
                 disable : true
             };
@@ -155,7 +159,11 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
             //$scope.company.address_same_as_owner = true;
         }else{
-            $scope.truck.owner.first_name = "";
+            if(typeof $scope.truck.owner != "undefined" && typeof $scope.truck.owner.address != "undefined" && typeof $scope.truck.owner.address.mapLocation != "undefined"
+                && $scope.truck.owner != null && $scope.truck.owner.address != null && $scope.truck.owner.address.mapLocation != null){
+                $scope.truck.owner.address.mapLocation.disable = false;
+            }
+            /*$scope.truck.owner.first_name = "";
             $scope.truck.owner.last_name = "";
             $scope.truck.owner.address.line1 = "";
             $scope.truck.owner.address.line2 = "";
@@ -172,7 +180,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
                 $scope.truck.company = {};
             }
             $scope.truck.company.name = "";
-            console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));
+            console.log("canDisableOwnerDetails "+JSON.stringify($scope.truck.owner));*/
         }
     };
     $scope.canDisableCompanyDetails = function(){
@@ -193,6 +201,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
                 place : $scope.user.user_information.address.city,
                 state : $scope.user.user_information.address.state,
                 country : $scope.user.user_information.address.country,
+                display : $scope.user.user_information.address.city,
                 isSelected : true,
                 disable : true
             };
@@ -204,7 +213,11 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));
             //$scope.company.address_same_as_owner = true;
         }else{
-            $scope.truck.company.name = "";
+            if(typeof $scope.truck.company != "undefined" && typeof $scope.truck.company.address != "undefined" && typeof $scope.truck.company.address.mapLocation != "undefined"
+                && $scope.truck.company != null && $scope.truck.company.address != null && $scope.truck.company.address.mapLocation != null){
+                $scope.truck.company.address.mapLocation.disable = false;
+            }
+            /*$scope.truck.company.name = "";
             $scope.truck.company.address.line1 = "";
             $scope.truck.company.address.line2 = "";
             $scope.truck.company.address.mapLocation = {
@@ -217,7 +230,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.company.address.pincode = "";
             $scope.truck.company.contact = "";
             $scope.truck.company.address_same_as_owner = false;
-            console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));
+            console.log("canDisableCompanyDetails "+JSON.stringify($scope.truck.company));*/
         }
     };
     $scope.canDisableSameAddress = function(){
@@ -236,6 +249,10 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.company.address.city = $scope.truck.owner.address.city;
             $scope.truck.company.address.state = $scope.truck.owner.address.state;
             $scope.truck.company.address.mapLocation = $scope.truck.owner.address.mapLocation ;
+            if(typeof $scope.truck.company != "undefined" && typeof $scope.truck.company.address != "undefined" && typeof $scope.truck.company.address.mapLocation != "undefined"
+                && $scope.truck.company != null && $scope.truck.company.address != null && $scope.truck.company.address.mapLocation != null){
+                $scope.truck.company.address.mapLocation.disable = true;
+            }
             //$("#company_city").val($scope.truck.owner.address.mapLocation.place);
             $("#company_city").val($("#owner_city").val());
             $scope.truck.company.address.pincode = $scope.truck.owner.address.pincode;
@@ -243,7 +260,11 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         }else if(typeof $scope.truck.company != "undefined"
                 && typeof $scope.truck.company.address != "undefined"
                 && $scope.truck.company != null && $scope.truck.company.address != null){
-            console.log("canDisableSameAddress owner 1 "+JSON.stringify($scope.truck.owner));
+            if(typeof $scope.truck.company != "undefined" && typeof $scope.truck.company.address != "undefined" && typeof $scope.truck.company.address.mapLocation != "undefined"
+                && $scope.truck.company != null && $scope.truck.company.address != null && $scope.truck.company.address.mapLocation != null){
+                $scope.truck.company.address.mapLocation.disable = false;
+            }
+            /*console.log("canDisableSameAddress owner 1 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.line1 = "";
             //console.log("canDisableSameAddress owner 2 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.line2 = "";
@@ -256,7 +277,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             };
             //console.log("canDisableSameAddress owner 4 "+JSON.stringify($scope.truck.owner));
             $scope.truck.company.address.pincode = "";
-            console.log("canDisableSameAddress owner 5 "+JSON.stringify($scope.truck.owner));
+            console.log("canDisableSameAddress owner 5 "+JSON.stringify($scope.truck.owner));*/
         }
         //console.log("canDisableSameAddress owner "+JSON.stringify($scope.truck.owner));
         console.log("canDisableSameAddress company "+JSON.stringify($scope.truck.company));
@@ -270,7 +291,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truck.company.contact = $scope.truck.owner.contact;
             //$scope.truck.company.contact_same_as_owner = true;
         }else{
-            $scope.truck.company.contact = "";
+            //$scope.truck.company.contact = "";
             //$scope.truck.company.contact_same_as_owner = false;
         }
     };
@@ -410,7 +431,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         else {
             //alert("Please correct errors!");
             $scope.truckProcess.indicator.showAlert = true;
-            succesAlert("Please correct the errors", 'manage_truck_alert');
+            succesError("Please correct the errors", 'manage_truck_alert');
             // set the location.hash to the id of
             // the element you wish to scroll to.
             $location.hash('truckManagePage');

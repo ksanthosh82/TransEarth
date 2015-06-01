@@ -1189,8 +1189,12 @@ h4 {
     color : #CC4D16;
 }
 
-#user_role .ng-valid {
-    border-color: #006600;
+#user_role .nya-selectpicker .ng-valid{
+    border-color: #18bc9c;
+}
+
+#user_role .nya-selectpicker .ng-invalid{
+    border-color: #e74c3c;
 }
 
 .nopadding {

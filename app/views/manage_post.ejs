@@ -8,8 +8,6 @@
 		</div>
 	</div -->
 
-	<div id="manage_truck_post_alert" ng-show="truckPostProcess.indicator.showAlert"></div>
-
 	<!-- FORM : YOU CAN DISABLE, HTML5 VALIDATION BY USING "novalidate" ATTRIBUTE-->
 	<form name="truckPostForm" name="truckPostForm" ng-submit="submitForm()" novalidate>
 		<div class="bs-component" id="truckManagePanel">
@@ -21,6 +19,8 @@
 							{{page.header}}
 						</div>
 						<div class="panel-body">
+							<div id="manage_truck_post_alert" ng-show="truckPostProcess.indicator.showAlert"></div>
+							<!-- pre>{{truckPostForm.$error}}</pre -->
 							<fieldset>
 								<!-- Truck NAME -->
 								<div class="form-group-sm">
@@ -69,7 +69,7 @@
 
 								<!-- Capacity -->
 								<div class="form-group-sm">
-									<label class="col-lg-3 control-label">Load</label>
+									<label class="col-lg-3 control-label">Capacity</label>
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-anchor fa-2"></i></span>
@@ -80,69 +80,35 @@
 
 								<!-- From -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.source.$invalid,
-							 				'has-success' : !(truckPostForm.source.$invalid),
-					 						'has-feedback' : truckPostForm.source.$invalid}">
+									 ng-class="{ 'has-error' : !truckToPost.post.source.isSelected,
+							 				'has-success' : truckToPost.post.source.isSelected,
+					 						'has-feedback' : !truckToPost.post.source.isSelected}">
 									<label class="col-lg-3 control-label">From</label>
 									<div class="col-lg-9">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<!-- input type="text" class="form-control" name="source" id="source" ng-model="truckToPost.post.source"
-												   placeholder="Enter Source" ng-minlength="1" ng-maxlength="35" ng-required="true" -->
-											<google-places
-													tagId="source" tagName="source" location=truckToPost.post.source></google-places>
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.source.$invalid,
-							 				'glyphicon glyphicon-ok' : !(truckPostForm.source.$invalid),
-					 						'has-feedback' : truckPostForm.source.$valid}"
-										   for="source">
-										</i>
-										<div ng-if="truckPostForm.source.$invalid"
-											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.source.$invalid,
-							 				'has-success' : !(truckPostForm.source.$invalid),
-					 						'has-feedback' : truckPostForm.source.$invalid}"
-											 for="source">Source Location for Pickup
-										</div>
+										<google-places required
+													   tagId="source" tagName="source"
+													   location=truckToPost.post.source></google-places>
 									</div>
 								</div>
 
 								<!-- To -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.destination.$invalid,
-							 				'has-success' : !(truckPostForm.destination.$invalid),
-					 						'has-feedback' : truckPostForm.destination.$invalid}">
+									 ng-class="{ 'has-error' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place,
+							 				'has-success' : truckToPost.post.destination.isSelected && truckToPost.post.destination.place!=truckToPost.post.source.place,
+					 						'has-feedback' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place}">
 									<label class="col-lg-3 control-label">To</label>
 									<div class="col-lg-9">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<!-- input type="text" class="form-control" name="destination" id="destination" ng-model="truckToPost.post.destination"
-												   placeholder="Enter Destination" ng-minlength="1" ng-maxlength="35" ng-required="true" -->
-											<google-places
-													tagId="destination" tagName="destination" location=truckToPost.post.destination></google-places>
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.destination.$invalid,
-							 				'glyphicon glyphicon-ok' : !(truckPostForm.destination.$invalid),
-					 						'has-feedback' : truckPostForm.destination.$valid}"
-										   for="destination">
-										</i>
-										<div ng-if="truckPostForm.destination.$invalid"
-											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.destination.$invalid,
-							 				'has-success' : !(truckPostForm.destination.$invalid),
-					 						'has-feedback' : truckPostForm.destination.$invalid}"
-											 for="destination">Destination Location for Delivery
-										</div>
+											<google-places required
+														   tagId="destination" tagName="destination"
+														   location=truckToPost.post.destination></google-places>
 									</div>
 								</div>
 
 								<!-- Available weight for load -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.weight.$invalid,
-							 				'has-success' : !(truckPostForm.weight.$invalid),
-					 						'has-feedback' : truckPostForm.weight.$invalid}">
+									 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+							 				'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+					 						'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}">
 									<label class="col-lg-3 control-label">Available Ton</label>
 									<div class="col-lg-9">
 										<div class="input-group">
@@ -153,26 +119,26 @@
 												   maxlength="2" ng-required="true">
 										</div>
 										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.weight.$invalid,
-							 				'glyphicon glyphicon-ok' : !(truckPostForm.weight.$invalid),
-					 						'has-feedback' : truckPostForm.weight.$valid}"
+										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+							 				'glyphicon glyphicon-ok' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+					 						'has-feedback' : truckPostForm.weight.$valid || truckToPost.post.load>truckToPost.details.load}"
 										   for="weight">
 										</i>
-										<div ng-if="truckPostForm.weight.$invalid"
+										<div ng-if="truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load"
 											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.weight.$invalid,
-							 				'has-success' : !(truckPostForm.weight.$invalid),
-					 						'has-feedback' : truckPostForm.weight.$invalid}"
-											 for="weight">Available weight is manadatory
+											 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+							 				'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+					 						'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}"
+											 for="weight">Available weight is mandatory and should be less than Truck's capacity
 										</div>
 									</div>
 								</div>
 
 								<!-- Available Date for Pickup -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid,
-							 										'has-success' : !(truckPostForm.pickup_date.$invalid),
-					 												'has-feedback' : truckPostForm.pickup_date.$invalid}">
+									 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null || truckToPost.post.pickup.date<minDate,
+							 										'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null  || truckToPost.post.pickup.date>minDate),
+					 												'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null || truckToPost.post.pickup.date<minDate}">
 									<label class="col-lg-3 control-label">Date</label>
 									<div class="col-lg-9">
 										<div class="input-group">
@@ -181,23 +147,23 @@
 												   id="pickupDaterange" name="pickupDaterange" class="form-control"
 												   datepicker-popup="dd-MMMM-yyyy" ng-model="truckToPost.post.pickup.date"
 												   min="minDate"
-												   is-open="pickup.opened" datepicker-options="pickup.dateOptions" ng-required="true" close-text="Close" />
+												   is-open="pickup.opened" datepicker-options="pickup.dateOptions"
+												   ng-required="true" required close-text="Close" />
 										</div>
 										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_date.$invalid,
-							 							'glyphicon glyphicon-ok' : !(truckPostForm.pickup_date.$invalid),
-					 									'has-feedback' : truckPostForm.pickup_date.$valid}"
+										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
+							 							'glyphicon glyphicon-ok' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
+					 									'has-feedback' : truckPostForm.pickup_date.$valid || truckToPost.post.pickup.date==null}"
 										   for="pickup_date">
 										</i>
-										<div ng-if="truckPostForm.pickup_date.$invalid"
+										<div ng-if="truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null"
 											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid,
-							 							'has-success' : !(truckPostForm.pickup_date.$invalid),
-					 									'has-feedback' : truckPostForm.pickup_date.$invalid}"
+											 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
+							 							'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
+					 									'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==nullx}"
 											 for="pickup_date">Pickup Date is mandatory
 										</div>
 									</div>
-									<!-- pre>{{userForm.user_type.$valid}}</pre -->
 								</div>
 							</fieldset>
 
@@ -253,7 +219,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
 				<h4 class="modal-title">Terms and Conditions</h4>
 			</div>
 			<div class="modal-body">
