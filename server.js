@@ -370,6 +370,11 @@ app.get('/TransEarth/manage_load', ensureAuthenticated, function (req, res) {
     res.render('manage_load');
 });
 
+app.get('/TransEarth/add_trucks', ensureAuthenticated, function (req, res) {
+    console.log("Add Multiple Trucks Page");
+    res.render('add_trucks');
+});
+
 app.post("/TransEarth/createUser", UserRoute.createUser);
 
 app.post("/TransEarth/getTruckPostingsSummary", TruckRoute.getTruckPostSummary);

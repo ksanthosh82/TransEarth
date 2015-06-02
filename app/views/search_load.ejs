@@ -1,4 +1,4 @@
-<div class="page-header" ng-controller="loadListCtrl">
+<div class="page-header" ng-controller="loadListCtrl" ng-init="init()">
 	<div class="bs-docs-section">
 		<!-- div class="row">
 			<div class="col-lg-12">
@@ -18,42 +18,62 @@
 			<div class="panel-heading">Search Loads</div>
 			<div class="panel-body">
 				<div class="container">
-					<form class="form-inline" role="form">
-						<div class="form-group-sm" ng-class="{ 'has-error' : !loadPostList.filter.from.isSelected,
+					<form id="searchLoadForm" name="searchLoadForm" role="form">
+						<div class="form-group-sm col-md-3" ng-class="{ 'has-error' : !loadPostList.filter.from.isSelected,
 										'has-success' : loadPostList.filter.from.isSelected,
 										'has-feedback' : loadPostList.filter.from.isSelected}">
-							<!-- label for="from">From:</label -->
-							<google-places tagId="from_city" tagName="from_city" holder="From Location"
-										   location=loadPostList.filter.from></google-places>
+							<label class="col-lg-6 control-label" for="from_city">From:</label>
+							<div class="col-lg-12 no-padding">
+								<google-places tagId="from_city" tagName="from_city" holder="From Location" glyph="false"
+											   location=loadPostList.filter.from></google-places>
+							</div>
 						</div>
-						<div class="form-group-sm" ng-class="{ 'has-error' : !loadPostList.filter.to.isSelected,
+						<div class="form-group-sm col-md-3" ng-class="{ 'has-error' : !loadPostList.filter.to.isSelected,
 										'has-success' : loadPostList.filter.to.isSelected,
 										'has-feedback' : loadPostList.filter.to.isSelected}">
-							<!-- label for="from">To:</label -->
-							<google-places tagId="to_city" tagName="to_city" holder="To Location"
-										   location=loadPostList.filter.to></google-places>
+							<label class="col-lg-6 control-label" for="to_city">To:</label>
+							<div class="col-lg-12 no-padding">
+								<google-places tagId="to_city" tagName="to_city" holder="To Location" glyph="false"
+											   location=loadPostList.filter.to></google-places>
+							</div>
 						</div>
-						<div class="form-group-sm">
-							<label><input type="radio" ng-change="resetSearchCategory()" ng-model="loadPostList.filter.dateRange" name="optionsRadios" id="optionsRadios1" value=1> On</label>
+						<div class="form-group-sm col-md-3">
+							<label for="material">Material</label>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-cube"></i></span>
+								<select selectpicker id="material" name="material"
+										ng-model="loadPostList.filter.material"
+										ng-options="material for material in materialList"
+										class="form-control col-lg-12" data-dropup-auto="false">
+									<option value="">Choose one</option>
+								</select>
+							</div>
 						</div>
-						<div class="form-group-sm">
-							<label><input type="radio" ng-change="resetSearchCategory()" ng-model="loadPostList.filter.dateRange" name="optionsRadios" id="optionsRadios2" value=2 selected> After</label>
+						<div class="form-group-sm col-md-2">
+							<!-- label class="col-md-9"> On</label -->
+							<div class="col-md-4 no-padding">
+								<input type="radio" ng-change="resetSearchCategory()"
+									   ng-model="loadPostList.filter.dateRange"
+									   name="optionsRadios" id="optionsRadios1" value=1>On
+							</div>
+							<div class="col-md-4 no-padding">
+								<input type="radio" ng-change="resetSearchCategory()"
+									   ng-model="loadPostList.filter.dateRange"
+									   name="optionsRadios" id="optionsRadios2" value=2 selected>After
+							</div>
+							<div class="col-md-12" ng-if="loadPostList.filter.dateRange!=null">
+								<input class="form-control input-sm" type="text" ng-change="resetSearchCategory()" placeholder="Available Date"
+									   id="daterange" name="daterange" class="form-control" datepicker-popup="dd-MMMM-yyyy"
+									   ng-model="loadPostList.filter.dt" is-open="opened"
+									   min="minDate"
+									   datepicker-options="loadPostList.dateOptions" ng-required="true" close-text="Close" />
+								<!-- span class="glyphicon error" ng-show="truckListForm.daterange.$error.required">*</span -->
+							</div>
 						</div>
-						<div class="form-group-sm" ng-if="loadPostList.filter.dateRange!=null">
-							<!-- select class="selectpicker">
-								<option>Mustard</option>
-								<option>Ketchup</option>
-								<option>Relish</option>
-							</select -->
-							<input class="form-control input-sm" type="text" ng-change="resetSearchCategory()" placeholder="Available Date"
-								   id="daterange" name="daterange" class="form-control" datepicker-popup="dd-MMMM-yyyy"
-								   ng-model="loadPostList.filter.dt" is-open="opened"
-								   min="minDate"
-								   datepicker-options="loadPostList.dateOptions" ng-required="true" close-text="Close" />
-							<!-- span class="glyphicon error" ng-show="truckListForm.daterange.$error.required">*</span -->
-						</div>
-						<div class="form-group-sm" ng-if="loadPostList.filter.dateRange!=null">
-							<button type="button" ng-click="searchLoads()" class="btn btn-success btn-sm col-md-offset-4" id="search">{{loadPostList.searchButtonName}}</button>
+						<div class="form-group-sm col-md-1" ng-if="loadPostList.filter.dateRange!=null">
+							<label class="col-md-12">&nbsp;</label>
+							<button type="button" ng-click="searchLoads()"
+									class="btn btn-success btn-sm" id="search">{{loadPostList.searchButtonName}}</button>
 						</div>
 						<!-- button type="submit" class="btn btn-default">Submit</button -->
 					</form>

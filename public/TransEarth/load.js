@@ -80,7 +80,8 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
                         $scope.loadPostList.filter.from,
                         $scope.loadPostList.filter.to,
                         $scope.loadPostList.filter.dateRange,
-                        $scope.loadPostList.filter.dt
+                        $scope.loadPostList.filter.dt,
+                        $scope.loadPostList.filter.material
                     ]}).success(function(data) {
                         // succesAlert(data.statusMsg, 'eaiSaveStatus');
                         if(typeof data != 'undefined' && data != null
@@ -115,7 +116,8 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
                         $scope.loadPostList.filter.from,
                         $scope.loadPostList.filter.to,
                         $scope.loadPostList.filter.dateRange,
-                        $scope.loadPostList.filter.dt
+                        $scope.loadPostList.filter.dt,
+                        $scope.loadPostList.filter.material
                     ]}).success(function(data) {
                         // succesAlert(data.statusMsg, 'eaiSaveStatus');
                         if(typeof data != 'undefined' && data != null
@@ -186,6 +188,23 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
         $scope.getPagedDataAsync($scope.loadPostList.pagingOptions.pageSize, $scope.loadPostList.pagingOptions.currentPage);
     };
     $scope.searchLoads();
+
+    $scope.init = function(){
+        $scope.getMaterials();
+    } ;
+
+    $scope.materialList = [];
+    $scope.getMaterials = function(){
+        $http.get("/TransEarth/getMaterialTypes")
+            .success(function(data) {
+                console.log("Materials looked up:"+JSON.stringify(data));
+                $scope.materialList = data;
+                $scope.loadPostList.filter.material = "";
+            }).error(function(err) {
+                console.log("truckType Lookup failed:"+JSON.stringify(err));
+            });
+    };
+    $scope.getMaterials();
 
     $scope.loadDetails = {};
     $scope.loadInfo = {};

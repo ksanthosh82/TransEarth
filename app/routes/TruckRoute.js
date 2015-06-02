@@ -271,6 +271,10 @@ exports.searchTruckPost = function(req,res){
                 res.json(500, jsonResponse);
             }
         }
+        if(typeof filters[4] != "undefined" && filters[4] != null) {
+            var truckType = filters[4];
+            searchParams["truck_details.type"] = truckType;
+        }
     }else{
         var jsonResponse = {'statusMsg' : ' Date Range Filter required'};
         res.json(500, jsonResponse);

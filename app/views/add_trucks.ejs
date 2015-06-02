@@ -1,0 +1,49 @@
+<div class="page-header" id="addTrucksPage" ng-controller="addTrucksCtrl" ng-init="init()">
+	<div class="bs-docs-section">
+
+		<table ng-table="tableParams" class="table">
+			<tr ng-repeat="truck in $data">
+				<td data-title="'Truck Type'">
+					<span ng-if="!truck.$edit">{{truck.details.type}}</span>
+					<div ng-if="truck.$edit">
+						<select selectpicker id="truck_type{{$index}}" name="truck_type{{$index}}"
+								ng-model="truck.details.type"  ng-required="true"
+								ng-options="type for type in truckTypeList"
+								class="form-control col-lg-12" data-dropup-auto="false">
+							<option value="">Choose one</option>
+						</select>
+					</div>
+				</td>
+				<td data-title="'Make'">
+					<span ng-if="!truck.$edit">{{truck.details.make}}</span>
+					<div ng-if="truck.$edit">
+						<select selectpicker id="truck_make{{$index}}" name="truck_make{{$index}}"
+								ng-model="truck.details.make"  ng-required="true"
+								ng-options="type for type in makeList"
+								class="form-control col-lg-12" data-dropup-auto="false">
+							<option value="">Choose one</option>
+						</select>
+					</div>
+				</td>
+				<td data-title="'Model'">
+					<span ng-if="!truck.$edit">{{truck.details.model}}</span>
+					<div ng-if="truck.$edit"><input capitalize-all class="form-control" type="text" ng-model="truck.details.model" /></div>
+				</td>
+				<td data-title="'Reg No'">
+					<span ng-if="!truck.$edit">{{truck.details.regno}}</span>
+					<div ng-if="truck.$edit"><input capitalize-no-blanks class="form-control" type="text" ng-model="truck.details.regno" /></div>
+				</td>
+				<td data-title="'Carrying Capacity'" width="200">
+					<span ng-if="!truck.$edit">{{truck.details.load}}</span>
+					<div ng-if="truck.$edit"><input numbers-only class="form-control" type="text" ng-model="truck.details.load" /></div>
+				</td>
+				<td data-title="'Actions'" width="200">
+					<a ng-if="!truck.$edit" href="" class="btn btn-default btn-xs" ng-click="truck.$edit = true">Edit</a>
+					<a ng-if="truck.$edit" href="" class="btn btn-primary btn-xs" ng-click="truck.$edit = false">Save</a>
+				</td>
+			</tr>
+		</table>
+		<a href="#" class="btn btn-primary btn-xs" ng-click="addTruckRow()">Add Row</a>
+	</div>
+</div>
+<script src="add_trucks.js"></script>

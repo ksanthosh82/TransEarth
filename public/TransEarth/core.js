@@ -4,8 +4,8 @@ var TransEarthApp = angular.module('TransEarthApp',
         'ngRoute',
         'ui.bootstrap',
         'ngGrid',
-        //'angular-bootstrap-select',
-        'nya.bootstrap.select',
+        'angular-bootstrap-select',
+        //'nya.bootstrap.select',
         'ngTable'
     ]
 );
@@ -319,6 +319,8 @@ TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
             var tagName = attrs.tagname;
             var requiredAttr = attrs.required;
             var placeHolder = attrs.holder;
+            var glyph = attrs.glyph;
+            var glyphDisplay = false;
             var disable;
             $scope.form = ctrls[0];
             if (typeof placeHolder == "undefined" || placeHolder == null) {
@@ -341,6 +343,11 @@ TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
             }else{
                 disable = $scope.location.disable;
             }
+            if (typeof glyph == "undefined" || glyph == null) {
+                glyphDisplay = true;
+            }else{
+                glyphDisplay = false;
+            }
 
             var template =
                     '<div class="input-group"> ' +
@@ -359,7 +366,7 @@ TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
                         '</div> ' +
                     '</div> '+
                         //'<span ng-show="form.'+tagName+'.$error.required" class="help-block">Required</span> ' +
-                    '<i class="form-control-feedback" ' +
+                    '<i class="form-control-feedback" ng-if="'+glyphDisplay+'"' +
                                 'ng-class="{ \'glyphicon glyphicon-remove\' : form.'+tagName+'.$error.required || !location.isSelected, '+
                                 '\'glyphicon glyphicon-ok\' : !form.'+tagName+'.$error.required && location.isSelected, '+
                                 '\'has-feedback\' : form.'+tagName+'.$error.required && !location.isSelected}" '+
@@ -506,6 +513,33 @@ TransEarthApp.directive('numbersOnly', function () {
                 return undefined;
             }
             ngModelCtrl.$parsers.push(fromUser);
+        }
+    };
+});
+
+TransEarthApp.directive('capitalizeNoBlanks', function(uppercaseFilter, $parse) {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, modelCtrl) {
+            //console.log(attrs.ngModel);
+            var capitalize = function(inputValue) {
+                //console.log(inputValue);
+                var capitalized;
+                if(typeof  inputValue != "undefined" && inputValue != null){
+                    capitalized = inputValue.toUpperCase();
+                    /*var capitalized = inputValue.split(' ').reduce(function(prevValue, word){
+                     return  prevValue + word.substring(0, 1).toUpperCase() + word.substring(1)+' ';
+                     }, '');*/
+                    if(capitalized !== inputValue) {
+                        modelCtrl.$setViewValue(capitalized);
+                        modelCtrl.$render();
+                    }
+                    return capitalized;
+                }
+            };
+            var model = $parse(attrs.ngModel);
+            modelCtrl.$parsers.push(capitalize);
+            capitalize(model(scope));
         }
     };
 });

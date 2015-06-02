@@ -1,4 +1,4 @@
-<div class="col-md-12" id="loadManagePage" ng-controller="loadManageCtrl">
+<div class="col-md-12" id="loadManagePage" ng-controller="loadManageCtrl" ng-init="init()">
 
 	<!-- PAGE HEADER -->
 	<div id="page-header" class="page-header">
@@ -15,7 +15,7 @@
 	<div id="goto_home" ng-show="loadProcess.indicator.saved"><a href="/TransEarth">GO BACK TO HOME</a></div>
 
 	<!-- FORM : YOU CAN DISABLE, HTML5 VALIDATION BY USING "novalidate" ATTRIBUTE-->
-	<div class="stepwizard col-md-offset-1">
+	<div class="stepwizard col-md-offset-3">
 		<div class="stepwizard-row setup-panel">
 			<div class="stepwizard-step">
 				<a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
@@ -91,13 +91,13 @@
                                             </div -->
 											<div class="input-group" id="material" >
 												<span class="input-group-addon"><i class="fa fa-truck"></i></span>
-												<select id="materialType" name="materialType"
-														style=""
+												<select selectpicker id="materialType" name="materialType"
+														ng-options="material for material in materialTypeList"
 														ng-class="{ 'has-error' : loadForm.materialType.$invalid,
 							 										'has-success' : !(loadForm.materialType.$invalid),
 					 												'has-feedback' : loadForm.materialType.$invalid}"
 														ng-model="load.load.material.type"  ng-required="true"
-														class="nya-selectpicker dropup form-control col-lg-12" data-dropup-auto="false">
+														class="dropup form-control col-lg-12" data-dropup-auto="false">
 													<option value="">{{chooseOne}}</option>
 												</select>
 												<!-- div class="radio col-lg-9" ng-repeat="item in materialTypeList">
@@ -122,6 +122,7 @@
 					 						'has-feedback' : loadForm.materialType.$invalid}"
 												 for="materialType">Material Type is mandatory
 											</div>
+											<!--cpre>{{loadForm.materialType.$error}}</prec-->
 										</div>
 									</div>
 									<div class="form-group-sm col-lg-12"
@@ -161,9 +162,10 @@
 										<div class="col-lg-9">
 											<div class="input-group" id="truckTypeId" >
 												<span class="input-group-addon"><i class="fa fa-exchange"></i></span>
-												<select id="truckType" name="truckType"
+												<select selectpicker id="truckType" name="truckType"
+														ng-options="truckType for truckType in truckTypeList"
 														ng-model="load.load.preferredTruck.type"  ng-required="true"
-														class="nya-selectpicker form-control col-lg-12" data-dropup-auto="false">
+														class="form-control col-lg-12" data-dropup-auto="false">
 													<option value="">Choose one</option>
 												</select>
 											</div>

@@ -81,7 +81,8 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
                         $scope.truckPostList.filter.from,
                         $scope.truckPostList.filter.to,
                         $scope.truckPostList.filter.dateRange,
-                        $scope.truckPostList.filter.dt
+                        $scope.truckPostList.filter.dt,
+                        $scope.truckPostList.filter.type
                     ]}).success(function(data) {
                         // succesAlert(data.statusMsg, 'eaiSaveStatus');
                         if(typeof data != 'undefined' && data != null
@@ -121,7 +122,8 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
                         $scope.truckPostList.filter.from,
                         $scope.truckPostList.filter.to,
                         $scope.truckPostList.filter.dateRange,
-                        $scope.truckPostList.filter.dt
+                        $scope.truckPostList.filter.dt,
+                        $scope.truckPostList.filter.type
                     ]}).success(function(data) {
                         // succesAlert(data.statusMsg, 'eaiSaveStatus');
                         if(typeof data != 'undefined' && data != null
@@ -194,6 +196,23 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
         $scope.getPagedDataAsync($scope.truckPostList.pagingOptions.pageSize, $scope.truckPostList.pagingOptions.currentPage);
     };
     $scope.searchTrucks();
+
+    $scope.init = function(){
+        $scope.getTruckTypes();
+    } ;
+
+    //$scope.truckTypeList = ["Ashok Leyland","Tata","Eicher","Force","Mahindra","Hindustan","Swaraj Mazda","Volvo","MAN","AMW","Tatra Vectra","DAF","Kamaz Vactra","SML Isuzu","Bharat Benz"];
+    $scope.truckTypeList = [];
+    $scope.getTruckTypes = function(){
+        $http.get("/TransEarth/getTruckTypes")
+            .success(function(data) {
+                console.log("Truck Types looked up:"+JSON.stringify(data));
+                $scope.truckTypeList = data;
+                $scope.truckPostList.filter.type = "";
+            }).error(function(err) {
+                console.log("truckType Lookup failed:"+JSON.stringify(err));
+            });
+    };
 
     $scope.truckPostDetails = {};
     $scope.viewTruckPost = function(truckId, postId){
