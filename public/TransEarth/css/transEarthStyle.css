@@ -1096,12 +1096,28 @@ section {
     width: 950px;
 }
 
-#materialType .btn{
+.form-group-sm textarea.form-control {
+    height: auto;
+}
+
+.width-full {
+    width: 100%;
+}
+
+#materialTypeTemp .btn{
     padding: 7px 15px;
 }
 
+#loadForm .btn{
+    padding: 8px 15px;
+}
+
+#truckForm .btn{
+    padding: 8px 15px;
+}
+
 #material .btn{
-    padding: 7px 15px;
+    padding: 8px 15px;
 }
 
 .no-border {

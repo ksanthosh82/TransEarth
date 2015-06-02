@@ -2,6 +2,9 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
     console.log('Inside loadManageCtrl - ');
 
     clearAlert("manage_load_alert");
+    $scope.chooseOne = "Choose One";
+    $scope.blanks = "";
+    $scope.style = "btn-danger";
 
     $scope.gotoHome = function(){
         //TruckRequest.setSharedTruck(null);
@@ -17,28 +20,29 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
     $scope.addLoadInd = false;
     $scope.editLoadInd = false;
     var sharedLoad = LoadRequest.getSharedLoad();
+    var userDetails = UserRequest.getUserProfile();
     if(typeof sharedLoad != "undefined" && sharedLoad != null){
         console.log("Shared Load in memory: "+JSON.stringify(sharedLoad));
         $scope.page_header = "Edit Load";
         $scope.editLoadInd = true;
         $scope.addLoadInd = false;
         //$scope.loadForm = {};
-        sharedLoad.owner.address.mapLocation = {
-            place : sharedLoad.owner.address.city,
-            state : sharedLoad.owner.address.state,
-            country : sharedLoad.owner.address.country,
-            display : sharedLoad.owner.address.city,
+        /*sharedLoad.owner.address.mapLocation = {
+            place : $scope.user.user_information.address.city,
+            state : $scope.user.user_information.address.state,
+            country : $scope.user.user_information.address.country,
+            display : "",//sharedLoad.owner.address.city,
             isSelected : true,
-            disable : sharedLoad.owner.details_same_as_user
+            disable : false
         };
         sharedLoad.company.address.mapLocation = {
-            place : sharedLoad.company.address.city,
-            state : sharedLoad.company.address.state,
-            country : sharedLoad.company.address.country,
-            display : sharedLoad.company.address.city,
+            place : $scope.user.user_information.address.city,
+            state : $scope.user.user_information.address.state,
+            country : $scope.user.user_information.address.country,
+            display : "", //sharedLoad.owner.address.city,
             isSelected : true,
-            disable : sharedLoad.company.address_same_as_owner
-        };
+            disable : false
+        };*/
         sharedLoad.load.pickup.address.mapLocation = {
             place : sharedLoad.load.pickup.address.city,
             state : sharedLoad.load.pickup.address.state,
@@ -55,14 +59,24 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
             isSelected : true,
             disable : false
         };
-        sharedLoad.owner.address.pincode  = sharedLoad.owner.address.pincode.toString();
-        sharedLoad.company.address.pincode  = sharedLoad.company.address.pincode.toString();
-        sharedLoad.owner.contact  = sharedLoad.owner.contact.toString();
-        sharedLoad.company.contact  = sharedLoad.company.contact.toString();
-        sharedLoad.load.pickup.address.pincode  = sharedLoad.load.pickup.address.pincode.toString();
-        sharedLoad.load.pickup.contact  = sharedLoad.load.pickup.contact.toString();
-        sharedLoad.load.delivery.address.pincode  = sharedLoad.load.delivery.address.pincode.toString();
-        sharedLoad.load.delivery.contact  = sharedLoad.load.delivery.contact.toString();
+        //sharedLoad.owner.address.pincode  = sharedLoad.owner.address.pincode.toString();
+        //sharedLoad.company.address.pincode  = sharedLoad.company.address.pincode.toString();
+        //sharedLoad.owner.contact  = sharedLoad.owner.contact.toString();
+        //sharedLoad.company.contact  = sharedLoad.company.contact.toString();
+        if(typeof sharedLoad.load.pickup.address.line1 != "undefined" && sharedLoad.load.pickup.address.line1 != null){
+            $scope.pickupPinFlag = true;
+            sharedLoad.load.pickup.address.pincode  =
+                (typeof sharedLoad.load.pickup.address.pincode != "undefined" && sharedLoad.load.pickup.address.pincode != null) ? sharedLoad.load.pickup.address.pincode.toString() : "";
+        }
+        sharedLoad.load.pickup.contact  =
+            (typeof sharedLoad.load.pickup.contact != "undefined" && sharedLoad.load.pickup.contact != null) ? sharedLoad.load.pickup.contact.toString() : "";
+        if(typeof sharedLoad.load.delivery.address.line1 != "undefined" && sharedLoad.load.delivery.address.line1 != null){
+            $scope.deliveryPinFlag = true;
+            sharedLoad.load.delivery.address.pincode  =
+                (typeof sharedLoad.load.delivery.address.pincode != "undefined" && sharedLoad.load.delivery.address.pincode != null) ? sharedLoad.load.delivery.address.pincode.toString() : "";
+        }
+        sharedLoad.load.delivery.contact  =
+            (typeof sharedLoad.load.delivery.contact != "undefined" && sharedLoad.load.delivery.contact != null) ? sharedLoad.load.delivery.contact.toString() : "";
         sharedLoad.load.quantity  = sharedLoad.load.quantity.toString();
         $scope.load = sharedLoad;
         console.log("Shared Load: "+JSON.stringify($scope.load));
@@ -96,6 +110,7 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
             disable : false
         };
         $scope.load.load = {};
+        $scope.load.load.material = {};
         $scope.load.load.pickup = {};
         $scope.load.load.pickup.address = {};
         $scope.load.load.pickup.address.mapLocation = {
@@ -150,7 +165,7 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
     };
 
     $scope.getMaterials = function(){
-        $http.post("/TransEarth/getMaterialTypes", {})
+        $http.get("/TransEarth/getMaterialTypes")
             .success(function(data) {
                 console.log("Materials looked up:"+JSON.stringify(data));
                 $scope.materialTypeList = data;
@@ -164,11 +179,58 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
                 //Apply html with option
                 applyHtml("materialType", options);
                 applySelect("materialType");
+                console.log("Materials looked up:"+$scope.load.load.material.type);
             }).error(function(err) {
                 console.log("Materials Lookup failed:"+JSON.stringify(err));
             });
     };
     $scope.getMaterials();
+
+    $scope.getTruckTypes = function(){
+        $http.get("/TransEarth/getTruckTypes")
+            .success(function(data) {
+                console.log("Truck Types looked up:"+JSON.stringify(data));
+                $scope.truckTypeList = data;
+                var options = '';
+                options += '<option data-hidden="true">Choose one</option>';
+                $.each(data, function (i, row) {
+                    //console.log(JSON.stringify(row));
+                    options += '<option>' + row + '</option>';
+                });
+                //alert(id+' - '+options);
+                //Apply html with option
+                applyHtml("truckType", options);
+                applySelect("truckType");
+            }).error(function(err) {
+                console.log("truckType Lookup failed:"+JSON.stringify(err));
+            });
+    };
+    $scope.getTruckTypes();
+
+    $scope.isPickupPincodeRequired = function(){
+        $scope.pickupPinFlag = false;
+        //console.log("Inside isPickupPincodeRequired "+$scope.load.load.pickup.address.line1);
+        if(typeof $scope.load.load.pickup != "undefined" && $scope.load.load.pickup != null
+            && typeof $scope.load.load.pickup.address != "undefined" && $scope.load.load.pickup.address != null
+            && typeof $scope.load.load.pickup.address.line1 != "undefined" && $scope.load.load.pickup.address.line1 != null
+            && $scope.load.load.pickup.address.line1.length >0){
+            $scope.pickupPinFlag = true;
+        }else{
+            $scope.pickupPinFlag = false;
+        }
+    };
+
+    $scope.isDeliveryPincodeRequired = function(){
+        $scope.deliveryPinFlag = false;
+        if(typeof $scope.load.load.delivery != "undefined" && $scope.load.load.delivery != null
+            && typeof $scope.load.load.delivery.address != "undefined" && $scope.load.load.delivery.address != null
+            && typeof $scope.load.load.delivery.address.line1 != "undefined" && $scope.load.load.delivery.address.line1 != null
+            && $scope.load.load.delivery.address.line1.length >0){
+            $scope.deliveryPinFlag = true;
+        }else{
+            $scope.deliveryPinFlag = false;
+        }
+    };
 
     $scope.canDisableOwnerDetails = function(){
         console.log("canDisableOwnerDetails with user information: "+JSON.stringify($scope.user));

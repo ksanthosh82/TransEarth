@@ -68,6 +68,8 @@ exports.getTruckPostSummary = function(req,res){
     colDef.resizable = true;
     returnData.truckPostList.headers.push(colDef);
 
+    var currentDate = new Date();
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
     //Truck.find(searchParams, subTruckSummary);
     Truck.aggregate(
         [
@@ -81,7 +83,8 @@ exports.getTruckPostSummary = function(req,res){
             },
             {
                 $match: {
-                    "posts.status" : {"$nin":["REMOVED"]}
+                    "posts.status" : {"$nin":["REMOVED"]},
+                    "posts.truck_post.availability.date" : {"$gte":currentDate}
                 }
             },
             {
@@ -94,7 +97,13 @@ exports.getTruckPostSummary = function(req,res){
                     destination: "$posts.truck_post.availability.delivery_location",
                     load : "$posts.truck_post.maximum_load.quantity",
                     unit : "$posts.truck_post.maximum_load.unit",
-                    availableDate: "$posts.truck_post.availability.date"
+                    availableDate: "$posts.truck_post.availability.date",
+                    createdOn: "$posts.auditLog.createdTime"
+                }
+            },
+            {
+                $sort : {
+                    "createdOn" : -1
                 }
             },
             {
@@ -601,6 +610,8 @@ exports.getMyTruckPosts = function(req,res){
 
     console.log("getMyTruckPosts searchParams: "+JSON.stringify(searchParams));
 
+    var currentDate = new Date();
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
     //Truck.find(searchParams, subTruckSummary);
     Truck.aggregate(
         [
@@ -617,7 +628,8 @@ exports.getMyTruckPosts = function(req,res){
             },
             {
                 $match: {
-                    "posts.status" : {"$nin":["REMOVED"]}
+                    "posts.status" : {"$nin":["REMOVED"]},
+                    "posts.truck_post.availability.date" : {"$gte":currentDate}
                 }
             },
             {
@@ -690,7 +702,7 @@ exports.addTruck = function(req, res){
                 contact : req.session.user_profile.user_information.contact[0]
             }
         },
-        owner : {
+        /*owner : {
             details_same_as_user : input.owner.details_same_as_user,
             first_name: input.owner.first_name,
             last_name: input.owner.last_name,
@@ -724,7 +736,7 @@ exports.addTruck = function(req, res){
                 pincode : input.company.address.pincode
             },
             contact : input.company.contact
-        },
+        },*/
         truck_details : {
             type : input.details.type,
             make : input.details.make,
@@ -837,7 +849,7 @@ exports.editTruck = function(req, res){
                             contact : req.session.user_profile.user_information.contact[0]
                         }
                     },
-                    owner : {
+                    /*owner : {
                         first_name: input.owner.first_name,
                         last_name: input.owner.last_name,
                         address : {
@@ -869,7 +881,7 @@ exports.editTruck = function(req, res){
                             pincode : input.company.address.pincode
                         },
                         contact : input.company.contact
-                    },
+                    },*/
                     truck_details : {
                         type : input.details.type,
                         make : input.details.make,
@@ -1002,6 +1014,12 @@ exports.addTruckPost = function(req, res){
                 quantity : new_post.load,
                 unit : "Tons"
             }
+        },
+        auditLog : {
+            createdUserId : req.session.user_profile.username,
+            lastUpdatedUserId : req.session.user_profile.username,
+            createdTime : new Date(),
+            lastUpdatedTime : new Date()
         }
     };
 
@@ -1147,8 +1165,9 @@ exports.editTruckPost = function(req, res){
             },
             { $set:
                 {
-                    "posts.$.truck_post" : truck_post
-
+                    "posts.$.truck_post" : truck_post,
+                    "posts.$.auditLog.lastUpdatedUserId" : req.session.user_profile.username,
+                    "posts.$.auditLog.lastUpdatedTime" : new Date()
                 }
             },
             subUpdateTruckPost

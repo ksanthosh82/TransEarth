@@ -1,15 +1,15 @@
 function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
-    console.log('Inside loginCtrl - '+$scope.error);
+    console.log('Inside loginCtrl - '+JSON.stringify($scope.serverAuth));
 
     $scope.core = {};
     $scope.width = 80;
     $scope.width = $scope.width.toFixed();
     $scope.width = $scope.width + "%";
     console.log("$scope.width "+$scope.width);
-    if(typeof $scope.error != "undefined" && $scope.error != null){
+    /*if(typeof $scope.error != "undefined" && $scope.error != null){
         $scope.serverAuth.authFailed = true;
         succesError($scope.error, "login_alert");
-    }
+    }*/
 
     if($scope.serverAuth.authFailed){
         console.log('Inside loginCtrl serverAuth failed - '+JSON.stringify($scope.serverAuth));
@@ -41,11 +41,6 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
                 console.log("Logged in");
                 $scope.core.loggedIn = true;
                 UserRequest.setUserProfile({
-                    username : "ksanthosh82",
-                    user_type : "truck_owner",
-                    display_name : "Santhosh",
-                    email : "as@as.com",
-                    user_information : ""
                 });
                 $scope.page.template = ''+"/TransEarth";
                 //$location.url("/");
@@ -67,7 +62,9 @@ function loginCtrl($scope, $http, $location, $anchorScroll, UserRequest) {
 
     $scope.userTypes = [
         { type: 'truck_owner', Name: 'Truck Owner' },
-        { type: 'load_owner', Name: 'Load Owner' }
+        { type: 'load_owner', Name: 'Load Owner' },
+        { type: 'agent', Name: 'Booking Agent' },
+        { type: 'contractor', Name: 'Transport Contractor' }
     ];
 
     $scope.cityList = [];

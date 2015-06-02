@@ -49,7 +49,8 @@ app.configure(function(){
     app.use(express.session({
         secret: '1234567890QWERTY',
         rolling: true,
-        cookie: {maxAge : validSessionDuration}
+        //cookie: {maxAge : validSessionDuration}
+        //cookie: {maxAge : 0}
     }));
     app.use(express.responseTime());
     // Initialize Passport
@@ -65,21 +66,22 @@ app.configure(function(){
         //console.log("Hiiii");
         if (req.method == 'POST' && req.url == '/login') {
             console.log("Inside Login Remember Me");
-            if (req.body.rememberMe) {
+            /*if (req.body.rememberMe) {
                 //req.session.cookie.maxAge = 0; // Remember 'me' Deacticate
                 console.log("Marking Remember Me");
                 req.session.cookie.maxAge = 5*24*60*60*1000; //Remember 'me' for 5 days
             } else {
                 req.session.cookie.expires = false;
-            }
+            }*/
         }
         req.error = null;
         if (req.isAuthenticated()) {
-            console.log(moment().utc().local().format("YYYY-MM-DD hh:mm:ss")+": Cookie MaxAge:"+req.session.cookie.maxAge+" Requested URL: "+req.url);
-            if(typeof req.session.cookie == "undefined" || typeof req.session.cookie.maxAge == "undefined"){
+            /*if(typeof req.session.cookie == "undefined" || typeof req.session.cookie.maxAge == "undefined"){
+                console.log(moment().utc().local().format("YYYY-MM-DD hh:mm:ss")+": Cookie MaxAge:"+req.session.cookie.maxAge+" Requested URL: "+req.url);
                 console.log("Marking Remember Me for session duration");
-                req.session.cookie.maxAge = validSessionDuration;
-            }
+                //req.session.cookie.maxAge = validSessionDuration;
+                //req.session.cookie.maxAge = 0;
+            }*/
             return next();
         }
         next();
@@ -206,6 +208,12 @@ app.get("/TransEarth/getLoggedInUserProfile", function(req, res){
 function ensureAuthenticated(req, res, next) {
     console.log("Utility Method for Authentication ");
     if (req.isAuthenticated()) {
+        return next();
+    }else{
+        return res.redirect('/TransEarth/sessionExpired');
+    }
+
+    /*if (req.isAuthenticated()) {
         console.log(moment().utc().local().format("YYYY-MM-DD hh:mm:ss")+": Cookie MaxAge:"+req.session.cookie.maxAge+" Requested URL: "+req.url);
         req.session.cookie.maxAge = validSessionDuration;
         console.log("User logged in - "+req.session.cookie.maxAge);
@@ -214,7 +222,7 @@ function ensureAuthenticated(req, res, next) {
     req.session.validity = false;
     console.log("User not logged in - Default pages display - "+req.session.cookie.maxAge);
     return res.redirect('/TransEarth/sessionExpired');
-    //return next();
+    //return next();*/
 }
 
 function clearSession(req){
@@ -392,7 +400,9 @@ app.post("/TransEarth/addLoad", ensureAuthenticated, LoadRoute.addLoad);
 app.post("/TransEarth/editLoad", ensureAuthenticated, LoadRoute.editLoad);
 app.post("/TransEarth/removeLoad", ensureAuthenticated, LoadRoute.removeLoad);
 
-app.post("/TransEarth/getMaterialTypes", LookupRoute.getMaterialTypes);
+app.get("/TransEarth/getMaterialTypes", LookupRoute.getMaterialTypes);
+app.get("/TransEarth/getTruckTypes", LookupRoute.getTruckTypes);
+app.get("/TransEarth/getTruckMakes", LookupRoute.getTruckMakes);
 
 app.get('/TransEarth/test', function (req, res) {
     res.render('test');

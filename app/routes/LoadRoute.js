@@ -74,9 +74,13 @@ exports.getLoadListSummary = function(req,res){
     colDef.resizable = true;
     returnData.loadPostList.headers.push(colDef);
 
+    var currentDate = new Date();
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
+
     Load.find(
         {
-            "isActive" : true
+            "isActive" : true,
+            "load.pickup.date" : {"$gte":currentDate}
         },
         {
             "load.pickup.address.city" : true,
@@ -84,9 +88,10 @@ exports.getLoadListSummary = function(req,res){
             "load.quantity" : true,
             "load.unit" : true,
             "load.material.type" : true,
-            "pickup.date" : true
+            "load.pickup.date" : true,
+            "auditLog.createdTime": true
         }
-    ).limit(5).exec(subLoadSummary);
+    ).sort({"auditLog.createdTime":-1}).limit(5).exec(subLoadSummary);
 
     function subLoadSummary(err, data){
         if(!err){
@@ -263,6 +268,7 @@ exports.searchLoadList = function(req,res){
             res.json(500, jsonResponse);
         }
         console.log("getLoadList searchParams: "+JSON.stringify(searchParams));
+
         //Truck.find(searchParams, subTruckSummary);
         Load.aggregate(
             [
@@ -406,8 +412,12 @@ exports.getMyLoadList = function(req,res){
     colDef.resizable = true;
     returnData.myLoadList.headers.push(colDef);
 
+    var currentDate = new Date();
+    currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
+
     var searchParams = {};
     searchParams["isActive"] = true;
+    searchParams["load.pickup.date"] = {"$gte":currentDate};
     if(typeof req.session.user_profile != "undefined" && req.session.user_profile != null){
         searchParams["current_tracker.user.username"] = req.session.user_profile.username;
     }else{
@@ -433,7 +443,13 @@ exports.getMyLoadList = function(req,res){
                     loadQuantity: "$load.quantity",
                     loadUnit: "$load.unit",
                     materialType : "$load.material.type",
-                    pickupDate: "$load.pickup.date"
+                    pickupDate: "$load.pickup.date",
+                    createdTime : "$auditLog.createdTime"
+                }
+            },
+            {
+                $sort : {
+                    "createdTime":-1
                 }
             }
         ], subMyLoad
@@ -502,7 +518,7 @@ exports.addLoad = function(req, res){
     if(typeof input == "undefined" || input == null){
         return res.json(500, {statusMsg:'Load Input invalid'});
     }
-    if(typeof input.owner == "undefined" || input.owner == null
+    /*if(typeof input.owner == "undefined" || input.owner == null
         || typeof input.owner.address == "undefined" || input.owner.address == null
         || typeof input.owner.address.mapLocation == "undefined" || input.owner.address.mapLocation == null
         || typeof input.owner.address.mapLocation.place == "undefined" || input.owner.address.mapLocation.place == null
@@ -515,7 +531,7 @@ exports.addLoad = function(req, res){
         || typeof input.company.address.mapLocation.place == "undefined" || input.company.address.mapLocation.place == null
         || input.company.address.mapLocation.place == ""){
         return res.json(500, {statusMsg:'Load Company Location Details invalid'});
-    }
+    }*/
     if(typeof input.load == "undefined" || input.load == null
         || typeof input.load.pickup == "undefined" || input.load.pickup == null
         || typeof input.load.pickup.address == "undefined" || input.load.pickup.address == null
@@ -549,7 +565,7 @@ exports.addLoad = function(req, res){
                 contact : req.session.user_profile.user_information.contact[0]
             }
         },
-        owner : {
+        /*owner : {
             details_same_as_user : input.owner.details_same_as_user,
             first_name: input.owner.first_name,
             last_name: input.owner.last_name,
@@ -579,7 +595,7 @@ exports.addLoad = function(req, res){
                 pincode : input.company.address.pincode
             },
             contact : input.company.contact
-        },
+        },*/
         load : {
             quantity : input.load.quantity,
             unit : "Tons",
@@ -587,10 +603,14 @@ exports.addLoad = function(req, res){
                 type : input.load.material.type,
                 typeDescription : input.load.material.typeDescription
             },
+            preferredTruck :{
+                type : input.load.preferredTruck.type,
+                typeDescription : input.load.preferredTruck.typeDescription
+            },
             status : "OPEN",
             pickup : {
                 date : input.load.pickup.date,
-                address_same_as_owner : input.load.pickup.address_same_as_owner,
+                //address_same_as_owner : input.load.pickup.address_same_as_owner,
                 address : {
                     line1 : input.load.pickup.address.line1,
                     line2 : input.load.pickup.address.line2,
@@ -613,7 +633,7 @@ exports.addLoad = function(req, res){
             },
             delivery : {
                 //date : input.load.delivery.date,
-                address_same_as_owner : input.load.delivery.address_same_as_owner,
+                //address_same_as_owner : input.load.delivery.address_same_as_owner,
                 address : {
                     line1 : input.load.delivery.address.line1,
                     //line2 : input.load.delivery.address.line2,
@@ -670,7 +690,7 @@ exports.editLoad = function(req, res){
         || typeof input.load_id == "undefined" || input.load_id == null){
         return res.json(500, {statusMsg:'Empty Load ID passed - Stopping Hack Updates'});
     }
-    if(typeof input.owner == "undefined" || input.owner == null
+    /*if(typeof input.owner == "undefined" || input.owner == null
         || typeof input.owner.address == "undefined" || input.owner.address == null
         || typeof input.owner.address.mapLocation == "undefined" || input.owner.address.mapLocation == null
         || typeof input.owner.address.mapLocation.place == "undefined" || input.owner.address.mapLocation.place == null
@@ -683,7 +703,7 @@ exports.editLoad = function(req, res){
         || typeof input.company.address.mapLocation.place == "undefined" || input.company.address.mapLocation.place == null
         || input.company.address.mapLocation.place == ""){
         return res.json(500, {statusMsg:'Load Company Location Details invalid'});
-    }
+    }*/
     if(typeof input.load == "undefined" || input.load == null
         || typeof input.load.pickup == "undefined" || input.load.pickup == null
         || typeof input.load.pickup.address == "undefined" || input.load.pickup.address == null
@@ -738,7 +758,7 @@ exports.editLoad = function(req, res){
                             contact : req.session.user_profile.user_information.contact[0]
                         }
                     },
-                    owner : {
+                    /*owner : {
                         details_same_as_user : input.owner.details_same_as_user,
                         first_name: input.owner.first_name,
                         last_name: input.owner.last_name,
@@ -768,7 +788,7 @@ exports.editLoad = function(req, res){
                             pincode : input.company.address.pincode
                         },
                         contact : input.company.contact
-                    },
+                    },*/
                     load : {
                         quantity : input.load.quantity,
                         unit : "Tons",
@@ -776,10 +796,14 @@ exports.editLoad = function(req, res){
                             type : input.load.material.type,
                             typeDescription : input.load.material.typeDescription
                         },
+                        preferredTruck :{
+                            type : input.load.preferredTruck.type,
+                            typeDescription : input.load.preferredTruck.typeDescription
+                        },
                         status : "OPEN",
                         pickup : {
                             date : input.load.pickup.date,
-                            address_same_as_owner : input.load.pickup.address_same_as_owner,
+                            //address_same_as_owner : input.load.pickup.address_same_as_owner,
                             address : {
                                 line1 : input.load.pickup.address.line1,
                                 //line2 : input.load.pickup.address.line2,
@@ -801,7 +825,7 @@ exports.editLoad = function(req, res){
                         },
                         delivery : {
                             //date : input.load.delivery.date,
-                            address_same_as_owner : input.load.delivery.address_same_as_owner,
+                            //address_same_as_owner : input.load.delivery.address_same_as_owner,
                             address : {
                                 line1 : input.load.delivery.address.line1,
                                 //line2 : input.load.delivery.address.line2,

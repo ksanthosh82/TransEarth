@@ -52,44 +52,50 @@ var postSchema = new Schema({
     pickup : {
         date : {type: Date, required: true, trim: true},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
             city : { type: String, required: true, trim : true},
             state : { type: String, required: true, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
         alt_address : {
-            line1 : { type: String, required: true},
+            line1 : { type: String, trim: true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
             city : { type: String, required: true, trim : true},
             state : { type: String, required: true, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         }
     },
     delivery : {
         date : {type: Date, required: true, trim: true},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
             city : { type: String, required: true, trim : true},
             state : { type: String, required: true, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
         alt_address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
             city : { type: String, required: true, trim : true},
             state : { type: String, required: true, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         }
+    },
+    auditLog : {
+        createdUserId : {type: String, trim: true},
+        lastUpdatedUserId : {type: String, trim: true},
+        createdTime : {type: Date, trim: true, default : new Date()},
+        lastUpdatedTime : {type: Date, trim: true, default : new Date()}
     }
 });
 
@@ -109,38 +115,38 @@ var truckSchema = new Schema({
         }
     },
     owner : {
-        details_same_as_user : { type: Boolean, required: true, trim : true},
-        first_name: { type: String, required: true, trim : true},
-        last_name: { type: String, required: true, trim : true},
+        details_same_as_user : { type: Boolean, trim : true, default : false},
+        first_name: { type: String, trim : true},
+        last_name: { type: String, trim : true},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
-            city : { type: String, required: true, trim : true},
-            state : { type: String, required: true, trim : true},
+            city : { type: String, trim : true},
+            state : { type: String, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
-        contact : { type: Number, required: true, trim : true}
+        contact : { type: Number, trim : true}
     },
     company : {
-        details_same_as_user : { type: Boolean, required: true, trim : true},
-        name: { type: String, required: true, trim : true},
-        address_same_as_owner : { type: Boolean, required: true, trim : true},
-        contact_same_as_owner : { type: Boolean, required: true, trim : true},
+        details_same_as_user : { type: Boolean, trim : true, default : false},
+        name: { type: String, trim : true},
+        address_same_as_owner : { type: Boolean, trim : true, default : false},
+        contact_same_as_owner : { type: Boolean, trim : true, default : false},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
-            city : { type: String, required: true, trim : true},
-            state : { type: String, required: true, trim : true},
+            city : { type: String, trim : true},
+            state : { type: String, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
-        contact : { type: Number, required: true, trim : true}
+        contact : { type: Number, trim : true}
     },
     truck_details : {
-        type : {type: String, trim: true},
+        type : {type: String, required: true, trim: true},
         make : {type: String, required: true, trim: true},
         model : {type: String, required: true, trim: true},
         reg_no : {type: String, required: true, trim: true},

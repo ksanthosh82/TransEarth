@@ -52,7 +52,7 @@
 				</div>
 				<div class="navbar-collapse collapse" id="navbar-main">
 					<ul class="nav navbar-nav navbar-right">
-						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner">
+						<li class="dropdown top-navbar-margin">
 							<!-- a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes" aria-expanded="false">Truck Owners <span class="caret"></span></a>
 							<ul class="dropdown-menu" aria-labelledby="themes">
 								<li><a href="#" ng-click="loadMyTrucks()">Home Page</a></li>
@@ -61,16 +61,16 @@
 							</ul -->
 							<a href="#" ng-click="siteHome()">Home</a>
 						</li>
-						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner">
-							<a href="#" ng-click="loadMyTrucks()">My Truck Posts</a>
+						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner||core.agent||core.contractor">
+							<a href="#" ng-click="loadMyTrucks()">My Trucks</a>
 						</li>
-						<li class="dropdown top-navbar-margin" ng-if="core.load_owner">
+						<li class="dropdown top-navbar-margin" ng-if="core.load_owner||core.agent||core.contractor">
 							<a href="#" ng-click="loadMyLoads()">My Loads</a>
 						</li>
-						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner">
+						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner||core.agent||core.contractor">
 							<a href="#" ng-click="addTruck()">Add Truck</a>
 						</li>
-						<li class="dropdown top-navbar-margin" ng-if="core.load_owner">
+						<li class="dropdown top-navbar-margin" ng-if="core.load_owner||core.agent||core.contractor">
 							<a href="#" ng-click="addLoad()">Add Load</a>
 						</li>
 						<li class="top-navbar-margin"><a href="#" ng-click="searchTrucks()">Search Trucks</a></li>
@@ -149,7 +149,7 @@
 		<script src="bootstrap/js/bootstrap-select.min.js"></script>
 		<!-- Angular Addon -->
 		<script src="angular/ui-bootstrap-tpls-0.10.0.js"></script>
-		<script src="angular/angular-bootstrap-select.min.js"></script>
+		<script src="angular/angular-bootstrap-select.js"></script>
 		<script src="angular/nya-bootstrap-select.js"></script>
         <!-- Load Date & Time picker plugins -->
         <script src="bootstrap/js/daterangepicker.js"></script>

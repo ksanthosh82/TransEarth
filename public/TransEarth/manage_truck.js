@@ -10,6 +10,53 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
     $scope.truck = TruckRequest.getSharedTruck();
     console.log("User details in Manage Truck:"+JSON.stringify($scope.user));
 
+    $scope.init = function(){
+        $scope.getTruckTypes();
+        $scope.getTruckMakes();
+    } ;
+
+    //$scope.truckTypeList = ["Ashok Leyland","Tata","Eicher","Force","Mahindra","Hindustan","Swaraj Mazda","Volvo","MAN","AMW","Tatra Vectra","DAF","Kamaz Vactra","SML Isuzu","Bharat Benz"];
+    $scope.getTruckTypes = function(){
+        $http.get("/TransEarth/getTruckTypes")
+            .success(function(data) {
+                console.log("Truck Types looked up:"+JSON.stringify(data));
+                $scope.truckTypeList = data;
+                var options = '';
+                options += '<option data-hidden="true">Choose one</option>';
+                $.each(data, function (i, row) {
+                    //console.log(JSON.stringify(row));
+                    options += '<option>' + row + '</option>';
+                });
+                //alert(id+' - '+options);
+                //Apply html with option
+                //applyHtml("truck_type", options);
+                //applySelect("truck_type");
+            }).error(function(err) {
+                console.log("truckType Lookup failed:"+JSON.stringify(err));
+            });
+    };
+    //$scope.getTruckTypes();
+    $scope.getTruckMakes = function(){
+        $http.get("/TransEarth/getTruckMakes")
+            .success(function(data) {
+                console.log("Truck Makes looked up:"+data[0].list);
+                $scope.makeList = data;
+                var options = '';
+                options += '<option data-hidden="true">Choose one</option>';
+                $.each(data, function (i, row) {
+                    //console.log(JSON.stringify(row));
+                    options += '<option>' + row + '</option>';
+                });
+                //alert(id+' - '+options);
+                //Apply html with option
+                //applyHtml("make", options);
+                //applySelect("make");
+            }).error(function(err) {
+                console.log("Make Lookup failed:"+JSON.stringify(err));
+            });
+    };
+    //$scope.getTruckMakes();
+
     $scope.addTruckInd = false;
     $scope.editTruckInd = false;
     $scope.dumpTruck = function(){
@@ -24,7 +71,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             $scope.truckShared.company.contact = $scope.truckShared.owner.contact;
             //$scope.truckShared.company.address.pincode = $scope.truckShared.company.address.pincode.toString();
         }*/
-        $scope.truckShared.owner.address.mapLocation = {
+        /*$scope.truckShared.owner.address.mapLocation = {
             place : $scope.truckShared.owner.address.city,
             state : $scope.truckShared.owner.address.state,
             country : $scope.truckShared.owner.address.country,
@@ -44,7 +91,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         $scope.truckShared.company.contact = $scope.truckShared.company.contact.toString();
 
         $scope.truckShared.owner.address.pincode = $scope.truckShared.owner.address.pincode.toString();
-        $scope.truckShared.company.address.pincode = $scope.truckShared.company.address.pincode.toString();
+        $scope.truckShared.company.address.pincode = $scope.truckShared.company.address.pincode.toString();*/
 
         if(typeof $scope.truckShared != "undefined" && typeof $scope.truckShared.truck_details != "undefined" ){
             $scope.truckShared.details = {};
@@ -63,7 +110,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
 
     if(typeof $scope.truck == "undefined" || $scope.truck == null){
         $scope.truck = {};
-        $scope.truck.owner = {};
+        /*$scope.truck.owner = {};
         $scope.truck.owner.address = {};
         $scope.truck.owner.address.mapLocation = {
             place : "",
@@ -78,7 +125,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             state : "",
             isSelected : false,
             disable : false
-        };
+        };*/
         $scope.page.header = "Add Truck";
         $scope.addTruckInd = true;
         $scope.editTruckInd = false;
@@ -343,7 +390,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
         if ($scope.truckForm.$valid) {
             console.log("Form is valid! "+JSON.stringify($scope.truck));
 
-            if($scope.truck.owner.details_same_as_user){
+            /*if($scope.truck.owner.details_same_as_user){
                 $scope.truck.owner.details_same_as_user = true;
             }else{
                 $scope.truck.owner.details_same_as_user = false;
@@ -362,7 +409,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
                 $scope.truck.company.contact_same_as_owner = true;
             }else{
                 $scope.truck.company.contact_same_as_owner = false;
-            }
+            }*/
             var url = "";
             if($scope.addTruckInd){
                 url = "/TransEarth/addTruck";

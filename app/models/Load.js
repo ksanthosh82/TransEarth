@@ -25,40 +25,44 @@ var loadSchema = new Schema({
         }
     },
     owner : {
-        details_same_as_user: { type: Boolean, required: true, trim : true, default: false},
-        first_name: { type: String, required: true, trim : true},
-        last_name: { type: String, required: true, trim : true},
+        details_same_as_user: { type: Boolean, trim : true, default: false},
+        first_name: { type: String, trim : true},
+        last_name: { type: String, trim : true},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
-            city : { type: String, required: true, trim : true},
-            state : { type: String, required: true, trim : true},
+            city : { type: String, trim : true},
+            state : { type: String, trim : true},
             country : { type: String},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
-        contact : { type: Number, required: true, trim : true}
+        contact : { type: Number, trim : true}
     },
     company : {
-        details_same_as_user: { type: Boolean, required: true, trim : true, default: false},
-        name: { type: String, required: true, trim : true},
-        address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
-        contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
+        details_same_as_user: { type: Boolean, trim : true, default: false},
+        name: { type: String, trim : true},
+        address_same_as_owner : { type: Boolean, trim : true, default: false},
+        contact_same_as_owner : { type: Boolean, trim : true, default: false},
         address : {
-            line1 : { type: String, required: true, trim : true},
+            line1 : { type: String, trim : true},
             line2 : { type: String, trim : true},
             line3 : { type: String, trim : true},
-            city : { type: String, required: true, trim : true},
-            state : { type: String, required: true, trim : true},
+            city : { type: String, trim : true},
+            state : { type: String, trim : true},
             country : { type: String, trim : true},
-            pincode : { type: Number, required: true, trim : true}
+            pincode : { type: Number, trim : true}
         },
-        contact : { type: Number, required: true, trim : true}
+        contact : { type: Number, trim : true}
     },
     load : {
         quantity : {type: Number, required: true, trim: true},
         unit : {type: String, required: true, trim: true},
         material :{
+            type : {type: String, required: true, trim: true},
+            typeDescription : {type: String, trim: true, default : ""}
+        },
+        preferredTruck :{
             type : {type: String, required: true, trim: true},
             typeDescription : {type: String, trim: true, default : ""}
         },
@@ -68,23 +72,23 @@ var loadSchema = new Schema({
             address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             address : {
-                line1 : { type: String, required: true, trim : true},
+                line1 : { type: String, trim : true},
                 line2 : { type: String, trim : true},
                 line3 : { type: String, trim : true},
                 city : { type: String, required: true, trim : true},
                 state : { type: String, required: true, trim : true},
                 country : { type: String, trim : true},
-                pincode : { type: Number, required: true, trim : true}
+                pincode : { type: Number, trim : true}
             },
             contact : { type: Number, required: true, trim : true},
             alt_address : {
-                line1 : { type: String, required: true},
+                line1 : { type: String, trim : true},
                 line2 : { type: String, trim : true},
                 line3 : { type: String, trim : true},
                 city : { type: String, required: true, trim : true},
                 state : { type: String, required: true, trim : true},
                 country : { type: String, trim : true},
-                pincode : { type: Number, required: true, trim : true}
+                pincode : { type: Number, trim : true}
             }
         },
         delivery : {
@@ -92,23 +96,23 @@ var loadSchema = new Schema({
             address_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             contact_same_as_owner : { type: Boolean, required: true, trim : true, default: false},
             address : {
-                line1 : { type: String, required: true, trim : true},
+                line1 : { type: String, trim : true},
                 line2 : { type: String, trim : true},
                 line3 : { type: String, trim : true},
                 city : { type: String, required: true, trim : true},
                 state : { type: String, required: true, trim : true},
                 country : { type: String, trim : true},
-                pincode : { type: Number, required: true, trim : true}
+                pincode : { type: Number, trim : true}
             },
             contact : { type: Number, required: true, trim : true},
             alt_address : {
-                line1 : { type: String, required: true, trim : true},
+                line1 : { type: String, trim : true},
                 line2 : { type: String, trim : true},
                 line3 : { type: String, trim : true},
                 city : { type: String, required: true, trim : true},
                 state : { type: String, required: true, trim : true},
                 country : { type: String, trim : true},
-                pincode : { type: Number, required: true, trim : true}
+                pincode : { type: Number, trim : true}
             }
         }
     },

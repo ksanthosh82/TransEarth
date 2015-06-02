@@ -3,7 +3,7 @@
 	<!-- PAGE HEADER -->
 	<div class="page-header">
 		<h2>Register</h2>
-		<span class="label label-default pull-right">Clear errors in each step to move to next</span>
+		<span ng-show="!saved" class="label label-default pull-right">Clear errors in each step to move to next</span>
 	</div>
 
 	<div id="signup_alert"></div>
@@ -51,12 +51,12 @@
 											<div class="input-group" id="user_role">
 												<span class="input-group-addon"><i class="fa fa-user"></i></span>
 												<select name="user_type" class="form-control nya-selectpicker"
-														id="user_type" multiple
+														id="user_type"
 														ng-model="user.user_type"
 														ng-options="user_type.type as user_type.Name for user_type in userTypes"
 														ng-required="true"
 														ng-change="showAccountDetails()">
-													<option value="false">Please Choose One</option>
+													<option value="">Please Choose One</option>
 												</select>
 											</div>
 											<!-- i class="form-control-feedback"
@@ -149,7 +149,7 @@
 												<span class="input-group-addon"><i class="fa fa-key"></i></span>
 												<input type="password" class="form-control" name="password" id="password" ng-model="user.password" placeholder="Enter Password"
 													   ng-maxlength="12" maxlength="12"
-													   ng-required="true" ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-!@#$%^&*]).{8,12}$/">
+													   ng-required="true" ng-pattern="/^().{8,12}$/">
 											</div>
 											<i class="form-control-feedback"
 											   ng-class="{ 'glyphicon glyphicon-remove' : userForm.password.$invalid,
@@ -162,12 +162,7 @@
 												 ng-class="{ 'has-error' : userForm.password.$invalid,
 													'has-success' : (!userForm.password.$invalid),
 													'has-error' : userForm.password.$error.pattern}">
-												New Password should satisfy below rules: <br/>
-												1. Minimum 8 and Maximum 12 characters <br/>
-												2. Should have atleast one numeric character <br/>
-												3. Should have atleast one lowercase character <br/>
-												4. Should have atleast one Uppercase character <br/>
-												5. Should have atleast one of these special  characters <b>-, !, @, #, $, %, ^, &, *</b>
+												New Password should contain Minimum 8 and Maximum 12 characters
 											</div>
 										</div>
 									</div>

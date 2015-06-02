@@ -71,6 +71,9 @@ TransEarthApp.factory('UserRequest', function () {
             user_profile.user_information = user.user_information;
         }
     }
+    function getUserProfile(){
+        return user_profile;
+    }
     function getUserName(){
         return user_profile.username;
     }
@@ -86,7 +89,8 @@ TransEarthApp.factory('UserRequest', function () {
         getEmail : getEmail,
         getUserType : getUserType,
         setUserProfile : setUserProfile,
-        resetUserProfile : resetUserProfile
+        resetUserProfile : resetUserProfile,
+        getUserProfile : getUserProfile
     };
 });
 
@@ -362,7 +366,7 @@ TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
                                 'for="city"> ' +
                     '</i>'+
                     '<div ng-if="form.'+tagName+'.$error.required" '+
-                                'class="help-block" '+
+                                'class="help-block pull-right" '+
                                 'ng-class="{ \'has-error\' : form.'+tagName+'.$error.required && !location.isSelected, '+
                                 '\'has-success\' : !form.'+tagName+'.$error.required && location.isSelected, '+
                                 '\'has-feedback\' : form.'+tagName+'.$error.required && !location.isSelected}" '+
@@ -439,6 +443,27 @@ TransEarthApp.directive('googlePlaces', ["$compile", function($compile){
         }
     }
 }]);
+
+TransEarthApp.directive('myFocus', function () {
+    return {
+        restrict: 'A',
+        link: function postLink(scope, element, attrs) {
+            console.log("myFocus directive:"+attrs);
+            if (attrs.myFocus == "") {
+                attrs.myFocus = "focusElement";
+            }
+            scope.$watch(attrs.myFocus, function(value) {
+                if(value == attrs.id) {
+                    element[0].focus();
+                }
+            });
+            element.on("blur", function() {
+                scope[attrs.myFocus] = "";
+                scope.$apply();
+            })
+        }
+    };
+});
 
 TransEarthApp.controller('CityCtrl', ['$scope', function($scope) {
 }]);
@@ -647,10 +672,11 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
         $scope.ifSessionInvalid = false;
         if(typeof $scope.local != "undefined" && $scope.local != null){
             $scope.session = JSON.parse($scope.local);
+            console.log("Set $scope.session: "+JSON.stringify($scope.session));
             if(typeof $scope.session != "undefined" && $scope.session != null && $scope.session.loginFailed){
                 $scope.serverAuth.authFailed = true;
                 $scope.serverAuth.messageAvailable = true;
-                $scope.serverAuth.message = $scope.loginAuth.loginError;
+                $scope.serverAuth.message = $scope.session.loginError;
                 console.log("Set $scope.serverAuth: "+JSON.stringify($scope.serverAuth));
             }
             if(typeof $scope.session.expired != "undefined" && $scope.session.expired != null && !$scope.local.expired){
@@ -672,18 +698,22 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
             console.log("Get User Profile: "+JSON.stringify(data));
             $scope.core.truck_owner = false;
             $scope.core.load_owner = false;
+            $scope.core.agent = false;
+            $scope.core.contractor = false;
             if(typeof data.user != 'undefined'){
                 $scope.user = data.user;
                 $scope.core.loggedIn = true;
                 if(typeof $scope.user.user_type != "undefined"){
                     if($scope.user.user_type == "truck_owner"){
                         $scope.core.truck_owner = true;
-                        $scope.core.load_owner = false;
-                    }
-                    if($scope.user.user_type == "load_owner"){
-                        $scope.core.truck_owner = false;
+                    }else if($scope.user.user_type == "load_owner"){
                         $scope.core.load_owner = true;
-                    }else if(Array.isArray($scope.user.user_type)){
+                    }else if($scope.user.user_type == "agent"){
+                        $scope.core.agent = true;
+                    }else if($scope.user.user_type == "contractor"){
+                        $scope.core.contractor = true;
+                    }
+                    /*else if(Array.isArray($scope.user.user_type)){
                         console.log("Array User type: "+$scope.user.user_type);
                         for(var user_type in $scope.user.user_type){
                             console.log("User type item: "+$scope.user.user_type[user_type]);
@@ -694,9 +724,11 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
                                 $scope.core.load_owner = true;
                             }
                         }
-                    }
+                    }*/
                     console.log("$scope.core.truck_owner: "+$scope.core.truck_owner);
                     console.log("$scope.core.load_owner: "+$scope.core.load_owner);
+                    console.log("$scope.core.agent: "+$scope.core.agent);
+                    console.log("$scope.core.contractor: "+$scope.core.contractor);
                 }
                 //console.log("Core Profile: "+JSON.stringify($scope.core));
             }else{
