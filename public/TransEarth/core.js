@@ -526,7 +526,8 @@ TransEarthApp.directive('capitalizeNoBlanks', function(uppercaseFilter, $parse) 
                 //console.log(inputValue);
                 var capitalized;
                 if(typeof  inputValue != "undefined" && inputValue != null){
-                    capitalized = inputValue.toUpperCase();
+                    //capitalized = inputValue.toUpperCase();
+                    capitalized = inputValue.replace(/\s+/g,'').toUpperCase();
                     /*var capitalized = inputValue.split(' ').reduce(function(prevValue, word){
                      return  prevValue + word.substring(0, 1).toUpperCase() + word.substring(1)+' ';
                      }, '');*/

@@ -1244,3 +1244,28 @@ h4 {
     margin: 0 !important;
     color:#7c848d;
 }
+
+input.w30  {width:30px;}
+input.w40  {width:40px;}
+input.w60  {width:60px;}
+input.w80  {width:80px;}
+input.w100 {width:100px;}
+input.w120 {width:120px;}
+input.w140 {width:140px;}
+input.w160 {width:160px;}
+input.w180 {width:180px;}
+input.w200 {width:200px;}
+input.w100p {width:100%;}
+
+td.w30  {width:30px;}
+td.w40  {width:40px;}
+td.w60  {width:60px;}
+td.w80  {width:80px;}
+td.w100 {width:100px;}
+td.w120 {width:120px;}
+td.w140 {width:140px;}
+td.w160 {width:160px;}
+td.w180 {width:180px;}
+td.w200 {width:200px;}
+td.w280 {width:280px;}
+td.w300 {width:300px;}

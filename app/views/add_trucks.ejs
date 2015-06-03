@@ -3,7 +3,7 @@
 
 		<table ng-table="tableParams" class="table">
 			<tr ng-repeat="truck in $data">
-				<td data-title="'Truck Type'">
+				<td class="rowTd w100" data-title="'Truck Type'">
 					<span ng-if="!truck.$edit">{{truck.details.type}}</span>
 					<div ng-if="truck.$edit">
 						<select selectpicker id="truck_type{{$index}}" name="truck_type{{$index}}"
@@ -14,7 +14,7 @@
 						</select>
 					</div>
 				</td>
-				<td data-title="'Make'">
+				<td class="rowTd w100" data-title="'Make'">
 					<span ng-if="!truck.$edit">{{truck.details.make}}</span>
 					<div ng-if="truck.$edit">
 						<select selectpicker id="truck_make{{$index}}" name="truck_make{{$index}}"
@@ -25,25 +25,108 @@
 						</select>
 					</div>
 				</td>
-				<td data-title="'Model'">
+				<td class="rowTd w100" data-title="'Model'">
 					<span ng-if="!truck.$edit">{{truck.details.model}}</span>
-					<div ng-if="truck.$edit"><input capitalize-all class="form-control" type="text" ng-model="truck.details.model" /></div>
+					<!-- div ng-if="truck.$edit"><input capitalize-all class="form-control" type="text" ng-model="truck.details.model" /></div -->
+					<div class="form-group-sm"
+						 ng-if="truck.$edit"
+						 ng-class="{ 'has-error' : truck.details.model==undefined || truck.details.model == null || truck.details.model == '',
+							 				'has-success' : !(truck.details.model==undefined || truck.details.model == null || truck.details.model == ''),
+					 						'has-feedback' : truck.details.model==undefined || truck.details.model == null || truck.details.model == ''}">
+						<div class="col-lg-12">
+							<div class="input-group">
+								<!-- span class="input-group-addon"><i class="fa fa-tag fa-2"></i></span -->
+								<input type="text" class="form-control" name="model{{$index}}" id="model{{$index}}" ng-model="truck.details.model" placeholder="Enter Model"
+									   ng-minlength="1" maxlength="35" ng-required="true">
+							</div>
+							<i class="form-control-feedback"
+							   ng-class="{ 'glyphicon glyphicon-remove' : truck.details.model==undefined || truck.details.model == null || truck.details.model == '',
+							 				'glyphicon glyphicon-ok' : !(truck.details.model==undefined || truck.details.model == null || truck.details.model == ''),
+					 						'has-feedback' : truck.details.model==undefined || truck.details.model == null || truck.details.model == ''}"
+							   for="model{{$index}}">
+							</i>
+							<div ng-if="truck.details.model==undefined || truck.details.model == null || truck.details.model == ''"
+								 class="help-block pull-right"
+								 ng-class="{ 'has-error' : truck.details.model==undefined || truck.details.model == null || truck.details.model == '',
+							 				'has-success' : !(truck.details.model==undefined || truck.details.model == null || truck.details.model == ''),
+					 						'has-feedback' : truck.details.model==undefined || truck.details.model == null || truck.details.model == ''}"
+								 for="model{{$index}}">Model is mandatory
+							</div>
+						</div>
+					</div>
 				</td>
-				<td data-title="'Reg No'">
+				<td class="rowTd w80" data-title="'Reg No'">
 					<span ng-if="!truck.$edit">{{truck.details.regno}}</span>
-					<div ng-if="truck.$edit"><input capitalize-no-blanks class="form-control" type="text" ng-model="truck.details.regno" /></div>
+					<!-- div ng-if="truck.$edit"><input capitalize-no-blanks class="form-control" type="text" ng-model="truck.details.regno" /></div -->
+					<div class="form-group-sm"
+						 ng-if="truck.$edit"
+						 ng-class="{ 'has-error' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == '' || truck.details.regno.length < 7,
+							 				'has-success' : !(truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == ''  || truck.details.regno.length < 7),
+					 						'has-feedback' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == ''  || truck.details.regno.length < 7}">
+						<div class="col-lg-12">
+							<div class="input-group">
+								<input ng-if="truck.$edit" type="text" class="form-control" name="regno{{$index}}" id="regno{{$index}}" ng-model="truck.details.regno"
+									   placeholder="Enter Reg No"
+									   capitalize-no-blanks maxlength="10" ng-required="true">
+							</div>
+							<i class="form-control-feedback"
+							   ng-class="{ 'glyphicon glyphicon-remove' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == ''  || truck.details.regno.length < 7,
+							 				'glyphicon glyphicon-ok' : !(truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == ''  || truck.details.regno.length < 7),
+					 						'has-feedback' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == ''  || truck.details.regno.length < 7}"
+							   for="regno{{$index}}">
+							</i>
+							<div ng-if="truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == '' || truck.details.regno.length < 7"
+								 class="help-block pull-right"
+								 ng-class="{ 'has-error' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == '' || truck.details.regno.length < 7,
+							 				'has-success' : !(truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == '' || truck.details.regno.length < 7),
+					 						'has-feedback' : truck.details.regno==undefined || truck.details.regno == null || truck.details.regno == '' || truck.details.regno.length < 7}"
+								 for="regno{{$index}}">Registration Number is mandatory. Enter without spaces e.g. TN01XX0001
+							</div>
+						</div>
+					</div>
 				</td>
-				<td data-title="'Carrying Capacity'" width="200">
+				<td class="rowTd w60" data-title="'Carrying Capacity in Tons'" width="200">
 					<span ng-if="!truck.$edit">{{truck.details.load}}</span>
-					<div ng-if="truck.$edit"><input numbers-only class="form-control" type="text" ng-model="truck.details.load" /></div>
+					<!-- div ng-if="truck.$edit"><input numbers-only class="form-control" type="text" ng-model="truck.details.load" /></div -->
+					<div class="form-group-sm"
+						 ng-if="truck.$edit"
+						 ng-class="{ 'has-error' : truck.details.load==undefined || truck.details.load == null || truck.details.load == '',
+							 				'has-success' : !(truck.details.load==undefined || truck.details.load == null || truck.details.load == ''),
+					 						'has-feedback' : truck.details.load==undefined || truck.details.load == null || truck.details.load == ''}">
+						<div class="col-lg-12">
+							<div class="input-group">
+								<input ng-if="truck.$edit" type="text" numbers-only class="form-control" name="load" id="load" ng-model="truck.details.load"
+									   maxlength="2"
+									   placeholder="Enter Load in Tons" ng-minlength="1" ng-maxlength="2" ng-required="true">
+							</div>
+							<i class="form-control-feedback"
+							   ng-class="{ 'glyphicon glyphicon-remove' : truck.details.load==undefined || truck.details.load == null || truck.details.load == '',
+							 				'glyphicon glyphicon-ok' : !(truck.details.load==undefined || truck.details.load == null || truck.details.load == ''),
+					 						'has-feedback' : truck.details.load==undefined || truck.details.load == null || truck.details.load == ''}"
+							   for="load{{$index}}">
+							</i>
+							<div ng-if="truck.details.load==undefined || truck.details.load == null || truck.details.load == ''"
+								 class="help-block pull-right"
+								 ng-class="{ 'has-error' : truck.details.load==undefined || truck.details.load == null || truck.details.load == '',
+							 				'has-success' : !(truck.details.load==undefined || truck.details.load == null || truck.details.load == ''),
+					 						'has-feedback' : truck.details.load==undefined || truck.details.load == null || truck.details.load == ''}"
+								 for="load{{$index}}">Model is mandatory
+							</div>
+						</div>
+					</div>
 				</td>
-				<td data-title="'Actions'" width="200">
-					<a ng-if="!truck.$edit" href="" class="btn btn-default btn-xs" ng-click="truck.$edit = true">Edit</a>
-					<a ng-if="truck.$edit" href="" class="btn btn-primary btn-xs" ng-click="truck.$edit = false">Save</a>
+				<td class="rowTd w40" data-title="'Actions'" width="200">
+					<a ng-if="!truck.$edit&&!truck.haveMessage" href="" class="btn btn-default btn-xs" ng-click="truck.$edit = true">Edit</a>
+					<a ng-if="!truck.$edit&&!truck.haveMessage" href="" class="btn btn-default btn-xs" ng-click="removeTruck($index)">Remove</a>
+					<a ng-disabled="checkErrors(truck)" ng-if="truck.$edit&&!truck.haveMessage" href="" class="btn btn-primary btn-xs" ng-click="truck.$edit = false">Save</a>
+					<a ng-disabled="!checkErrors(truck)" ng-if="truck.$edit&&!truck.haveMessage" href="" class="btn btn-primary btn-xs" ng-click="truck.$edit = false">Cancel</a>
+					<p ng-show="checkErrors(truck)" class="text-danger" ng-if="truck.$edit&&!truck.haveMessage">Clear Errors</p>
+					<p class="text-danger" ng-if="truck.haveMessage">{{truck.message}}</p>
 				</td>
 			</tr>
+			<a href="#" class="btn btn-primary btn-xs" ng-click="addTruckRow()">Add Row</a>
+			<a href="#" ng-disabled="isError" ng-if="tableParams.data.length>0" class="btn btn-success btn-sm pull-right" ng-click="addTrucks(tableParams.data)">Submit</a>
 		</table>
-		<a href="#" class="btn btn-primary btn-xs" ng-click="addTruckRow()">Add Row</a>
 	</div>
 </div>
 <script src="add_trucks.js"></script>
