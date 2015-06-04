@@ -143,14 +143,14 @@ margin:3% 3%;
 width:100%;
 height:325px;
 }
-.detailpane {
+.loaddetailpane, .truckdetailpane {
 padding:2% 5%;
 display:none;
 }
 .first-slide {
 display:block;
 }
-.detailpane li {
+.loaddetailpane li, .truckdetailpane li {
 padding-bottom:3%;
 height:20px;
 }
