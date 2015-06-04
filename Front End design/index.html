@@ -7,9 +7,8 @@
 		
 		<script>
 		
-		
-		
 		$(document).ready(function(){
+		
 		$('.logindiv').click(function(){
 		$('.loginpanel').show();
 		});		
@@ -22,41 +21,73 @@
 		$('.closediv').click(function(){
 		$(this).parent().hide();
 		});
-		
-		$(function nextitem(){
-			$('.detailpane:visible').delay(3000).animate({ marginLeft: "-100px", opacity: 0 }, 600, function(){ $(this).css("display","none");
-				$(this).next().fadeIn(function(){ 
-					nextitem();
-				$(this).previous().animate();
 
-				});
-			});		
+	$(function loop(){
+
+		$('.loaddetailpane:visible li:first-child').delay(2500).animate({ marginLeft: "-100px", opacity: 0 }, 170, function nextitem(){ 
+
+			$(this).next().animate({ marginLeft: "-100px", opacity: 0 }, 170, nextitem);
+		if($('.loaddetailpane:visible li:last-child').css("opacity") == "0") {
+		$(this).parent().css("display","none");
+		$(this).parent().next().fadeIn(1000, function() {
+		loop();
 		});
+		}
+		});
+    });
+	
+		$(function loop(){
+
+		$('.truckdetailpane:visible li:first-child').delay(2500).animate({ marginLeft: "-100px", opacity: 0 }, 170, function nextitem(){ 
+
+			$(this).next().animate({ marginLeft: "-100px", opacity: 0 }, 170, nextitem);
+		if($('.truckdetailpane:visible li:last-child').css("opacity") == "0") {
+		$(this).parent().css("display","none");
+		$(this).parent().next().fadeIn(1000, function() {
+		loop();
+		});
+		}
+		});
+    });
 		
-		var clicks = 0;
-		$('.steps-list button').click(function( event ) {
-		event.preventDefault();});		
-		$('.steps-list button').click(function() {
-		if(clicks == 0){
+		$('.next-btn, .back-btn').click(function( event ) {
+		event.preventDefault();});
+		
+		$('.next-btn').click(function() {
+		if($('.step1').is(':visible')){
 		$('.step1').hide();
 		$('.step2').show();
 		$('.step-note2').css({"background" : "url('current.png')",'background-size' : 'cover','color' : '#000000'});
 		clicks++;
 		}
 		else{
-		if(clicks == 1){
+		if($('.step2').is(':visible')){
 		$('.step2').hide();
 		$('.step3').show();
-		$('.steps-list button').hide();
+		$('.next-btn').hide();
 		$('.submit-button').show();
 		$('.step-note3').css({"background" : "url('current.png')",'background-size' : 'cover','color' : '#000000'});
 		}
 		}
 		});
 		
-		$('.closediv').click(function() {
-		$('.signuppanel').load('.signuppanel');
+		$('.back-btn').click(function() {
+		if($('.step3').is(':visible')){
+		$('.step3').hide();
+		$('.step2').show();
+		$('.step-note3').css({"background" : "url('next.png')",'background-size' : 'cover','color' : '#ffffff'});
+		$('.submit-button').hide();
+		$('.next-btn').show();
+		}
+		else{
+		if($('.step2').is(':visible')){
+		$('.step2').hide();
+		$('.step1').show();
+		$('.step-note2').css({"background" : "url('next.png')",'background-size' : 'cover','color' : '#ffffff'});
+		}
+		}
 		});
+		
 		
 		});
 		
@@ -111,8 +142,9 @@
 			<li class="step3"><input class="textbox" type="textbox" value="" name="email" placeholder="TEST" /></li>
 			<li class="step3"><input class="textbox" type="textbox" value="" name="email" placeholder="TEST" /></li>
 			<li class="step3"><input class="textbox" type="textbox" value="" name="email" placeholder="TEST" /></li>
-			<li><button style="background:#006FD7; margin-left:95px;" class="buttons">Next</button></li>
-			<li><input style="background:#006FD7; margin-left:95px; display:none;" class="buttons submit-button" type="submit" name="login" value="Submit" /></li>
+			<li><button style="background:#006FD7; float:left;" class="buttons back-btn">Back</button></li>
+			<li><button style="background:#006FD7; float:right;" class="buttons next-btn">Next</button></li>
+			<li><input style="background:#006FD7; float:right; display:none;" class="buttons submit-button" type="submit" name="login" value="Submit" /></li>
 		</ul>
 		</form>
 		<a class="closediv" href="#"><p>CLOSE</p></a>
@@ -121,19 +153,19 @@
 		<div class="loaddetails">
 		<div class="slider">
 		<p class="nameplace" style="height:60px; margin:30px 20px;" ><img id="profilepic" src="load.png" alt=""><a href="#">Load Posts</a></p>
-			<ul class="detailpane first-slide">
+			<ul class="loaddetailpane first-slide">
 				<li><p class="infos">FROM: Chennai</p></li>
 				<li><p class="infos">TO: Madurai</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
 				<li><p class="infos">DATE: 10.06.2015</p></li>
-			</ul>			
-			<ul class="detailpane">
+			</ul>
+			<ul class="loaddetailpane">
 				<li><p class="infos">FROM: Madurai</p></li>
 				<li><p class="infos">TO: Bangalore</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
 				<li><p class="infos">DATE: 5.06.2015</p></li>
-			</ul>			
-			<ul class="detailpane">
+			</ul>
+			<ul class="loaddetailpane">
 				<li><p class="infos">FROM: Chennai</p></li>
 				<li><p class="infos">TO: Bangalore</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
@@ -148,19 +180,19 @@
 		<div class="truckdetails">
 		<div class="slider">
 		<p class="nameplace" style="height:60px; margin:30px 20px;" ><img id="profilepic" src="truck.png" alt=""><a href="#">Trucks Posts</a></p>
-			<ul class="detailpane first-slide">
+			<ul class="truckdetailpane first-slide">
 				<li><p class="infos">FROM: Chennai</p></li>
 				<li><p class="infos">TO: Bangalore</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
 				<li><p class="infos">DATE: 5.06.2015</p></li>
 			</ul>			
-			<ul class="detailpane">
+			<ul class="truckdetailpane">
 				<li><p class="infos">FROM: Chennai</p></li>
 				<li><p class="infos">TO: Madurai</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
 				<li><p class="infos">DATE: 8.06.2015</p></li>
 			</ul>			
-			<ul class="detailpane">
+			<ul class="truckdetailpane">
 				<li><p class="infos">FROM: Madurai</p></li>
 				<li><p class="infos">TO: Bangalore</p></li>
 				<li><p class="infos">TONS: 30 Tons</p></li>
