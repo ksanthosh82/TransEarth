@@ -22,17 +22,34 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             .success(function(data) {
                 console.log("Truck Types looked up:"+JSON.stringify(data));
                 $scope.truckTypeList = data;
-                $scope.truck.details.type = "";
+                //$scope.truck.details.type = "";
                 var options = '';
                 options += '<option data-hidden="true">Choose one</option>';
                 $.each(data, function (i, row) {
                     //console.log(JSON.stringify(row));
-                    options += '<option>' + row + '</option>';
+                    if(typeof $scope.truck.truck_details != "undefined" && typeof $scope.truck.truck_details.type != "undefined"
+                        && $scope.truck.truck_details.type != null
+                        && $scope.truck.truck_details.type == row){
+                        options += '<option selected>' + row + '</option>';
+                    }else{
+                        options += '<option>' + row + '</option>';
+                    }
                 });
                 //alert(id+' - '+options);
                 //Apply html with option
-                //applyHtml("truck_type", options);
-                //applySelect("truck_type");
+                applyHtml("truck_type", options);
+                applySelect("truck_type");
+                if(typeof $scope.truck.truck_details != "undefined"
+                        && typeof $scope.truck.truck_details.type != "undefined" && $scope.truck.truck_details.type != null){
+                    console.log("Truck Types lookup selected:"+$scope.truck.truck_details.type);
+                    //$('#truck_type').selectpicker('val', $scope.load.load.preferredTruck.type);
+                    $('#truck_type').val($scope.truck.truck_details.type);
+                    $('#truck_type').selectpicker('refresh');
+                }
+                if(typeof $scope.truck.truck_details != "undefined"
+                        && typeof $scope.truck.truck_details.typeDescription != "undefined" && $scope.truck.truck_details.typeDescription != null){
+                    $scope.truck.details.typeDescription = $scope.truck.truck_details.typeDescription;
+                }
             }).error(function(err) {
                 console.log("truckType Lookup failed:"+JSON.stringify(err));
             });
@@ -44,17 +61,29 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
             .success(function(data) {
                 console.log("Truck Makes looked up:"+data);
                 $scope.makeList = data;
-                $scope.truck.details.make = "";
+                //$scope.truck.details.make = "";
                 var options = '';
                 options += '<option data-hidden="true">Choose one</option>';
                 $.each(data, function (i, row) {
                     //console.log(JSON.stringify(row));
-                    options += '<option>' + row + '</option>';
+                    if(typeof $scope.truck.truck_details != "undefined"
+                        && typeof $scope.truck.truck_details.make != "undefined" && $scope.truck.truck_details.make != null && $scope.truck.truck_details.make == row){
+                        options += '<option selected>' + row + '</option>';
+                    }else{
+                        options += '<option>' + row + '</option>';
+                    }
                 });
                 //alert(id+' - '+options);
                 //Apply html with option
-                //applyHtml("make", options);
-                //applySelect("make");
+                applyHtml("make", options);
+                applySelect("make");
+                if(typeof $scope.truck.truck_details != "undefined"
+                        && typeof $scope.truck.truck_details.make != "undefined" && $scope.truck.truck_details.make != null){
+                    console.log("Truck Makes lookup selected:"+$scope.truck.truck_details.make);
+                    //$('#make').selectpicker('val', $scope.load.load.preferredTruck.make);
+                    $('#make').val($scope.truck.truck_details.make);
+                    $('#make').selectpicker('refresh');
+                }
             }).error(function(err) {
                 console.log("Make Lookup failed:"+JSON.stringify(err));
             });
@@ -149,7 +178,7 @@ function truckManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, T
 
         $scope.truckShared = TruckRequest.getSharedTruck();
         $scope.dumpTruck();
-        console.log('Truck to be editted: '+JSON.stringify($scope.truck));
+        console.log('Truck to be edited: '+JSON.stringify($scope.truck));
     }
     /*if($scope.page.scope == "Add Truck"){
         $scope.page.header = "Add Truck";

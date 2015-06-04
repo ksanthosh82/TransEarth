@@ -91,7 +91,7 @@
                                             </div -->
 											<div class="input-group" id="material" >
 												<span class="input-group-addon"><i class="fa fa-truck"></i></span>
-												<select selectpicker id="materialType" name="materialType"
+												<!-- select selectpicker id="materialType" name="materialType"
 														ng-options="material for material in materialTypeList"
 														ng-class="{ 'has-error' : loadForm.materialType.$invalid,
 							 										'has-success' : !(loadForm.materialType.$invalid),
@@ -99,6 +99,13 @@
 														ng-model="load.load.material.type"  ng-required="true"
 														class="dropup form-control col-lg-12" data-dropup-auto="false">
 													<option value="">{{chooseOne}}</option>
+												</select -->
+												<select selectpicker id="materialType" name="materialType"
+														ng-class="{ 'has-error' : loadForm.materialType.$invalid,
+							 										'has-success' : !(loadForm.materialType.$invalid),
+					 												'has-feedback' : loadForm.materialType.$invalid}"
+														ng-model="load.load.material.type"  ng-required="true"
+														class="dropup form-control col-lg-12" data-dropup-auto="false">
 												</select>
 												<!-- div class="radio col-lg-9" ng-repeat="item in materialTypeList">
 													<label for="{{item}}">
@@ -163,10 +170,8 @@
 											<div class="input-group" id="truckTypeId" >
 												<span class="input-group-addon"><i class="fa fa-exchange"></i></span>
 												<select selectpicker id="truckType" name="truckType"
-														ng-options="truckType for truckType in truckTypeList"
 														ng-model="load.load.preferredTruck.type"  ng-required="true"
 														class="form-control col-lg-12" data-dropup-auto="false">
-													<option value="">Choose one</option>
 												</select>
 											</div>
 											<div ng-if="loadForm.truckType.$invalid"

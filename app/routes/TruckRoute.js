@@ -743,6 +743,7 @@ exports.addTruck = function(req, res){
         },*/
         truck_details : {
             type : input.details.type,
+            typeDescription : input.details.typeDescription,
             make : input.details.make,
             model : input.details.model,
             reg_no : input.details.regno,
@@ -888,6 +889,7 @@ exports.editTruck = function(req, res){
                     },*/
                     truck_details : {
                         type : input.details.type,
+                        typeDescription : input.details.typeDescription,
                         make : input.details.make,
                         model : input.details.model,
                         reg_no : input.details.regno,

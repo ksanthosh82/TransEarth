@@ -43,14 +43,35 @@ angular.module('angular-bootstrap-select', [])
             link: function (scope, element, attrs) {
                 element.selectpicker($parse(attrs.selectpicker)());
                 element.selectpicker('refresh');
-                console.log("Angular Bootstrap Select Picker with Attrs: "+ attrs);
+                //scope.$watch(attrs.ngModel, function (newVal, oldVal) {
                 scope.$watch(attrs.ngModel, function (newVal, oldVal) {
-                    console.log("Watch Select Picker ngModel: "+ attrs.ngModel);
                     scope.$parent[attrs.ngModel] = newVal;
+                    //console.log("Watch Select Picker ngModel: "+ scope.$parent[attrs.ngModel] +" newVal: "+newVal+" oldVal: "+oldVal);
                     scope.$evalAsync(function () {
-                        console.log("Watch Select Picker ngOptions: "+ attrs.ngOptions);
-                        if (!attrs.ngOptions || /track by/.test(attrs.ngOptions)) element.val(newVal);
+                        newVal = (typeof newVal != "undefined" && newVal != null) ? newVal.trim() : newVal;
+                        var patt = new RegExp(newVal);
+                        //console.log("Watch Select Picker ngOptions : "+ attrs.ngOptions);
+                        //console.log("Watch Select Picker ngOptions with selected value: "+ newVal +"'");
+                        /*if (!attrs.ngOptions){
+                            element.val(newVal);
+                            console.log("no ng-options element: "+ element);
+                        }else{
+                            var attr = attrs.ngOptions.slice(attrs.ngOptions.lastIndexOf(' ') + 1);
+                            console.log("ng-options attr: "+ attr);
+                            console.log("ng-options list: "+ scope[attr]);
+                            console.log("Watch Select Picker ngOptions with selected value: "+ newVal +"'");
+                            console.log("Watch Select Picker Regex ngOptions with selected value: "+ patt.test(scope[attr]));
+                            if(patt.test(scope[attr])){
+                                console.log("ng-options patt matched element: "+ newVal);
+                                element.val(newVal);
+                            }
+                        }*/
+                        console.log("ng-options refresh with: "+ newVal);
                         element.selectpicker('refresh');
+                        console.log(attrs);
+                        console.log(element);
+
+                        //element.selectpicker('val', newVal);
                     });
                 });
 

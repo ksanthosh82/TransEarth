@@ -49,9 +49,7 @@
 												<span class="input-group-addon"><i class="fa fa-truck"></i></span>
 												<select selectpicker id="truck_type" name="truck_type"
 														ng-model="truck.details.type"  ng-required="true"
-														ng-options="type for type in truckTypeList"
 														class="form-control col-lg-12" data-dropup-auto="false">
-													<option value="">Choose one</option>
 												</select>
 												<!-- input type="text" class="form-control" name="truck_type" id="truck_type" ng-required="true"
 													   ng-model="truck.details.type"
@@ -68,7 +66,33 @@
 												 ng-class="{ 'has-error' : truckForm.truck_type.$invalid,
 							 				'has-success' : !(truckForm.truck_type.$invalid),
 					 						'has-feedback' : truckForm.truck_type.$invalid}"
-												 for="truck_type">Truck Type is madatory <!--Luck favors - Add Truck Name if you have -->
+												 for="truck_type">Truck Type is mandatory <!--Luck favors - Add Truck Name if you have -->
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group-sm col-lg-12"
+										 ng-class="{ 'has-error' : truckForm.truckTypeDesc.$invalid,
+							 				'has-success' : !(truckForm.truckTypeDesc.$invalid),
+					 						'has-feedback' : truckForm.truckTypeDesc.$invalid}">
+										<div class="col-lg-6 col-lg-offset-3" ng-if="truck.details.type=='Others'">
+											<div class="input-group">
+												<input type="text" class="form-control" name="truckTypeDesc" id="truckTypeDesc"
+													   ng-model="truck.details.typeDescription"
+													   ng-minlength="1" ng-required="true" placeholder="Enter Other Truck Type">
+											</div>
+											<i class="form-control-feedback"
+											   ng-class="{ 'glyphicon glyphicon-remove' : truckForm.truckTypeDesc.$invalid,
+							 				'glyphicon glyphicon-ok' : !(truckForm.truckTypeDesc.$invalid),
+					 						'has-feedback' : truckForm.truckTypeDesc.$valid}"
+											   for="truckTypeDesc">
+											</i>
+											<div ng-if="truckForm.truckTypeDesc.$invalid"
+												 class="help-block pull-right"
+												 ng-class="{ 'has-error' : truckForm.truckTypeDesc.$invalid,
+							 				'has-success' : !(truckForm.truckTypeDesc.$invalid),
+					 						'has-feedback' : truckForm.truckTypeDesc.$invalid}"
+												 for="truckTypeDesc">Truck Type is mandatory
 											</div>
 										</div>
 									</div>
@@ -86,7 +110,6 @@
 												<span class="input-group-addon"><i class="fa fa-cog fa-2"></i></span>
 												<select selectpicker id="make" name="make"
 														ng-model="truck.details.make"  ng-required="true"
-														ng-options="make for make in makeList"
 														class="form-control col-lg-12" data-dropup-auto="false">
 													<option value="">Choose one</option>
 												</select>

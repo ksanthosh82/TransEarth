@@ -4,7 +4,7 @@ var TransEarthApp = angular.module('TransEarthApp',
         'ngRoute',
         'ui.bootstrap',
         'ngGrid',
-        'angular-bootstrap-select',
+        //'angular-bootstrap-select',
         //'nya.bootstrap.select',
         'ngTable'
     ]

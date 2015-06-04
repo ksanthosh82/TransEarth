@@ -147,6 +147,7 @@ var truckSchema = new Schema({
     },
     truck_details : {
         type : {type: String, required: true, trim: true},
+        typeDescription : {type: String, trim: true},
         make : {type: String, required: true, trim: true},
         model : {type: String, required: true, trim: true},
         reg_no : {type: String, required: true, trim: true},

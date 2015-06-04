@@ -1,15 +1,73 @@
 function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, LoadRequest) {
     console.log('Inside loadManageCtrl - ');
 
+    $scope.init = function(){
+        $scope.getTruckTypes();
+        $scope.getMaterials();
+    } ;
+
     clearAlert("manage_load_alert");
     $scope.chooseOne = "Choose One";
     $scope.blanks = "";
     $scope.style = "btn-danger";
+    $scope.materialTypeList = [];
 
     $scope.gotoHome = function(){
         //TruckRequest.setSharedTruck(null);
         $scope.page.template = "/TransEarth/load_owner_home";
         $scope.page.scope = "Load Owner Home";
+    };
+
+    $scope.getMaterials = function(){
+        $http.get("/TransEarth/getMaterialTypes")
+            .success(function(data) {
+                $scope.materialTypeList = data;
+                console.log("Materials looked up:"+JSON.stringify($scope.materialTypeList));
+                var options = '';
+                options += '<option data-hidden="true">'+$scope.chooseOne+'</option>';
+                $.each(data, function (i, row) {
+                    //console.log(JSON.stringify(row));
+                    options += '<option>' + row + '</option>';
+                });
+                //alert(id+' - '+options);
+                //Apply html with option
+                applyHtml("materialType", options);
+                applySelect("materialType");
+                if(typeof $scope.load.load.material.type != "undefined" && $scope.load.load.material.type != null){
+                    //$('#materialType').selectpicker('val', $scope.load.load.material.type);
+                    $('#materialType').val($scope.load.load.material.type);
+                    $('#materialType').selectpicker('refresh');
+                }
+                //console.log("Materials assigned: "+$scope.load.load.material.type);
+                //$('#materialType').selectpicker('refresh');
+            }).error(function(err) {
+                console.log("Materials Lookup failed:"+JSON.stringify(err));
+            });
+    };
+
+    $scope.getTruckTypes = function(){
+        $http.get("/TransEarth/getTruckTypes")
+            .success(function(data) {
+                console.log("Truck Types looked up:"+JSON.stringify(data));
+                $scope.truckTypeList = data;
+                var options = '';
+                options += '<option data-hidden="true">'+$scope.chooseOne+'</option>';
+                $.each(data, function (i, row) {
+                    //console.log(JSON.stringify(row));
+                    options += '<option>' + row + '</option>';
+                });
+                //alert(id+' - '+options);
+                //Apply html with option
+                applyHtml("truckType", options);
+                applySelect("truckType");
+                if(typeof $scope.load.load.preferredTruck.type != "undefined" && $scope.load.load.preferredTruck.type != null){
+                    //$('#truckType').selectpicker('val', $scope.load.load.preferredTruck.type);
+                    $('#truckType').val($scope.load.load.preferredTruck.type);
+                    $('#truckType').selectpicker('refresh');
+                }
+            }).error(function(err) {
+                console.log("truckType Lookup failed:"+JSON.stringify(err));
+            });
     };
 
     $scope.minDate = new Date();
@@ -79,6 +137,7 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
             (typeof sharedLoad.load.delivery.contact != "undefined" && sharedLoad.load.delivery.contact != null) ? sharedLoad.load.delivery.contact.toString() : "";
         sharedLoad.load.quantity  = sharedLoad.load.quantity.toString();
         $scope.load = sharedLoad;
+
         console.log("Shared Load: "+JSON.stringify($scope.load));
         //$scope.disableAddress = $scope.load.company.address_same_as_owner;
         //$scope.disableContact = $scope.load.company.contact_same_as_owner;
@@ -111,6 +170,7 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
         };
         $scope.load.load = {};
         $scope.load.load.material = {};
+        $scope.load.load.preferredTruck = {};
         $scope.load.load.pickup = {};
         $scope.load.load.pickup.address = {};
         $scope.load.load.pickup.address.mapLocation = {
@@ -163,49 +223,6 @@ function loadManageCtrl($scope, $http, $location, $anchorScroll, UserRequest, Lo
         //console.log("delivery.Opened");
         $scope.delivery.opened = true;
     };
-
-    $scope.getMaterials = function(){
-        $http.get("/TransEarth/getMaterialTypes")
-            .success(function(data) {
-                console.log("Materials looked up:"+JSON.stringify(data));
-                $scope.materialTypeList = data;
-                var options = '';
-                options += '<option data-hidden="true">Choose one</option>';
-                $.each(data, function (i, row) {
-                    //console.log(JSON.stringify(row));
-                    options += '<option>' + row + '</option>';
-                });
-                //alert(id+' - '+options);
-                //Apply html with option
-                applyHtml("materialType", options);
-                applySelect("materialType");
-                console.log("Materials looked up:"+$scope.load.load.material.type);
-            }).error(function(err) {
-                console.log("Materials Lookup failed:"+JSON.stringify(err));
-            });
-    };
-    $scope.getMaterials();
-
-    $scope.getTruckTypes = function(){
-        $http.get("/TransEarth/getTruckTypes")
-            .success(function(data) {
-                console.log("Truck Types looked up:"+JSON.stringify(data));
-                $scope.truckTypeList = data;
-                var options = '';
-                options += '<option data-hidden="true">Choose one</option>';
-                $.each(data, function (i, row) {
-                    //console.log(JSON.stringify(row));
-                    options += '<option>' + row + '</option>';
-                });
-                //alert(id+' - '+options);
-                //Apply html with option
-                applyHtml("truckType", options);
-                applySelect("truckType");
-            }).error(function(err) {
-                console.log("truckType Lookup failed:"+JSON.stringify(err));
-            });
-    };
-    $scope.getTruckTypes();
 
     $scope.isPickupPincodeRequired = function(){
         $scope.pickupPinFlag = false;
