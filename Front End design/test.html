@@ -1,0 +1,48 @@
+<html>
+<head>
+<style>
+#list {
+display:block;
+}
+.ticker {
+display:none;
+}
+</style>
+		<script src="jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function(){
+
+$(function nextitem(){
+        $('.ticker:visible').delay(500).animate({ marginLeft: "-500px", opacity: 0 }, 1500, function(){ $(this).css("display","none");
+          $(this).next().fadeIn(function(){ 
+               nextitem(); 
+
+});
+});
+});
+
+});
+</script>
+</head>
+<body>
+<a href="#">test</a>
+<ul id="list" class="ticker">
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+</ul>
+<ul class="ticker">
+<li>5</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+</ul>
+<ul class="ticker">
+<li>9</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+</ul>
+</body>
+</html>
