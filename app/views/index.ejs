@@ -35,6 +35,12 @@
 
 	</head>
 	<body ng-controller="coreController" ng-init="local='<%= JSON.stringify(session)%>'">
+		<div id="loadingWidget" class="overlay" loader>
+			<div class="loadingGif">
+				<strong class="text">Please Wait....</strong>
+				<img alt="Loading Content" src="images/ajax-loader-mini.gif"/>
+			</div>
+		</div>
 		<div class="navbar navbar-default transearth-header navbar-fixed-top">
 			<div class="container">
 				<div class="navbar-header" id="headerBar">
