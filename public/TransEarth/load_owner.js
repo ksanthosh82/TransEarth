@@ -88,6 +88,7 @@ function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadReques
                             && data.myLoadList.details.length > 0){
                             //console.log(JSON.stringify(data));
                             $scope.myLoadList.list = data.myLoadList.details;
+                            $scope.myLoadList.totalServerItems = data.myLoadList.details.length;
                             var filteredData = data.myLoadList.details.filter(function(item) {
                                 return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
                             });
@@ -119,6 +120,7 @@ function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadReques
                             && data.myLoadList.details.length > 0){
                             //console.log(JSON.stringify(data));
                             $scope.myLoadList.list = data.myLoadList.details;
+                            $scope.myLoadList.totalServerItems = data.myLoadList.details.length;
                             var filteredData = data.myLoadList.details;
                             //console.log("Filtered Data:"+JSON.stringify(filteredData));
                             $scope.myLoadList.columnDefs = data.myLoadList.headers;
@@ -167,6 +169,9 @@ function loadOwnerCtrl($scope, $http, $location, $modal, UserRequest, LoadReques
         showFooter: true,
         rowHeight : 25,
         showGroupPanel: true,
+        enableCellSelection: false,
+        enableRowSelection: false,
+        totalServerItems : 'myLoadList.totalServerItems',
         columnDefs: 'myLoadList.columnDefs'
     };
     $scope.myLoadList.list = [

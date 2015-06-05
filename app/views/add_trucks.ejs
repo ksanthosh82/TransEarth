@@ -20,11 +20,11 @@
 							 ng-class="{ 'has-error' : truck.details.typeDescription==undefined || truck.details.typeDescription==null,
 							 				'has-success' : !(truck.details.typeDescription==undefined || truck.details.typeDescription==null),
 					 						'has-feedback' : truck.details.typeDescription==undefined || truck.details.typeDescription==null}">
-							<div class="col-lg-6 col-lg-offset-3" ng-if="truck.details.type=='Others'">
+							<div class="" ng-if="truck.details.type=='Others'">
 								<div class="input-group">
 									<input type="text" class="form-control" name="truckTypeDesc{{truck.index}}" id="truckTypeDesc{{truck.index}}"
 										   ng-model="truck.details.typeDescription"
-										   ng-minlength="1" ng-required="true" placeholder="Enter Other Truck Type">
+										   ng-minlength="1" ng-required="true" placeholder="Enter Other Type">
 								</div>
 								<i class="form-control-feedback"
 								   ng-class="{ 'glyphicon glyphicon-remove' : truck.details.typeDescription==undefined || truck.details.typeDescription==null,

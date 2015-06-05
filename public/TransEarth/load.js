@@ -174,6 +174,9 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
         showFooter: true,
         rowHeight : 25,
         showGroupPanel: true,
+        enableCellSelection: false,
+        enableRowSelection: false,
+        totalServerItems : 'loadPostList.totalServerItems',
         columnDefs: 'loadPostList.columnDefs'
     };
     $scope.loadPostList.list = [
@@ -212,7 +215,7 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
         var modalInstance = $modal.open({
             templateUrl: 'loadDetailModal.html',
             controller: LoadDetailModalCtrl,
-            windowClass: 'xx-dialog',
+            //windowClass: 'xx-dialog',
             size: size,
             resolve: {
                 load: function () {
@@ -265,7 +268,7 @@ function loadListCtrl($scope, $http, $location, $modal, UserRequest) {
                         $scope.loadInfo = data;
                         //TruckRequest.setSharedTruck(data);
                         //console.log("Get Shared Truck Request: "+JSON.stringify(TruckRequest.getSharedTruck()));
-                        $scope.loadDetails.open('lg');
+                        $scope.loadDetails.open('sm');
                     }else{
                         $scope.loadPostList.messageAvailable = true;
                         //$scope.loadPostList.message = "No data available";

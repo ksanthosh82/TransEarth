@@ -889,7 +889,7 @@ exports.editTruck = function(req, res){
                     },*/
                     truck_details : {
                         type : input.details.type,
-                        typeDescription : input.details.typeDescription,
+                        typeDescription : (typeof input.details.typeDescription != "undefined") ? input.details.typeDescription : null,
                         make : input.details.make,
                         model : input.details.model,
                         reg_no : input.details.regno,
@@ -1004,11 +1004,16 @@ exports.addTruckPost = function(req, res){
         return res.json(500, {statusMsg:'Truck Post Destination Details invalid'});
     }
 
+    console.log("Add Truck started for "+JSON.stringify(new_post));
+
     var post = {
         status : "ADDED",
         truck_post : {
             availability : {
-                date : new_post.pickup.date,
+                schedule : new_post.schedule.frequency,
+                date : (typeof new_post.pickup.date != "undefined" && new_post.pickup.date != null) ? new_post.pickup.date : new_post.pickup.endDate,
+                start_date : new_post.pickup.startDate,
+                end_date : new_post.pickup.endDate,
                 pickup_location : new_post.source.place,
                 delivery_location : new_post.destination.place
             },
@@ -1150,7 +1155,10 @@ exports.editTruckPost = function(req, res){
 
         var truck_post = {
             availability : {
-                date : post.pickup.date,
+                schedule : post.schedule.frequency,
+                date : (typeof post.pickup.date != "undefined" && post.pickup.date != null) ? post.pickup.date : post.pickup.endDate,
+                start_date : post.pickup.startDate,
+                end_date : post.pickup.endDate,
                 pickup_location : post.source.place,
                 delivery_location : post.destination.place
             },

@@ -11,7 +11,10 @@ var postSchema = new Schema({
     status : { type: String, required: true, trim : true},
     truck_post : {
         availability : {
-            date : {type: Date, required: true, trim: true},
+            "schedule" : { type: String, required: true, trim : true},
+            date : {type: Date, trim: true},
+            "start_date" : {type: Date, trim: true},
+            "end_date" : {type: Date, trim: true},
             "pickup_location" : { type: String, required: true, trim : true},
             "delivery_location" : { type: String, required: true, trim : true}
         },

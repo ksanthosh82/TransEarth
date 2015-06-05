@@ -40,7 +40,8 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-cog fa-2"></i></span>
-											<input readonly type="text" class="form-control" name="make" id="make" ng-model="truckToPost.details.make" placeholder="Enter Make" ng-minlength="1" ng-required="true">
+											<input readonly type="text" class="form-control" name="make" id="make"
+												   ng-model="truckToPost.details.make" placeholder="Enter Make" ng-minlength="1" ng-required="true">
 										</div>
 									</div>
 								</div>
@@ -51,7 +52,8 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-tag fa-2"></i></span>
-											<input readonly type="text" class="form-control" name="model" id="model" ng-model="truckToPost.details.model" placeholder="Enter Model" ng-minlength="1" ng-required="true">
+											<input readonly type="text" class="form-control" name="model" id="model"
+												   ng-model="truckToPost.details.model" placeholder="Enter Model" ng-minlength="1" ng-required="true">
 										</div>
 									</div>
 								</div>
@@ -62,7 +64,8 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-file-text-o fa-2"></i></span>
-											<input readonly type="text" class="form-control" name="regno" id="regno" ng-model="truckToPost.details.reg_no" placeholder="Enter Reg No" ng-minlength="4" ng-required="true">
+											<input readonly type="text" class="form-control" name="regno" id="regno"
+												   ng-model="truckToPost.details.reg_no" placeholder="Enter Reg No" ng-minlength="4" ng-required="true">
 										</div>
 									</div>
 								</div>
@@ -73,95 +76,220 @@
 									<div class="col-lg-9">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-anchor fa-2"></i></span>
-											<input readonly type="text" class="form-control" name="load" id="load" ng-model="truckToPost.details.load" placeholder="Enter Load in Tons" ng-required="true">
+											<input readonly type="text" class="form-control" name="load" id="load"
+												   ng-model="truckToPost.details.load" placeholder="Enter Load in Tons" ng-required="true">
 										</div>
 									</div>
 								</div>
 
-								<!-- From -->
+								<!-- Post Frequency -->
 								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : !truckToPost.post.source.isSelected,
-							 				'has-success' : truckToPost.post.source.isSelected,
-					 						'has-feedback' : !truckToPost.post.source.isSelected}">
-									<label class="col-lg-3 control-label">From</label>
+									 ng-class="{ 'has-error' : truckPostForm.post_frequency.$invalid,
+							 				'has-success' : !(truckPostForm.post_frequency.$invalid),
+					 						'has-feedback' : truckPostForm.post_frequency.$invalid,
+					 						'error' : truckPostForm.post_frequency.$invalid,
+					 						'success' : !truckPostForm.post_frequency.$invalid}">
+									<label class="col-lg-3 control-label">How frequent is the post?</label>
 									<div class="col-lg-9">
-										<google-places required
-													   tagId="source" tagName="source"
-													   location=truckToPost.post.source></google-places>
+										<div class="input-group">
+											<span class="input-group-addon"><i class="fa fa-truck"></i></span>
+											<select selectpicker id="post_frequency" name="post_frequency"
+													ng-model="truckToPost.post.schedule.frequency"  ng-required="true"
+													ng-change="trackDays()"
+													class="form-control col-lg-12" data-dropup-auto="false">
+											</select>
+										</div>
+										<div ng-if="truckPostForm.post_frequency.$invalid"
+											 class="help-block pull-right"
+											 ng-class="{ 'has-error' : truckPostForm.post_frequency.$invalid,
+							 				'has-success' : !(truckPostForm.post_frequency.$invalid),
+					 						'has-feedback' : truckPostForm.post_frequency.$invalid}"
+											 for="post_frequency">Choose Frequency for further details
+										</div>
 									</div>
 								</div>
 
-								<!-- To -->
-								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place,
-							 				'has-success' : truckToPost.post.destination.isSelected && truckToPost.post.destination.place!=truckToPost.post.source.place,
-					 						'has-feedback' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place}">
-									<label class="col-lg-3 control-label">To</label>
-									<div class="col-lg-9">
+								<div ng-if="showLocations">
+									<!-- From -->
+									<div class="form-group-sm"
+										 ng-class="{ 'has-error' : !truckToPost.post.source.isSelected,
+												'has-success' : truckToPost.post.source.isSelected,
+												'has-feedback' : !truckToPost.post.source.isSelected}">
+										<label class="col-lg-3 control-label">From</label>
+										<div class="col-lg-9">
 											<google-places required
-														   tagId="destination" tagName="destination"
-														   location=truckToPost.post.destination></google-places>
-									</div>
-								</div>
-
-								<!-- Available weight for load -->
-								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
-							 				'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
-					 						'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}">
-									<label class="col-lg-3 control-label">Available Ton</label>
-									<div class="col-lg-9">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
-											<input numbers-only type="text" class="form-control" name="weight" id="weight"
-												   ng-model="truckToPost.post.load" placeholder="Enter Load in Tons"
-												   ng-minlength="1" ng-maxlength="2"
-												   maxlength="2" ng-required="true">
-										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
-							 				'glyphicon glyphicon-ok' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
-					 						'has-feedback' : truckPostForm.weight.$valid || truckToPost.post.load>truckToPost.details.load}"
-										   for="weight">
-										</i>
-										<div ng-if="truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load"
-											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
-							 				'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
-					 						'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}"
-											 for="weight">Available weight is mandatory and should be less than Truck's capacity
+														   tagId="source" tagName="source"
+														   location=truckToPost.post.source></google-places>
 										</div>
 									</div>
-								</div>
 
-								<!-- Available Date for Pickup -->
-								<div class="form-group-sm"
-									 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null || truckToPost.post.pickup.date<minDate,
-							 										'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null  || truckToPost.post.pickup.date>minDate),
-					 												'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null || truckToPost.post.pickup.date<minDate}">
-									<label class="col-lg-3 control-label">Date</label>
-									<div class="col-lg-9">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-import"></i></span>
-											<input class="form-control input-sm" type="text" placeholder="Available Pickup Date"
-												   id="pickupDaterange" name="pickupDaterange" class="form-control"
-												   datepicker-popup="dd-MMMM-yyyy" ng-model="truckToPost.post.pickup.date"
-												   min="minDate"
-												   is-open="pickup.opened" datepicker-options="pickup.dateOptions"
-												   ng-required="true" required close-text="Close" />
+									<!-- To -->
+									<div class="form-group-sm"
+										 ng-class="{ 'has-error' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place,
+												'has-success' : truckToPost.post.destination.isSelected && truckToPost.post.destination.place!=truckToPost.post.source.place,
+												'has-feedback' : !truckToPost.post.destination.isSelected || truckToPost.post.destination.place==truckToPost.post.source.place}">
+										<label class="col-lg-3 control-label">To</label>
+										<div class="col-lg-9">
+												<google-places required
+															   tagId="destination" tagName="destination"
+															   location=truckToPost.post.destination></google-places>
 										</div>
-										<i class="form-control-feedback"
-										   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
-							 							'glyphicon glyphicon-ok' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
-					 									'has-feedback' : truckPostForm.pickup_date.$valid || truckToPost.post.pickup.date==null}"
-										   for="pickup_date">
-										</i>
-										<div ng-if="truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null"
-											 class="help-block"
-											 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
-							 							'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
-					 									'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==nullx}"
-											 for="pickup_date">Pickup Date is mandatory
+									</div>
+
+									<!-- Available weight for load -->
+									<div class="form-group-sm"
+										 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+												'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+												'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}">
+										<label class="col-lg-3 control-label">Available Ton</label>
+										<div class="col-lg-9">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa fa-map-marker fa-2"></i></span>
+												<input numbers-only type="text" class="form-control" name="weight" id="weight"
+													   ng-model="truckToPost.post.load" placeholder="Enter Load in Tons"
+													   ng-minlength="1" ng-maxlength="2"
+													   maxlength="2" ng-required="true">
+											</div>
+											<i class="form-control-feedback"
+											   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+												'glyphicon glyphicon-ok' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+												'has-feedback' : truckPostForm.weight.$valid || truckToPost.post.load>truckToPost.details.load}"
+											   for="weight">
+											</i>
+											<div ng-if="truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load"
+												 class="help-block"
+												 ng-class="{ 'has-error' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load,
+												'has-success' : !(truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load),
+												'has-feedback' : truckPostForm.weight.$invalid || truckToPost.post.load>truckToPost.details.load}"
+												 for="weight">Available weight is mandatory and should be less than Truck's capacity
+											</div>
+										</div>
+									</div>
+									<!-- pre>truck.details.schedule.frequency: {{truckToPost.details.schedule.frequency}}</pre>
+									<pre>truckPostForm.pickup_date_range.$error: {{truckPostForm.pickup_date_range.$error}}</pre -->
+
+									<!-- Available Date for Pickup -->
+									<div class="form-group-sm"
+										 ng-if="truckToPost.post.schedule.frequency!=undefined&&truckToPost.post.schedule.frequency!=null&&truckToPost.post.schedule.frequency=='One Time'"
+										 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
+																		'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
+																		'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null}">
+										<label class="col-lg-3 control-label">Date</label>
+										<div class="col-lg-9">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-import"></i></span>
+												<input class="form-control input-sm" type="text" placeholder="Available Pickup Date"
+													   id="pickup_date" name="pickup_date" class="form-control"
+													   datepicker-popup="dd-MMMM-yyyy" ng-model="truckToPost.post.pickup.date"
+													   min="minDate"
+													   is-open="pickup.opened" datepicker-options="pickup.dateOptions"
+													   ng-required="true" required close-text="Close" />
+												<!-- input class="form-control col-md-4" datepicker id="pickup_date" name="pickup_date"
+															class="form-control well well-sm"
+															datepicker-options="pickup.dateOptions"
+															datepicker-popup="dd-MMMM-yyyy"
+															is-open="pickup.opened"
+															ng-model="truckToPost.post.pickup.date"
+															min="minDate"
+															ng-required="true"
+															show-weeks="false"/ -->
+											</div>
+											<i class="form-control-feedback"
+											   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
+															'glyphicon glyphicon-ok' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
+															'has-feedback' : truckPostForm.pickup_date.$valid || truckToPost.post.pickup.date==null}"
+											   for="pickup_date">
+											</i>
+											<div ng-if="truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null"
+												 class="help-block"
+												 ng-class="{ 'has-error' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null,
+															'has-success' : !(truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==null),
+															'has-feedback' : truckPostForm.pickup_date.$invalid || truckToPost.post.pickup.date==nullx}"
+												 for="pickup_date">Pickup Date is mandatory
+											</div>
+										</div>
+									</div>
+
+									<!-- Date Range for Pickup -->
+									<div class="col-md-6" ng-if="truckToPost.post.schedule.frequency!=undefined&&truckToPost.post.schedule.frequency!=null&&truckToPost.post.schedule.frequency!='One Time'">
+										<div class="form-group-sm"
+											 ng-class="{ 'has-error' : truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null,
+													'has-success' : !(truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null),
+													'has-feedback' : truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null}">
+											<label class="col-lg-5 control-label">Start Date</label>
+											<div class="col-lg-11">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-import"></i></span>
+													<!-- input class="form-control col-md-4" date-range-picker class="form-control date-picker" type="text"
+                                                           ng-model="pickup.dateRange" options="pickup.dateRangeOptions" ng-change="loadSearch()"/ -->
+													<!-- input class="form-control col-md-4" date-range-picker class="form-control date-picker" type="text"
+                                                           id="pickup_date_range" name="pickup_date_range"
+                                                           ng-model="truckToPost.post.pickup.dateRange" options="pickup.dateRangeOptions" / -->
+													<input class="form-control input-sm" type="text" placeholder="Start Date"
+														   id="pickup_start_date" name="pickup_start_date" class="form-control"
+														   datepicker-popup="dd-MMMM-yyyy" ng-model="truckToPost.post.pickup.startDate"
+														   min="minDate"
+														   is-open="pickup.startDateOpened" datepicker-options="pickup.dateOptions"
+														   ng-required="true" required close-text="Close" />
+												</div>
+												<i class="form-control-feedback"
+												   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null,
+															'glyphicon glyphicon-ok' : !(truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null),
+															'has-feedback' : truckPostForm.pickup_start_date.$valid || truckToPost.post.pickup.startDate==null}"
+												   for="pickup_start_date">
+												</i>
+												<div ng-if="truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null"
+													 class="help-block"
+													 ng-class="{ 'has-error' : truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null,
+															'has-success' : !(truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==null),
+															'has-feedback' : truckPostForm.pickup_start_date.$invalid || truckToPost.post.pickup.startDate==nullx}"
+													 for="pickup_start_date">Range Start Date is mandatory
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6" ng-if="truckToPost.post.schedule.frequency!=undefined&&truckToPost.post.schedule.frequency!=null&&truckToPost.post.schedule.frequency!='One Time'">
+										<div class="form-group-sm"
+											 ng-class="{ 'has-error' : truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null || truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate,
+													'has-success' : !(truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null || truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate),
+													'has-feedback' : truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null || truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate}">
+											<label class="col-lg-5 control-label">End Date</label>
+											<div class="col-lg-11">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-import"></i></span>
+													<!-- input class="form-control col-md-4" date-range-picker class="form-control date-picker" type="text"
+                                                           ng-model="pickup.dateRange" options="pickup.dateRangeOptions" ng-change="loadSearch()"/ -->
+													<!-- input class="form-control col-md-4" date-range-picker class="form-control date-picker" type="text"
+                                                           id="pickup_date_range" name="pickup_date_range"
+                                                           ng-model="truckToPost.post.pickup.dateRange" options="pickup.dateRangeOptions" / -->
+													<input class="form-control input-sm" type="text" placeholder="End Date"
+														   id="pickup_end_date" name="pickup_end_date" class="form-control"
+														   datepicker-popup="dd-MMMM-yyyy" ng-model="truckToPost.post.pickup.endDate"
+														   min="minDate"
+														   is-open="pickup.endDateOpened" datepicker-options="pickup.dateOptions"
+														   ng-required="true" required close-text="Close" />
+												</div>
+												<i class="form-control-feedback"
+												   ng-class="{ 'glyphicon glyphicon-remove' : truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null,
+															'glyphicon glyphicon-ok' : !(truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null),
+															'has-feedback' : truckPostForm.pickup_end_date.$valid || truckToPost.post.pickup.endDate==null}"
+												   for="pickup_end_date">
+												</i>
+												<div ng-if="truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null"
+													 class="help-block"
+													 ng-class="{ 'has-error' : truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null,
+															'has-success' : !(truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null),
+															'has-feedback' : truckPostForm.pickup_end_date.$invalid || truckToPost.post.pickup.endDate==null}"
+													 for="pickup_end_date">Range End Date is mandatory
+												</div>
+												<div ng-if="truckPostForm.pickup_end_date.$valid && truckToPost.post.pickup.endDate!=null && truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate"
+													 class="help-block"
+													 ng-class="{ 'has-error' : truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate,
+															'has-success' : !(truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate),
+															'has-feedback' : truckToPost.post.pickup.endDate<truckToPost.post.pickup.startDate}"
+													 for="pickup_end_date">Range End Date cannot be before Start Date
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

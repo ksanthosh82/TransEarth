@@ -4,7 +4,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
     clearAlert("truck_home_alert");
     clearAlert("manage_truckPost_alert");
 
-    $scope.minDate = new Date();
+    $scope.minDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
     $scope.gotoHome = function(){
         $scope.page.template = "/TransEarth/truck_owner_home";
         $scope.page.scope = "Truck Owner Home";
@@ -16,9 +16,22 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
 
     $scope.pickup = {};
     $scope.pickup.date = new Date();
+    $scope.pickup.dateRange = {startDate: null, endDate: null};
+    var currentDt = new Date();
+    $scope.minDate = new Date();
+    $scope.maxDate = new Date(currentDt.getFullYear() + 1);
+
     $scope.pickup.dateOptions = {
         formatYear: 'yy',
         startingDay: 1
+    };
+
+    $scope.pickup.dateRangeOptions ={
+        format: 'DD-MMM-YYYY',
+        popup : "dd-MMMM-yyyy",
+        "is-open" : "pickup.dateRangeOpened",
+        minDate: $scope.minDate,
+        maxDate: $scope.maxDate
     };
 
     $scope.pickup.opened = false;
@@ -27,6 +40,20 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $event.stopPropagation();
         //console.log("pickup.Opened");
         $scope.pickup.opened = true;
+    };
+    $scope.pickup.startDateOpened = false;
+    $scope.pickup.startDateOpen = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        //console.log("pickup.dateRangeOpened");
+        $scope.pickup.startDateOpened = true;
+    };
+    $scope.pickup.endDateOpened = false;
+    $scope.pickup.endDateOpen = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        //console.log("pickup.dateRangeOpened");
+        $scope.pickup.endDateOpened = true;
     };
 
     $scope.truckToPost = TruckRequest.getSharedTruck();
@@ -55,8 +82,9 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.truckToPost = {};
         $scope.truckToPost = $scope.truckPostToUpdate;
         $scope.truckToPost.details = {};
+        $scope.truckToPost.details.schedule = {};
         $scope.truckToPost.post = {};
-
+        $scope.truckToPost.post.schedule = {};
         $scope.truckToPost.post.pickup = {};
         $scope.truckToPost.post.delivery = {};
 
@@ -66,6 +94,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         $scope.addTruckPostInd = true;
         $scope.editTruckPostInd = false;
         $scope.truckToPost.details = {};
+        $scope.truckToPost.details.schedule = {};
         $scope.truckToPost.post = {};
         $scope.truckToPost.post.pickup = {};
         $scope.truckToPost.post.delivery = {};
@@ -82,6 +111,43 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
     $scope.truckToPost.details.model = tempTruck.truck_details.model;
     $scope.truckToPost.details.reg_no = tempTruck.truck_details.reg_no;
     $scope.truckToPost.details.load = tempTruck.truck_details.maximum_load.quantity + " " + tempTruck.truck_details.maximum_load.unit;
+
+    console.log("Refreshing Date picker start");
+    var frequency = ["One Time", "Daily", "Weekly", "Monthly"];
+    var options = '';
+    options += '<option value="">Choose one</option>';
+    $.each(frequency, function (i, row) {
+        //console.log(JSON.stringify(row));
+        if(typeof $scope.truckToPost.details.schedule != "undefined"
+            && $scope.truckToPost.details.schedule != null
+            && $scope.truckToPost.details.schedule.frequency == row){
+            options += '<option selected>' + row + '</option>';
+        }else{
+            options += '<option>' + row + '</option>';
+        }
+    });
+    applyHtml("post_frequency", options);
+    applySelect("post_frequency");
+    //$('#post_frequency').selectpicker('refresh');
+    console.log("Refreshing Date picker start");
+
+    $scope.showLocations = false;
+    $scope.showDateRange = false;
+    $scope.showDate = false;
+    $scope.getDays = false;
+
+    $scope.trackDays= function(){
+        console.log("Tracking Days for frequency "+$scope.truckToPost.post.schedule.frequency);
+        if(typeof $scope.truckToPost.post.schedule.frequency != "undefined" && $scope.truckToPost.post.schedule.frequency != null){
+            if($scope.truckToPost.post.schedule.frequency == "Weekly"){
+                $scope.dateRange = 7;
+            }else if($scope.truckToPost.post.schedule.frequency == "Monthly"){
+                $scope.monthRange = 1;
+            }else{
+                $scope.showLocations = true;
+            }
+        }
+    };
 
     $scope.truckToPost.post.source = {
         place : "",
@@ -117,6 +183,12 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
         };
         $scope.truckToPost.post.load = tempPost.truck_post.maximum_load.quantity.toString();
         $scope.truckToPost.post.pickup.date = tempPost.truck_post.availability.date;
+        $scope.truckToPost.post.pickup.startDate = tempPost.truck_post.availability.start_date;
+        $scope.truckToPost.post.pickup.endDate = tempPost.truck_post.availability.end_date;
+        $scope.truckToPost.post.schedule.frequency = tempPost.truck_post.availability.schedule;
+        $("#post_frequency").val(tempPost.truck_post.availability.schedule);
+        $("#post_frequency").selectpicker('refresh');
+        $scope.showLocations = true;
     }
     $scope.truckPostForm = {};
     $scope.truckPostProcess = {};
@@ -129,6 +201,7 @@ function truckPostManageCtrl($scope, $http, $location, $anchorScroll, $filter, U
     // function to submit the form after all validation has occurred
     $scope.reset = function(){
         $scope.truckToPost.post = {};
+        $scope.truckToPost.post.schedule = {};
         $scope.truckToPost.post.pickup = {};
         $scope.truckToPost.post.delivery = {};
         $scope.truckToPost.post.source = {

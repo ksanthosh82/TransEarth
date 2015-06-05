@@ -75,8 +75,8 @@
 										 ng-class="{ 'has-error' : truckForm.truckTypeDesc.$invalid,
 							 				'has-success' : !(truckForm.truckTypeDesc.$invalid),
 					 						'has-feedback' : truckForm.truckTypeDesc.$invalid}">
-										<div class="col-lg-6 col-lg-offset-3" ng-if="truck.details.type=='Others'">
-											<div class="input-group">
+										<div class="col-lg-offset-3" ng-if="truck.details.type=='Others'">
+											<div class="input-group col-lg-12">
 												<input type="text" class="form-control" name="truckTypeDesc" id="truckTypeDesc"
 													   ng-model="truck.details.typeDescription"
 													   ng-minlength="1" ng-required="true" placeholder="Enter Other Truck Type">

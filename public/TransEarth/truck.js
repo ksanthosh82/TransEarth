@@ -183,6 +183,9 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
         showFooter: true,
         rowHeight : 25,
         showGroupPanel: true,
+        enableCellSelection: false,
+        enableRowSelection: false,
+        totalServerItems : 'truckPostList.totalServerItems',
         columnDefs: 'truckPostList.columnDefs'
     };
     $scope.truckPostList.truckList = [];
@@ -227,13 +230,22 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
                 //console.log("Data fetched by getTruckPostById:"+JSON.stringify(data));
                 if(typeof data != 'undefined' && data != null){
                     //console.log(JSON.stringify(data));
-                    $scope.truckPostInfo = data;
                     data.posts = $filter('filter')(data.posts, {_id:postId})[0];
-                    if(typeof data.posts != "undefined" && typeof data.posts.availability != "undefined"){
+                    console.log(JSON.stringify(data));
+                    if(typeof data.posts != "undefined" && typeof data.posts.truck_post != "undefined"
+                        && typeof data.posts.truck_post.availability != "undefined" && typeof data.posts.truck_post.availability.date != "undefined"){
                         //data.posts.availability.date = moment(data.posts.availability.date).format("dd MMM yyyy");
-                        data.posts.availability.date = data.posts.availability.date.getFullYear() + "/" + data.posts.availability.date.getMonth()+ "/" + data.posts.availability.date.getDate();
+                        /*data.posts.truck_post.availability.date = new Date(data.posts.truck_post.availability.date);
+                        data.posts.truck_post.availability.date =
+                            data.posts.truck_post.availability.date.getFullYear() + "/"
+                            + data.posts.truck_post.availability.date.getMonth()+ "/"
+                            + data.posts.truck_post.availability.date.getDate();*/
+                        data.posts.truck_post.availability.date = moment(data.posts.truck_post.availability.date).format('MMM DD, YYYY');
+                        console.log("Formatted Date: "+data.posts.truck_post.availability.date);
                     }
-                    $scope.truckPostDetails.open('lg');
+                    console.log("Formatted: "+JSON.stringify(data));
+                    $scope.truckPostInfo = data;
+                    $scope.truckPostDetails.open('sm');
                     $scope.truckPostDetails.messageAvailable = false;
                 }else{
                     $scope.truckPostDetails.messageAvailable = true;
@@ -251,11 +263,11 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
         var modalInstance = $modal.open({
             templateUrl: 'truckPostDetailModal.html',
             controller: TruckPostDetailModalCtrl,
-            windowClass: 'xx-dialog',
+            //windowClass: 'xx-dialog',
             size: size,
             resolve: {
                 post: function () {
-                    console.log("Modal $scope.truckPostInfo: "+JSON.stringify($scope.truckPostInfo));
+                    //console.log("Modal $scope.truckPostInfo: "+JSON.stringify($scope.truckPostInfo));
                     return $scope.truckPostInfo;
                 }
             }
@@ -276,7 +288,7 @@ function truckListCtrl($scope, $http, $location, $modal, $filter, UserRequest) {
             $scope.truckPostModal.owner.name = $scope.truckPostModal.owner.last_name + " ," + $scope.truckPostModal.owner.first_name;
         }
         $scope.showClose = false;
-        console.log("Inside TruckPostDetailModalCtrl: truckPostModal = "+JSON.stringify($scope.truckPostModal));
+        //console.log("Inside TruckPostDetailModalCtrl: truckPostModal = "+JSON.stringify($scope.truckPostModal));
 
         $scope.ok = function () {
             $modalInstance.close($scope.truckPostModal);

@@ -141,6 +141,9 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
         filterOptions: $scope.myTruckPostList.filterOptions,
         showFooter: true,
         rowHeight : 25,
+        enableCellSelection: false,
+        enableRowSelection: false,
+        totalServerItems : 'myTruckPostList.totalServerItems',
         //showGroupPanel: true,
         columnDefs: 'myTruckPostList.columnDefs'
     };
@@ -157,9 +160,9 @@ function truckOwnerPostsCtrl($scope, $http, $location, $modal, UserRequest, Truc
 
     $scope.myTruckList.showAddPostError = false;
     $scope.editTruckPost = function(truckId, postId, availableDate){
-        console.log("Editing truck : "+truckId+" Post:"+postId+" Date: "+new Date(availableDate));
+        console.log("Editing truck : "+truckId+" Post:"+postId+" Date: "+new Date(availableDate)+" Current Date: " +new Date());
         //console.log("Get Shared Truck Request: "+TruckRequest.getSharedTruckId());
-        if(new Date(availableDate) < new Date()){
+        if(new Date(availableDate) < new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate())){
             $scope.myTruckPostList.messageAvailable = true;
             succesWarning("Post prior to today cannot be edited. Please remove and add new post if required", 'myTruckPostlist_alert');
         }else{

@@ -26,6 +26,8 @@ function indexCtrl($scope, $http, $location, $route, UserRequest) {
         headerRowHeight : 28,
         rowHeight : 25,
         enableCellSelection : true,
+        enableCellSelection: false,
+        enableRowSelection: false,
         columnDefs: 'index.truckPostListColumnDefs'
     };
     $scope.index.truckPostList = [
@@ -82,6 +84,8 @@ function indexCtrl($scope, $http, $location, $route, UserRequest) {
         headerRowHeight : 28,
         rowHeight : 25,
         enableCellSelection : true,
+        enableCellSelection: false,
+        enableRowSelection: false,
         headerClass : "",
         columnDefs: 'index.loadPostListColumnDefs'
     };

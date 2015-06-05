@@ -1124,6 +1124,14 @@ section {
     z-index: inherit;
 }
 
+#truckPostManagePage .btn{
+    padding: 8px 15px !important;
+}
+
+#truckPostManagePage .input-group .form-control{
+    z-index: inherit;
+}
+
 #material .btn{
     padding: 8px 15px;
 }
@@ -1269,3 +1277,4 @@ td.w180 {width:180px;}
 td.w200 {width:200px;}
 td.w280 {width:280px;}
 td.w300 {width:300px;}
+

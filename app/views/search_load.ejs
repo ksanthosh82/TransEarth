@@ -115,7 +115,7 @@
 	<div class="modal-body">
 		<div id="load_detail_alert"></div>
 		<div class="row">
-			<div class="col-sm-4">
+			<!-- div class="col-sm-4">
 				<div class="col-xs-5 col-sm-12">
 					<h4>Owner Details</h4>
 					<ul class="profile-details">
@@ -162,10 +162,10 @@
 						</li>
 					</ul>
 				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="col-xs-5 col-sm-12">
-					<h4>Load Details</h4>
+			</div -->
+			<div class="col-sm-12">
+				<div class="col-xs-6 col-sm-6">
+					<!-- h4>Load Details</h4 -->
 					<ul class="profile-details">
 						<li>
 							<div><i class="fa fa-suitcase"></i> Quantity/ Weight</div>
@@ -175,6 +175,10 @@
 							<div><i class="fa fa-cube"></i> Material</div>
 							{{loadModal.load.material.type}} <br/>
 						</li>
+					</ul>
+				</div>
+				<div class="col-xs-6 col-sm-6">
+					<ul class="profile-details">
 						<li>
 							<div><i class="fa fa-map-marker"></i> Pickup City</div>
 							{{loadModal.load.pickup.address.city}} <br/>

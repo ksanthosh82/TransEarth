@@ -65,26 +65,26 @@
 								<li class="divider"></li>
 								<li><a href="#" ng-click="addTruck()">Add Truck</a></li>
 							</ul -->
-							<a href="#" ng-click="siteHome()">Home</a>
+							<a href="#" ng-click="siteHome()">{{core.pageHeaders.home}}</a>
 						</li>
 						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner||core.agent||core.contractor">
-							<a href="#" ng-click="loadMyTrucks()">My Trucks</a>
+							<a href="#" ng-click="loadMyTrucks()">{{core.pageHeaders.myTrucks}}</a>
 						</li>
 						<li class="dropdown top-navbar-margin" ng-if="core.load_owner||core.agent||core.contractor">
-							<a href="#" ng-click="loadMyLoads()">My Loads</a>
+							<a href="#" ng-click="loadMyLoads()">{{core.pageHeaders.myLoads}}</a>
 						</li>
 						<li class="dropdown top-navbar-margin" ng-if="core.truck_owner||core.agent||core.contractor">
-							<a href="#" ng-click="addTruck()">Add Truck</a>
+							<a href="#" ng-click="addTruck()">{{core.pageHeaders.addTruck}}</a>
 						</li>
 						<li class="dropdown top-navbar-margin" ng-if="core.load_owner||core.agent||core.contractor">
-							<a href="#" ng-click="addLoad()">Add Load</a>
+							<a href="#" ng-click="addLoad()">{{core.pageHeaders.addLoad}}</a>
 						</li>
 						<li class="top-navbar-margin"><a href="#" ng-click="searchTrucks()">Search Trucks</a></li>
 						<li class="top-navbar-margin"><a href="#" ng-click="searchLoad()">Search Load</a></li>
 						<li ng-if="!core.loggedIn">
 							<a href="#" ng-click="loginClicked()">
 								<button type="button" id="btn" class="btn btn-primary">
-									Login
+									{{core.pageHeaders.login}}
 								</button>
 							</a>
 							<!-- button type="button" id="btn" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
@@ -101,7 +101,7 @@
 						<li ng-if="core.expired&&0==1">
 							<a href="#" ng-click="loginClicked()">
 								<button type="button" id="btn" class="btn btn-danger">
-									Session Expired - Login Again
+									{{core.pageHeaders.sessionExpired}}
 								</button>
 							</a>
 						</li>
@@ -121,7 +121,7 @@
 
 		<div id="top"></div>
 		<div class="container">
-			<div id="session_alert" ng-if="ifSessionInvalid==true">Session Not Valid. Please login again</div>
+			<!-- div id="session_alert" ng-if="ifSessionInvalid==true">Session Not Valid. Please login again</div -->
 			<!-- div class="slide-animate-container">
 				<div class="slide-animate" ng-include src="page.template"></div>
 			</div -->
@@ -140,6 +140,8 @@
 				</div>
 			</div>
 		</footer>
+		<!-- Moment Date formatter -->
+		<script src="scripts/moment.min.js"></script>
 
 		<!-- script src="assets/js/jquery-1.11.1.js"></script -->
 		<script src="scripts/jquery-1.9.1.min.js"></script>

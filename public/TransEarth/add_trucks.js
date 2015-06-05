@@ -44,6 +44,7 @@ function addTrucksCtrl($scope, $http, $location, $anchorScroll, $timeout, ngTabl
         $scope.data.push(
             {
                 "index" : $scope.counter,
+                "$edit" : true,
                 "details" : {
                     "type" : "",
                     "make" : "",
@@ -218,7 +219,7 @@ function addTrucksCtrl($scope, $http, $location, $anchorScroll, $timeout, ngTabl
     $scope.tableParams = new ngTableParams({
         page: 1,   // show first page
         total: 1,  // value less than count hide pagination
-        count: 5  // count per page
+        count: 10  // count per page
     }, {
         counts: [], // hide page counts control
         //total: data.length, // length of data

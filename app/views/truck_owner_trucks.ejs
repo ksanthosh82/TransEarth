@@ -51,7 +51,7 @@
 	<div class="modal-body">
 		<div id="truck_detail_alert"></div>
 		<div class="row">
-			<div class="col-sm-4">
+			<!--div class="col-sm-4">
 				<div class="col-xs-5 col-sm-12">
 					<h4>Owner Details</h4>
 					<ul class="profile-details">
@@ -98,10 +98,10 @@
 						</li>
 					</ul>
 				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="col-xs-5 col-sm-12">
-					<h4>Truck Details</h4>
+			</div -->
+			<div class="col-sm-12">
+				<div class="col-xs-4 col-sm-4">
+					<!-- h4>Truck Details</h4 -->
 					<ul class="profile-details">
 						<li>
 							<div><i class="fa fa-truck"></i> Type</div>
@@ -111,6 +111,10 @@
 							<div><i class="fa fa-tag"></i> Make</div>
 							{{truckModal.truck_details.make}} <br/>
 						</li>
+					</ul>
+				</div>
+				<div class="col-xs-4 col-sm-4">
+					<ul class="profile-details">
 						<li>
 							<div><i class="fa fa-bookmark"></i> Model</div>
 							{{truckModal.truck_details.model}} <br/>
@@ -119,6 +123,10 @@
 							<div><i class="fa fa-gavel"></i> Reg No</div>
 							{{truckModal.truck_details.reg_no}}
 						</li>
+					</ul>
+				</div>
+				<div class="col-xs-4 col-sm-4">
+					<ul class="profile-details">
 						<li>
 							<div><i class="fa fa-shopping-cart"></i> Load</div>
 							{{truckModal.truck_details.maximum_load.quantity}} &nbsp; Tons

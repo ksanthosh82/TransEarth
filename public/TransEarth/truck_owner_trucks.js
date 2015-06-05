@@ -65,7 +65,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
                             && typeof data.myTruckList.details != "undefined" && data.myTruckList.details != null
                             && data.myTruckList.details.length > 0){
                             //console.log(JSON.stringify(data.myTruckList.details));
-                            $scope.myTruckList.totalServerItems = data.length;
+                            $scope.myTruckList.totalServerItems = data.myTruckList.details.length;
                             var filteredData = data.myTruckList.details.filter(function(item) {
                                 return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
                             });
@@ -104,7 +104,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
                             && typeof data.myTruckList.details != "undefined" && data.myTruckList.details != null
                             && data.myTruckList.details.length > 0){
                             //console.log(JSON.stringify(data.myTruckList.details));
-                            $scope.myTruckList.totalServerItems = data.length;
+                            $scope.myTruckList.totalServerItems = data.myTruckList.details.length;
                             var filteredData = data.myTruckList.details;
                             $scope.myTruckList.columnDefs = data.myTruckList.headers;
                             $scope.setPagingData(filteredData,page,pageSize);
@@ -153,7 +153,9 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
         filterOptions: $scope.myTruckList.filterOptions,
         showFooter: true,
         rowHeight : 25,
-        //enableRowSelection : false,
+        enableCellSelection: false,
+        enableRowSelection: false,
+        totalServerItems : 'myTruckList.totalServerItems',
         //showGroupPanel: true,
         columnDefs: 'myTruckList.columnDefs'
     };
@@ -300,7 +302,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
         var modalInstance = $modal.open({
             templateUrl: 'myTruckDetailModal.html',
             controller: TruckDetailModalCtrl,
-            windowClass: 'xx-dialog',
+            //windowClass: 'xx-dialog',
             size: size,
             resolve: {
                 truck: function () {
@@ -349,7 +351,7 @@ function truckOwnerTrucksCtrl($scope, $http, $location, $modal, UserRequest, Tru
                     $scope.truckInfo = data;
                     //TruckRequest.setSharedTruck(data);
                     //console.log("Get Shared Truck Request: "+JSON.stringify(TruckRequest.getSharedTruck()));
-                    $scope.truckDetails.open('lg');
+                    $scope.truckDetails.open('sm');
                 }else{
                     $scope.myTruckList.messageAvailable = true;
                     $scope.truckOwnerPage.showAlert = true;

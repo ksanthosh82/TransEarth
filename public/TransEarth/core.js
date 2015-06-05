@@ -4,6 +4,7 @@ var TransEarthApp = angular.module('TransEarthApp',
         'ngRoute',
         'ui.bootstrap',
         'ngGrid',
+        "daterangepicker",
         //'angular-bootstrap-select',
         //'nya.bootstrap.select',
         'ngTable'
@@ -688,6 +689,17 @@ function coreController($scope, $rootScope, $http, $location, UserRequest, Truck
     $scope.siteTitle = 'Transport Earth';
     $scope.page = {};
     $scope.core = {};
+    $scope.core.pageHeaders = {
+        "home" : "Home",
+        "login" : "Login",
+        "searchTrucks" : "Search Truck",
+        "searchLoads" : "Search Load",
+        "myTrucks" : "My Trucks",
+        "myLoads" : "My Loads",
+        "addTruck" : "Add Truck",
+        "addLoad" : "Add Load",
+        "sessionExpired" : "Session Expired"
+    };
     $scope.core.truck_owner = false;
     $scope.core.load_owner = false;
     $scope.serverAuth = {};
